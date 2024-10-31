@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.edu.kaizhi</groupId>
+		<artifactId>kaizhi-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../kaizhi-parent</relativePath>
+	</parent>
+	<artifactId>kaizhi-content</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>kaizhi-content</name>
+	<packaging>pom</packaging>
+	<description>kaizhi-content</description>
+	<dependencies>
+		<dependency>
+			<groupId>com.edu.kaizhi</groupId>
+			<artifactId>kaizhi-base</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<modules>
+		<module>kaizhi-content-api</module>
+		<module>kaizhi-content-model</module>
+		<module>kaizhi-content-service</module>
+	</modules>
+
+</project>
