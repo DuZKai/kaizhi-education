@@ -52,3 +52,9 @@
     cd /data1/redis-x  # 进入redis安装目录
     redis-server redis.conf  # 启动
     ```
+
+
+
+## TODO
+
+- 太多无用输出，8效率低下，项目完成时尽量尝试换为21
