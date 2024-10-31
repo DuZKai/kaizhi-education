@@ -21,6 +21,7 @@
   - 删除.\kaizhi-generator\src\main\java\com\kaizhi\content文件夹
   - 修改.\kaizhi-generator\src\main\java\com\kaizhi\generator\ContentCodeGenerator.java文件的配置信息（数据库名字，账号，密码等）
   - 执行ContentCodeGenerator.java下Main方法生成新的content文件夹
+- 这里是最新版的[generator](https://github.com/baomidou/generator/tree/develop)
 
 
 
