@@ -42,7 +42,7 @@ public class MediaCodeGenerator {
 		GlobalConfig gc = new GlobalConfig();
 		gc.setFileOverride(true);
 		gc.setOutputDir(System.getProperty("user.dir") + "/kaizhi-generator/src/main/java");
-		gc.setAuthor("itcast");
+		gc.setAuthor("zikai");
 		gc.setOpen(false);
 		gc.setSwagger2(false);
 		gc.setServiceName("%sService");

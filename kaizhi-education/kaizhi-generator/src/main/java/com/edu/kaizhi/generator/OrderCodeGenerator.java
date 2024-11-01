@@ -45,7 +45,7 @@ public class OrderCodeGenerator {
 		gc.setFileOverride(true);
 		//生成路径
 		gc.setOutputDir(System.getProperty("user.dir") + "/kaizhi-generator/src/main/java");
-		gc.setAuthor("itcast");
+		gc.setAuthor("zikai");
 		gc.setOpen(false);
 		gc.setSwagger2(false);
 		gc.setServiceName("%sService");
