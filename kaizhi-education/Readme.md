@@ -1,5 +1,14 @@
 # 楷智教育
 
+## IDEA
+
+- 编码UTF-8
+- 导包优化
+- 提示忽略大小写
+- 编译级别设置SDK为1.8
+
+
+
 ## Maven
 
 - 一部分包可能因为版本问题，可能无法直接加载，可以的话直接将对应包加载到Maven文件夹中
@@ -25,6 +34,12 @@
 
 
 
+## 虚拟机
+
+- 使用VMnet8的NAT模式，子网IP需要设置为192.168.101.0，子网掩码设置为255.255.255.0
+
+
+
 ## Tips
 
 - 每次重启后需要执行如下命令
@@ -44,17 +59,38 @@
 
       
 
-  - 虚拟机中(个人虚拟机密码：123456)
+  - 虚拟机中(个人虚拟机密码：centos)
 
-    - redis
+    - 启动docker
 
+    ```shell
+    systemctl start docker
     ```
-    cd /data1/redis-x  # 进入redis安装目录
-    redis-server redis.conf  # 启动
+    
+    - 启动重启脚本
+    
+    ```shell
+    sh /data/soft/restart.sh  
     ```
+    
+    - 查看状态
+    
+    ```shell
+    docker ps
+    ```
+    
+    - 一共有如下容器：
+    
+    1. xuxueli/xxl-job-admin:2.3.1
+    2. minio/minio:RELEASE.2022-09-07T22-25-02Z
+    3. redis:6.2.7
+    4. elasticsearch:7.12.1
+    5. rabbitmq:3.8.34
+    6. nacos/nacos-server:1.4.1
+    7. mysql:8.0.26
 
 
 
 ## TODO
 
-- 太多无用输出，8效率低下，项目完成时尽量尝试换为21
+- 太多无用输出，8效率低下，项目完成时尽量尝试换为21，虚拟机也是尽量换成最新版本
