@@ -18,15 +18,15 @@
         suffix-icon="el-icon-search"
         v-model="listQueryData.courseName"
       />
-      <el-select v-model="listQueryData.auditStatus" placeholder="请选择">
+      <el-select v-model="listQueryData.auditStatus" clearable placeholder="请选择">
         <el-option
-          v-for="item in aduitStatusOptions" 
+          v-for="item in aduitStatusOptions"
           :key="item.code"
           :label="item.desc"
           :value="item.code"
         ></el-option>
       </el-select>
-     <el-select v-model="listQueryData.publishStatus" placeholder="请选择">
+     <el-select v-model="listQueryData.publishStatus" clearable placeholder="请选择">
         <el-option
           v-for="item in coursePublishStatus"
           :key="item.code"

@@ -4,7 +4,7 @@
       <img class="logo" src="@/assets/img/logo@2x.png" />
     </div>
     <div class="right">
-      <div class="top">北京博学谷科技有限公司</div>
+      <div class="top">深圳楷智教育文化有限公司</div>
       <div class="bottom">
         <span class="create-time">创建时间：2016-12-12</span>
         <span class="authentication">未认证</span>
