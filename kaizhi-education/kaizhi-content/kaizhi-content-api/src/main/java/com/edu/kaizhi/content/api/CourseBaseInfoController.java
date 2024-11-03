@@ -2,6 +2,8 @@ package com.edu.kaizhi.content.api;
 
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.content.model.dto.AddCourseDto;
+import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
@@ -28,4 +30,13 @@ public class CourseBaseInfoController {
         return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParams);
     }
 
+
+    @ApiOperation("新增课程")
+    @PostMapping("/course")
+    public CourseBaseInfoDto createCourseBase(@RequestBody AddCourseDto addCourseDto) {
+
+        // TODO:获取用户所属机构ID
+        Long companyId = 1232141425L;
+        return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
+    }
 }
