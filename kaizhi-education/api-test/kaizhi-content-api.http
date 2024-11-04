@@ -39,3 +39,7 @@ Content-Type: application/json
 ### 查询课程详情
 GET {{content_host}}/content/course/40
 Content-Type: application/json
+
+### 查询课程计划详情
+GET {{content_host}}/content/teachplan/117/tree-nodes
+Content-Type: application/json
