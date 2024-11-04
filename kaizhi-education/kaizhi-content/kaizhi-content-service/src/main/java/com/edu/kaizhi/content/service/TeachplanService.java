@@ -28,4 +28,11 @@ public interface TeachplanService {
      * @param id 课程计划id
      */
     void deleteTeachplan(Long id);
+
+    /**
+     * 课程计划移动模式
+     * @param id 课程计划id
+     * @param upMode 上移模式
+     */
+    List<TeachplanDto> exchangeTeachplan(Long id, Boolean upMode);
 }

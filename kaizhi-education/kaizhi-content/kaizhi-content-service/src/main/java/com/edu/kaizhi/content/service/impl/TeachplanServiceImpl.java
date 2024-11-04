@@ -96,9 +96,44 @@ public class TeachplanServiceImpl implements TeachplanService {
         teachplanMapper.deleteById(id);
     }
 
+
+    @Transactional
+    public List<TeachplanDto> exchangeTeachplan(Long id, Boolean upMode){
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        if (teachplan == null)
+            CustomizeException.cast("课程计划不存在");
+        LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
+        Integer grade = teachplan.getGrade();
+        Integer orderby = teachplan.getOrderby();
+        Integer newOrderby = orderby + (upMode ? -1 : 1);
+
+        queryWrapper = queryWrapper.
+                eq(Teachplan::getGrade, grade).
+                eq(Teachplan::getParentid, teachplan.getParentid()).
+                eq(Teachplan::getCourseId, teachplan.getCourseId()).
+                eq(Teachplan::getOrderby, newOrderby);
+        Teachplan lastTeachplan = teachplanMapper.selectOne(queryWrapper);
+
+        if(lastTeachplan == null){
+            if(upMode)
+                CustomizeException.cast("已到达该章节顶端，无法继续上移");
+            else
+                CustomizeException.cast("已到达该章节底端，无法继续下移");
+        }
+
+        // 交换orderby
+        teachplan.setOrderby(newOrderby);
+        lastTeachplan.setOrderby(orderby);
+        teachplanMapper.updateById(teachplan);
+        teachplanMapper.updateById(lastTeachplan);
+        return teachplanMapper.selectTreeNodes(teachplan.getCourseId());
+    }
+
+
     private int getTeachplanCount(Long parentId, Long courseId) {
         LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper = queryWrapper.eq(Teachplan::getParentid, parentId).eq(Teachplan::getCourseId, courseId);
         return teachplanMapper.selectCount(queryWrapper);
     }
+
 }
