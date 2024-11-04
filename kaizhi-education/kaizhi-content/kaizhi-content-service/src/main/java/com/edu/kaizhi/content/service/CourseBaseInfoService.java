@@ -4,6 +4,7 @@ import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.model.dto.AddCourseDto;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
+import com.edu.kaizhi.content.model.dto.EditCourseDto;
 import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
 import com.edu.kaizhi.content.model.po.CourseBase;
 
@@ -27,4 +28,19 @@ public interface CourseBaseInfoService {
      * @return CourseBaseInfoDto 新增课程详细信息
      */
     CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto addCourseDto);
+
+    /**
+     * 根据课程ID查询课程信息
+     * @param courseId 课程ID
+     * @return CourseBaseInfoDto 课程详细信息
+     */
+    CourseBaseInfoDto getCourseBaseInfo(Long courseId);
+
+    /**
+     * 修改课程
+     * @param companyId 机构ID
+     * @param editCourseDto 修改课程信息
+     * @return CourseBaseInfoDto 修改后的课程详细信息
+     */
+    CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto);
 }

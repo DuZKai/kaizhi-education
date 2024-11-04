@@ -10,6 +10,7 @@ import com.edu.kaizhi.content.mapper.CourseCategoryMapper;
 import com.edu.kaizhi.content.mapper.CourseMarketMapper;
 import com.edu.kaizhi.content.model.dto.AddCourseDto;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
+import com.edu.kaizhi.content.model.dto.EditCourseDto;
 import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.model.po.CourseCategory;
@@ -72,33 +73,33 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     @Transactional
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
         // 参数合法性校验
-        if (StringUtils.isBlank(dto.getName())) {
-            CustomizeException.cast("课程名称为空");
-        }
-
-        if (StringUtils.isBlank(dto.getMt())) {
-            CustomizeException.cast("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getSt())) {
-            CustomizeException.cast("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getGrade())) {
-            CustomizeException.cast("课程等级为空");
-        }
-
-        if (StringUtils.isBlank(dto.getTeachmode())) {
-            CustomizeException.cast("教育模式为空");
-        }
-
-        if (StringUtils.isBlank(dto.getUsers())) {
-            CustomizeException.cast("适应人群为空");
-        }
-
-        if (StringUtils.isBlank(dto.getCharge())) {
-            CustomizeException.cast("收费规则为空");
-        }
+        // if (StringUtils.isBlank(dto.getName())) {
+        //     CustomizeException.cast("课程名称为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getMt())) {
+        //     CustomizeException.cast("课程分类为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getSt())) {
+        //     CustomizeException.cast("课程分类为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getGrade())) {
+        //     CustomizeException.cast("课程等级为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getTeachmode())) {
+        //     CustomizeException.cast("教育模式为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getUsers())) {
+        //     CustomizeException.cast("适应人群为空");
+        // }
+        //
+        // if (StringUtils.isBlank(dto.getCharge())) {
+        //     CustomizeException.cast("收费规则为空");
+        // }
         //新增对象
         CourseBase courseBaseNew = new CourseBase();
         //将填写的课程信息赋值给新增对象，属性名称一致即可拷贝
@@ -155,7 +156,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     }
 
     //根据课程id查询课程基本信息，包括基本信息和营销信息
-    public CourseBaseInfoDto getCourseBaseInfo(long courseId) {
+    public CourseBaseInfoDto getCourseBaseInfo(Long courseId) {
 
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
         if (courseBase == null) {
@@ -175,6 +176,44 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         courseBaseInfoDto.setMtName(courseCategoryByMt.getName());
 
         return courseBaseInfoDto;
+
+    }
+
+    // 修改课程
+    @Transactional
+    public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
+
+        // 得到课程id
+        Long courseId = editCourseDto.getId();
+        // 查询课程基本信息
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        if (courseBase == null) {
+            CustomizeException.cast("课程不存在");
+        }
+
+        // 数据合法性校验
+        // 根据具体业务逻辑去校验
+        // 每个机构只能修改自己机构课程
+        if (!companyId.equals(courseBase.getCompanyId())) {
+            CustomizeException.cast("本机构只能修改本机构课程");
+        }
+
+        // 封装数据
+        BeanUtils.copyProperties(editCourseDto, courseBase);
+        courseBase.setChangeDate(LocalDateTime.now());
+        // TODO: 获取修改人
+        // courseBase.setChangePeople();
+
+        // 更新数据
+        if (courseBaseMapper.updateById(courseBase) <= 0)
+            CustomizeException.cast("修改课程基本信息失败");
+
+        //封装营销信息的数据
+        CourseMarket courseMarket = new CourseMarket();
+        BeanUtils.copyProperties(editCourseDto, courseMarket);
+        saveCourseMarket(courseMarket);
+        //查询课程信息
+        return getCourseBaseInfo(courseId);
 
     }
 
