@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.api;
 
+import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.service.TeachplanService;
 import com.edu.kaizhi.content.service.impl.TeachplanServiceImpl;
@@ -7,9 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +28,13 @@ public class TeachplanController {
     @GetMapping("/teachplan/{courseId}/tree-nodes")
     public List<TeachplanDto> getTreeNodes(@PathVariable Long courseId) {
         return teachplanService.findTeachplanTreeNodes(courseId);
+    }
+
+
+    @ApiOperation("课程计划创建或修改")
+    @PostMapping("/teachplan")
+    public void saveTeachplan(@RequestBody SaveTeachplanDto teachplan){
+        teachplanService.saveTeachplan(teachplan);
     }
 
 }
