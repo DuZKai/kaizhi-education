@@ -65,3 +65,6 @@ Content-Type: application/json
   "grade" : 2,
   "pname" : "小节名称 [点击修改]"
 }
+
+### 删除课程计划
+DELETE {{content_host}}/content/teachplan/0

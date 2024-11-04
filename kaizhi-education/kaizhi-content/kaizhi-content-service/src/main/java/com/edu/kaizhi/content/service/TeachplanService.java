@@ -14,14 +14,18 @@ public interface TeachplanService {
      * 根据课程id查询课程计划树
      * @param courseId 课程id
      * */
-    public List<TeachplanDto> findTeachplanTreeNodes(Long courseId);
+    List<TeachplanDto> findTeachplanTreeNodes(Long courseId);
 
     /**
      * 保存课程计划
      * @param teachplanDto  课程计划信息
      */
-    public void saveTeachplan(SaveTeachplanDto teachplanDto);
+    void saveTeachplan(SaveTeachplanDto teachplanDto);
 
 
-
+    /**
+     * 删除课程计划
+     * @param id 课程计划id
+     */
+    void deleteTeachplan(Long id);
 }

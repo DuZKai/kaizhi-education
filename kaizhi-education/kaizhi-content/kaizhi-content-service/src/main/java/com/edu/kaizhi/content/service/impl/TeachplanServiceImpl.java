@@ -1,13 +1,16 @@
 package com.edu.kaizhi.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.mapper.CourseCategoryMapper;
 import com.edu.kaizhi.content.mapper.TeachplanMapper;
+import com.edu.kaizhi.content.mapper.TeachplanMediaMapper;
 import com.edu.kaizhi.content.model.dto.CourseCategoryTreeDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.CourseCategory;
 import com.edu.kaizhi.content.model.po.Teachplan;
+import com.edu.kaizhi.content.model.po.TeachplanMedia;
 import com.edu.kaizhi.content.service.CourseCategoryService;
 import com.edu.kaizhi.content.service.TeachplanService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,9 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Autowired
     TeachplanMapper teachplanMapper;
+
+    @Autowired
+    TeachplanMediaMapper teachplanMediaMapper;
 
     public List<TeachplanDto> findTeachplanTreeNodes(Long courseId){
         return teachplanMapper.selectTreeNodes(courseId);
@@ -60,6 +66,34 @@ public class TeachplanServiceImpl implements TeachplanService {
             BeanUtils.copyProperties(teachplanDto, teachplan);
             teachplanMapper.updateById(teachplan);
         }
+    }
+
+    @Transactional
+    public void deleteTeachplan(Long id) {
+        if (id == null)
+            CustomizeException.cast("课程计划ID为空");
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        if (teachplan == null)
+            CustomizeException.cast("删除课程计划失败，课程计划不存在");
+        if(teachplan.getGrade() == 1){
+            // 大章节删除前判断
+            // 判断子节点是否存在
+            LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper = queryWrapper.eq(Teachplan::getParentid, id);
+            int count = teachplanMapper.selectCount(queryWrapper);
+            if (count > 0) {
+                CustomizeException.cast("删除课程计划失败，存在子章节，无法操作");
+            }
+        }
+        else{
+            // 小章节删除前判断，需要将teachplan_media表关联的信息也删除
+            LambdaQueryWrapper<TeachplanMedia> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(TeachplanMedia::getTeachplanId, id);
+            teachplanMediaMapper.delete(queryWrapper);
+        }
+
+        // 删除课程计划
+        teachplanMapper.deleteById(id);
     }
 
     private int getTeachplanCount(Long parentId, Long courseId) {
