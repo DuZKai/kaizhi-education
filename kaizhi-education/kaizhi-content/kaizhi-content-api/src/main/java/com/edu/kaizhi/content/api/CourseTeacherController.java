@@ -1,11 +1,13 @@
 package com.edu.kaizhi.content.api;
 
+import com.edu.kaizhi.content.model.dto.CourseTeacherDto;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,13 +28,13 @@ public class CourseTeacherController {
 
     @ApiOperation("添加教师信息接口")
     @PostMapping
-    public CourseTeacher addCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
+    public CourseTeacher addCourseTeacher(@RequestBody @Validated CourseTeacherDto courseTeacher) {
         return courseTeacherService.saveCourseTeacher(courseTeacher);
     }
 
     @ApiOperation("修改教师信息接口")
     @PutMapping
-    public CourseTeacher modifyCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
+    public CourseTeacher modifyCourseTeacher(@RequestBody @Validated CourseTeacherDto courseTeacher) {
         return courseTeacherService.saveCourseTeacher(courseTeacher);
     }
 

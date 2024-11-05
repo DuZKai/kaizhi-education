@@ -3,6 +3,7 @@ package com.edu.kaizhi.content.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.mapper.CourseTeacherMapper;
+import com.edu.kaizhi.content.model.dto.CourseTeacherDto;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.service.CourseTeacherService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     }
 
     // 保存课程教师信息
-    public CourseTeacher saveCourseTeacher(CourseTeacher courseTeacher){
+    public CourseTeacher saveCourseTeacher(CourseTeacherDto courseTeacher){
         Long id = courseTeacher.getId();
         CourseTeacher teacher;
         if (id == null){

@@ -103,6 +103,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         return getCourseBaseInfo(courseId);
     }
 
+
+
     //保存课程营销信息
     private int saveCourseMarket(CourseMarket courseMarketNew) {
         //收费规则
