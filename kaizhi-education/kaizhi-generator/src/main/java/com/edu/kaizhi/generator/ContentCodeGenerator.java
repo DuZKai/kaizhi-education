@@ -24,7 +24,7 @@ public class ContentCodeGenerator {
     // 文件路径地址
     private static final String FILE_DIR_PATH = System.getProperty("user.dir") + "/kaizhi-generator/src/main/java";
     // 数据库地址
-    private static final String DATA_SOURCE_URL = "jdbc:mysql://localhost:3306/kaizhi_edu";
+    private static final String DATA_SOURCE_URL = "jdbc:mysql://192.168.101.65:3306/kaizhi_edu_content";
     // 父节点包
     public static final String Parent = "com.edu.kaizhi";
     // 作者

@@ -35,15 +35,6 @@
 
 
 
-## 数据库
-
-- .\init\database\model是数据库表图形化界面
-- 需要将.\init\database\*.sql均导入数据库
-
-- 需要在文件数据库地址修改为正确地址
-
-
-
 ## 前端
 
 - 安装node.js，版本最好小于等于16，没有openssl安全证书错误
@@ -86,12 +77,30 @@ npm run serve
     sh /data/soft/restart.sh  
     ```
   
+    - restart.sh内容如下：
+    ```bash
+    docker stop mysql
+    docker stop nacos
+    docker stop rabbitmq
+    docker stop redis
+    docker stop xxl-job-admin
+    # docker stop gogs
+    
+    docker start mysql
+    docker start nacos
+    docker start rabbitmq
+    docker start redis
+    docker start xxl-job-admin
+    # docker start gogs
+    ```
+    
+    
     - 查看状态
     
     ```shell
     docker ps
     ```
-  
+    
     - 一共有如下容器：
     
     1. xuxueli/xxl-job-admin:2.3.1
@@ -103,6 +112,21 @@ npm run serve
     7. mysql:8.0.26
 
 
+
+### 数据库
+
+- .\init\database\model是数据库表图形化界面
+- 需要将.\init\database\*.sql均导入数据库
+
+- 需要在文件数据库地址修改为正确地址
+
+
+
+### Nacos
+
+- Nacos依赖数据库，需要先打开mysql容器，再打开Nacos
+- 打开http://192.168.101.65:8848/nacos/#/login进入Nacos，账号密码均为nacos
+- 将.\init\nacos\nacos_config_export.zip导入到nacos中
 
 
 
@@ -122,23 +146,13 @@ npm run serve
 
   - 本地
 
-    - 启动mysql，并且登录mysql
-
-    ```
-    net start mysql
-    mysql -uroot -p # 输入个人mysql密码：1234
-    ```
-
-    - 打开navicat，localhost密码1234
-
-    - 进入项目文件夹打开前端页面启动器：nginx.exe
-
+    - 打开navicat，192.168.101.65密码mysql
   - 前端
-
+  
     - 打开kaizhi-front，使用npm运行serve服务
   
   
-  
+
   
   - 虚拟机中(个人虚拟机密码：centos)
   
@@ -148,17 +162,35 @@ npm run serve
     systemctl start docker
     ```
   
-    - 启动重启脚本
+    - 启动重启脚本restart.sh
   
     ```shell
     sh /data/soft/restart.sh
     ```
-  
+    
     - 查看状态
+    
     ```shell
     docker ps
     ```
-  
+    
+    - 状态如下：
+    ```bash
+    [root@localhost ~]# docker ps
+    CONTAINER ID        IMAGE                                      COMMAND                  CREATED             STATUS              PORTS                                                                                              NAMES
+    1af206612ed1        minio/minio:RELEASE.2022-09-07T22-25-02Z   "/usr/bin/docker-ent…"   2 years ago         Up About an hour    0.0.0.0:9000-9001->9000-9001/tcp                                                                   minio
+    ca6146074a33        elasticsearch:7.12.1                       "/bin/tini -- /usr/l…"   2 years ago         Up About an hour    0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp                                                     elasticsearch
+    87a556e98a6c        rabbitmq:3.8.34                            "docker-entrypoint.s…"   2 years ago         Up About an hour    4369/tcp, 0.0.0.0:5672->5672/tcp, 5671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp   rabbitmq
+    56868b26b49c        nacos/nacos-server:1.4.1                   "bin/docker-startup.…"   2 years ago         Up 11 minutes       0.0.0.0:8848->8848/tcp                                                                             nacos
+    fb02620c15cc        mysql:8.0.26                               "docker-entrypoint.s…"   2 years ago         Up 11 minutes       0.0.0.0:3306->3306/tcp, 33060/tcp                                                                  mysql
+                                                                               nacos
+    ```
+
+
+
+
+
+
 
 
 

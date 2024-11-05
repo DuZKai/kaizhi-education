@@ -1,7 +1,7 @@
 #微服务配置
 spring:
   application:
-    name: content-service # 微服务名
+    name: system-service # 微服务名
 
   # 数据源配置，默认dev
   profiles:
@@ -13,7 +13,7 @@ spring:
       config: # 配置文件相关信息
         namespace: kaizhi_edu
         group: kaizhi-education
-        prefix: content-service
+        prefix: system-service
         file-extension: yaml
         refresh-enabled: true
         # 找到共享的配置文件

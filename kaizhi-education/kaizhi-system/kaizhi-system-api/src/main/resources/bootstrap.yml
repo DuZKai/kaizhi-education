@@ -1,24 +1,68 @@
-server:
-  servlet:
-    context-path: /system
-  port: 63110
+#server:
+#  servlet:
+#    context-path: /system
+#  port: 63110
+##微服务配置
+#spring:
+#  application:
+#    name: system-api
+#  cloud:
+#    nacos:
+#      server-addr: 192.168.101.65:8848
+#      discovery:
+#        namespace: kaizhi_edu
+#        group: kaizhi-education
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.101.65:3306/kaizhi_edu_system?serverTimezone=UTC&useUnicode=true&useSSL=false&
+#    username: root
+#    password: mysql
+#
+#
+## 日志文件配置路径
+#logging:
+#  config: classpath:log4j2-dev.xml
+#
+## swagger 文档配置
+#swagger:
+#  title: "楷智系统管理"
+#  description: "系统管理接口"
+#  base-package: com.edu.kaizhi.system
+#  enabled: true
+#  version: 1.0.0
+
 #微服务配置
 spring:
   application:
-    name: system-api
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kaizhi_edu?serverTimezone=UTC&userUnicode=true&useSSL=false&
-    username: root
-    password: 1234
-# 日志文件配置路径
-logging:
-  config: classpath:log4j2-dev.xml
+    name: system-api # 微服务名
 
-# swagger 文档配置
-swagger:
-  title: "楷智系统管理"
-  description: "系统管理接口"
-  base-package: com.edu.kaizhi.system
-  enabled: true
-  version: 1.0.0
+  # 数据源配置，默认dev
+  profiles:
+    active: dev # 环境名，指定配置文件的名称
+
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848
+      discovery: # 服务注册相关配置
+        namespace: kaizhi_edu
+        group: kaizhi-education
+      config: # 配置文件相关信息
+        namespace: kaizhi_edu
+        group: kaizhi-education
+        # 找到自己特有配置文件
+        prefix: system-api
+        file-extension: yaml
+        refresh-enabled: true
+        extension-configs:
+          # 找到引用的数据库配置文件
+          - data-id: system-service-${spring.profiles.active}.yaml
+            group: kaizhi-education
+            refresh: true
+        # 找到共享的配置文件
+        shared-configs:
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
