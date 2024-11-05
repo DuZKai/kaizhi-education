@@ -20,6 +20,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
     @Autowired
     CourseCategoryMapper courseCategoryMapper;
 
+    // 查询课程分类树
     public List<CourseCategoryTreeDto> queryTreeNodes(String id) {
         List<CourseCategoryTreeDto> courseCategoryTreeDtos = courseCategoryMapper.selectTreeNodes(id);
         //将list转map,以备使用,排除根节点

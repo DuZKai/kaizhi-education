@@ -39,6 +39,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         return teachplanMapper.selectTreeNodes(courseId);
     }
 
+    // 保存课程计划
     @Transactional
     public void saveTeachplan(SaveTeachplanDto teachplanDto) {
         //课程计划id
@@ -68,6 +69,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         }
     }
 
+    // 删除课程计划
     @Transactional
     public void deleteTeachplan(Long id) {
         if (id == null)
@@ -97,6 +99,7 @@ public class TeachplanServiceImpl implements TeachplanService {
     }
 
 
+    // 课程计划上移下移
     @Transactional
     public List<TeachplanDto> exchangeTeachplan(Long id, Boolean upMode){
         Teachplan teachplan = teachplanMapper.selectById(id);
@@ -130,6 +133,7 @@ public class TeachplanServiceImpl implements TeachplanService {
     }
 
 
+    // 获取同级节点个数
     private int getTeachplanCount(Long parentId, Long courseId) {
         LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper = queryWrapper.eq(Teachplan::getParentid, parentId).eq(Teachplan::getCourseId, courseId);

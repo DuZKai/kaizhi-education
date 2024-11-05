@@ -72,34 +72,6 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     // 新增课程
     @Transactional
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
-        // 参数合法性校验
-        // if (StringUtils.isBlank(dto.getName())) {
-        //     CustomizeException.cast("课程名称为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getMt())) {
-        //     CustomizeException.cast("课程分类为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getSt())) {
-        //     CustomizeException.cast("课程分类为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getGrade())) {
-        //     CustomizeException.cast("课程等级为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getTeachmode())) {
-        //     CustomizeException.cast("教育模式为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getUsers())) {
-        //     CustomizeException.cast("适应人群为空");
-        // }
-        //
-        // if (StringUtils.isBlank(dto.getCharge())) {
-        //     CustomizeException.cast("收费规则为空");
-        // }
         //新增对象
         CourseBase courseBaseNew = new CourseBase();
         //将填写的课程信息赋值给新增对象，属性名称一致即可拷贝
