@@ -1,7 +1,7 @@
 #微服务配置
 spring:
   application:
-    name: system-api # 微服务名
+    name: gateway # 微服务名
 
   # 数据源配置，默认dev
   profiles:
@@ -17,19 +17,11 @@ spring:
         namespace: kaizhi_edu
         group: kaizhi-education
         # 找到自己特有配置文件
-        prefix: system-api
+        prefix: gateway
         file-extension: yaml
         refresh-enabled: true
-        extension-configs:
-          # 找到引用的数据库配置文件
-          - data-id: system-service-${spring.profiles.active}.yaml
-            group: kaizhi-education
-            refresh: true
         # 找到共享的配置文件
         shared-configs:
-          - data-id: swagger-${spring.profiles.active}.yaml
-            group: kaizhi-education-common
-            refresh: true
           - data-id: logging-${spring.profiles.active}.yaml
             group: kaizhi-education-common
             refresh: true
