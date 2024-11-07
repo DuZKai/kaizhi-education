@@ -13,6 +13,7 @@ spring:
       config:
         namespace: kaizhi_edu
         group: kaizhi-education
+        prefix: media-api
         file-extension: yaml
         refresh-enabled: true
         extension-configs:

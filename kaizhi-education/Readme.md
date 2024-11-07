@@ -62,6 +62,8 @@ npm run serve
 
 
 
+
+
 ## 虚拟机
 
 - 使用VMnet8的NAT模式，子网IP需要设置为192.168.101.0，子网掩码设置为255.255.255.0
@@ -84,6 +86,7 @@ npm run serve
     docker stop rabbitmq
     docker stop redis
     docker stop xxl-job-admin
+    docker stop minio
     # docker stop gogs
     
     docker start mysql
@@ -91,12 +94,13 @@ npm run serve
     docker start rabbitmq
     docker start redis
     docker start xxl-job-admin
+    docker start minio
     # docker start gogs
     ```
     
-    
+  
     - 查看状态
-    
+      
     ```shell
     docker ps
     ```
@@ -118,7 +122,7 @@ npm run serve
 - .\init\database\model是数据库表图形化界面
 - 需要将.\init\database\*.sql均导入数据库
 
-- 需要在文件数据库地址修改为正确地址
+- 需要在代码中数据库地址修改为正确地址
 
 
 
@@ -127,6 +131,14 @@ npm run serve
 - Nacos依赖数据库，需要先打开mysql容器，再打开Nacos
 - 打开http://192.168.101.65:8848/nacos/#/login进入Nacos，账号密码均为nacos
 - 将.\init\nacos\nacos_config_export.zip导入到nacos中
+
+
+
+### 分布式文件管理系统Minio
+
+- 创建mediafiles的bucket并设置成public
+
+账号密码均为minioadmin。
 
 
 
