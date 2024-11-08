@@ -12,7 +12,7 @@
       <el-table-column prop="size" label="大小" align="center"></el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <el-progress :percentage="scope.row.percentage"></el-progress>
+          <el-progress :text-inside="true" :stroke-width="24" :percentage="Math.floor(scope.row.percentage)"></el-progress>
         </template>
       </el-table-column>
 

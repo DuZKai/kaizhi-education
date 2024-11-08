@@ -1,6 +1,7 @@
 package com.edu.kaizhi.media.api;
 
 import com.edu.kaizhi.base.model.RestResponse;
+import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.service.MediaFileService;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -40,8 +41,8 @@ public class BigFilesController {
     @ApiOperation(value = "上传分块文件")
     @PostMapping("/upload/uploadchunk")
     public RestResponse<Boolean> uploadchunk(@RequestParam("file") MultipartFile file,
-                                    @RequestParam("fileMd5") String fileMd5,
-                                    @RequestParam("chunk") int chunk) throws Exception {
+                                             @RequestParam("fileMd5") String fileMd5,
+                                             @RequestParam("chunk") int chunk) throws Exception {
         // 创建临时文件
         File tempFile = File.createTempFile("minio", ".temp");
         file.transferTo(tempFile);
@@ -51,10 +52,21 @@ public class BigFilesController {
 
     @ApiOperation(value = "合并文件")
     @PostMapping("/upload/mergechunks")
-    public RestResponse mergechunks(@RequestParam("fileMd5") String fileMd5,
+    public RestResponse<Boolean> mergechunks(@RequestParam("fileMd5") String fileMd5,
                                     @RequestParam("fileName") String fileName,
                                     @RequestParam("chunkTotal") int chunkTotal) throws Exception {
-        return null;
+        // TODO:机构ID
+        Long companyId = 1232141425L;
+
+        // 文件信息
+        UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
+        uploadFileParamsDto.setFileType("001002");
+        uploadFileParamsDto.setTags("课程视频");
+        uploadFileParamsDto.setRemark("");
+        uploadFileParamsDto.setFilename(fileName);
+
+        return mediaFileService.mergechunks(companyId, fileMd5, chunkTotal, uploadFileParamsDto);
 
     }
+
 }

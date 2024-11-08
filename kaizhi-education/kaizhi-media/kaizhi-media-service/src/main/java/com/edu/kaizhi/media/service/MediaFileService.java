@@ -70,4 +70,14 @@ public interface MediaFileService {
      */
     public RestResponse<Boolean> uploadChunk(String fileMd5, int chunk, String localChunkFilePath);
 
+    /**
+     * 合并分块
+     *
+     * @param companyId           机构id
+     * @param fileMd5             文件md5
+     * @param chunkTotal          分块总数
+     * @param uploadFileParamsDto 上传文件参数
+     * @return RestResponse
+     */
+    public RestResponse<Boolean> mergechunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamsDto uploadFileParamsDto);
 }
