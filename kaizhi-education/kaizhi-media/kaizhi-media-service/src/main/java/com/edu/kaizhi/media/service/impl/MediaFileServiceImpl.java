@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.media.mapper.MediaFilesMapper;
 import com.edu.kaizhi.media.model.dto.QueryMediaParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
@@ -13,6 +14,7 @@ import com.edu.kaizhi.media.model.po.MediaFiles;
 import com.edu.kaizhi.media.service.MediaFileService;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
+import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- */
 @Service
 @Slf4j
 public class MediaFileServiceImpl implements MediaFileService {
@@ -54,7 +54,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     //视频桶
     @Value("${minio.bucket.videofiles}")
-    private String bucket_vedio;
+    private String bucket_video;
 
     @Override
     public PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
@@ -98,7 +98,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 将文件上传到minio
-     * */
+     */
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
 
         String filename = uploadFileParamsDto.getFilename();
@@ -223,5 +223,83 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mediaFiles;
     }
 
+    public RestResponse<Boolean> checkFile(String fileMd5) {
 
+        //查询文件信息
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
+        if (mediaFiles != null) {
+            //桶
+            String bucket = mediaFiles.getBucket();
+            //存储目录
+            String filePath = mediaFiles.getFilePath();
+            //文件流
+            try {
+                InputStream stream = minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(bucket)
+                                .object(filePath)
+                                .build());
+
+                if (stream != null) {
+                    //文件已存在
+                    return RestResponse.success(true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //文件不存在
+        return RestResponse.success(false);
+
+    }
+
+    public RestResponse<Boolean> checkChunk(String fileMd5, int chunkIndex) {
+        //得到分块文件目录
+        String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
+        //得到分块文件的路径
+        String chunkFilePath = chunkFileFolderPath + chunkIndex;
+
+        //文件流
+        InputStream fileInputStream = null;
+        try {
+            fileInputStream = minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucket_video)
+                            .object(chunkFilePath)
+                            .build());
+
+            if (fileInputStream != null) {
+                //分块已存在
+                return RestResponse.success(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //分块未存在
+        return RestResponse.success(false);
+    }
+
+    //得到分块文件的目录
+    private String getChunkFileFolderPath(String fileMd5) {
+        return fileMd5.charAt(0) + "/" + fileMd5.charAt(1) + "/" + fileMd5 + "/" + "chunk" + "/";
+
+    }
+
+    public RestResponse<Boolean> uploadChunk(String fileMd5, int chunk, String localChunkFilePath) {
+
+        //得到分块文件的目录路径
+        String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
+        //得到分块文件的路径
+        String chunkFilePath = chunkFileFolderPath + chunk;
+        //mimeType
+        String mimeType = getMimeType(null);
+        //将文件存储至minIO
+        boolean uploadSuccess = addMediaFilesToMinIO(localChunkFilePath, mimeType, bucket_video, chunkFilePath);
+        if (!uploadSuccess) {
+            log.debug("上传分块文件失败:{}", chunkFilePath);
+            return RestResponse.validfail("上传分块失败", false);
+        }
+        log.debug("上传分块文件成功:{}", chunkFilePath);
+        return RestResponse.success(true);
+    }
 }

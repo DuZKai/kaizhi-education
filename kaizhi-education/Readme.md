@@ -136,7 +136,7 @@ npm run serve
 
 ### 分布式文件管理系统Minio
 
-- 创建mediafiles的bucket并设置成public
+- 创建mediafiles、viedo的bucket并设置成public
 
 账号密码均为minioadmin。
 
