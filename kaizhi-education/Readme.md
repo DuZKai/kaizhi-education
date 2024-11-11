@@ -1,5 +1,9 @@
 # 楷智教育
 
+## 现有功能实现
+
+- 
+
 
 
 ## 实现个性化功能
@@ -67,6 +71,13 @@ npm run serve
 需要看到网址才是正确
 
 
+
+## XXL-JOB
+
+- 下载位置：https://github.com/xuxueli/xxl-job
+
+- 进入doc/db执行tables_xxl_job.sql新建数据库
+- 账号:admin 密码：123456
 
 
 

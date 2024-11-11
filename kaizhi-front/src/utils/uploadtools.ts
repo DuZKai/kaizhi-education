@@ -16,10 +16,10 @@ export const uploadByPieces = ({ file, pieceSize = 5, success, error }:any) => {
 
     // 第一步
     const readFileMD5 = () => {
-      //得到第一片和最后一片
-      const startChunk = getChunkInfo(file, 0, chunkSize);
-      const endChunk = getChunkInfo(file, chunkCount - 1, chunkSize);
-      //对第一片进行转码然后md5加密，网上很多是直接对整个文件转码加密得到标识，但是我发现大文件尤其是几个G的文件会崩溃，所以我是先分片然后取第一片加密
+      // 得到第一片和最后一片
+      // const startChunk = getChunkInfo(file, 0, chunkSize);
+      // const endChunk = getChunkInfo(file, chunkCount - 1, chunkSize);
+      // 对第一片进行转码然后md5加密，网上很多是直接对整个文件转码加密得到标识，但是我发现大文件尤其是几个G的文件会崩溃，所以我是先分片然后取第一片加密
       let fileRederInstance = new FileReader();
       fileRederInstance.readAsBinaryString(file.raw);
       fileRederInstance.addEventListener("load", (e) => {
