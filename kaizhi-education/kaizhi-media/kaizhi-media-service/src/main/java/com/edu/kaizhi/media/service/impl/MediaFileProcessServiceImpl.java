@@ -81,4 +81,8 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         mediaProcessMapper.deleteById(mediaProcess.getId());
 
     }
+
+    public List<MediaProcess> getTimeoutMediaProcessList() {
+        return mediaProcessMapper.selectTimeoutProcess(LocalDateTime.now());
+    }
 }

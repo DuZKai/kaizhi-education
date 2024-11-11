@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,4 +41,13 @@ public interface MediaProcessMapper extends BaseMapper<MediaProcess> {
     @Update("update media_process m set m.status='4' where (m.status='1' or m.status='3') and m.fail_count<3 and m.id=#{id}")
     int startTask(@Param("id") long id);
 
+
+    /**
+     * 查询是否有执行超过30分钟的视频处理任务
+     *
+     * @param nowDate 当前任务执行的时间
+     * @return List<MediaProcess>
+     */
+    @Select("SELECT * FROM media_process m where TIMESTAMPDIFF(MINUTE, m.create_date, #{date}) > 30 and m.status = '4'")
+    List<MediaProcess> selectTimeoutProcess(@Param("date") LocalDateTime nowDate);
 }

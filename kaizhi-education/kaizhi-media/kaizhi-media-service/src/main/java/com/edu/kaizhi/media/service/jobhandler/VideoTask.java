@@ -140,4 +140,16 @@ public class VideoTask {
             mediaFileProcessService.saveProcessFinishStatus(taskId, "3", fileId, null, "处理后视频上传或入库失败");
         }
     }
+
+    /**
+     * 视频处理任务处理器
+     */
+    @XxlJob("videoTimeoutJobHandler")
+    public void videoTimeoutJobHandler(){
+        mediaFileProcessService.getTimeoutMediaProcessList().forEach(mediaProcess -> {
+            log.debug("处理超时任务:{}", mediaProcess);
+            //删除mediaProcess
+            mediaFileProcessService.saveProcessFinishStatus(mediaProcess.getId(), "3", mediaProcess.getFileId(), null, "处理超时");
+        });
+    }
 }

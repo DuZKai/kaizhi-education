@@ -35,4 +35,10 @@ public interface MediaFileProcessService {
      */
     void saveProcessFinishStatus(Long taskId, String status, String fileId, String url, String errorMsg);
 
+    /**
+     * 获取超时任务
+     *
+     * @return java.util.List<com.edu.kaizhi.media.model.po.MediaProcess>
+     */
+    public List<MediaProcess> getTimeoutMediaProcessList();
 }
