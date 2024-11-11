@@ -7,10 +7,12 @@ import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.media.mapper.MediaFilesMapper;
+import com.edu.kaizhi.media.mapper.MediaProcessMapper;
 import com.edu.kaizhi.media.model.dto.QueryMediaParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
 import com.edu.kaizhi.media.model.po.MediaFiles;
+import com.edu.kaizhi.media.model.po.MediaProcess;
 import com.edu.kaizhi.media.service.MediaFileService;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -27,13 +29,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.plugin2.os.windows.Windows;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -48,9 +50,13 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Autowired
     MediaFilesMapper mediaFilesMapper;
 
+    @Autowired
+    MediaProcessMapper mediaProcessMapper;
+
     // 注入自己，使得事务生效
     @Autowired
     MediaFileService currentProxy;
+
 
     //普通文件桶
     @Value("${minio.bucket.files}")
@@ -364,6 +370,11 @@ public class MediaFileServiceImpl implements MediaFileService {
 
         //=====清除分块文件=====
         clearChunkFiles(chunkFileFolderPath, chunkTotal);
+
+        // 记录待处理任务
+        addWaitingTask(mediaFiles);
+
+        // 向MediaProcess插入记录
         return RestResponse.success(true);
     }
 
@@ -375,30 +386,6 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @return 下载后的文件
      */
     public File downloadFileFromMinIO(String bucket, String objectName) {
-        // //临时文件
-        // FileOutputStream outputStream = null;
-        // try {
-        //     InputStream stream = minioClient.getObject(GetObjectArgs.builder()
-        //             .bucket(bucket)
-        //             .object(objectName)
-        //             .build());
-        //     //创建临时文件
-        //     File minioFile = File.createTempFile("minio", ".merge");
-        //     outputStream = new FileOutputStream(minioFile);
-        //     IOUtils.copy(stream, outputStream);
-        //     return minioFile;
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // } finally {
-        //     if (outputStream != null) {
-        //         try {
-        //             outputStream.close();
-        //         } catch (IOException e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // }
-        // return null;
         try {
             InputStream stream = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(bucket)
@@ -415,7 +402,11 @@ public class MediaFileServiceImpl implements MediaFileService {
         return null;
     }
 
-    //得到分块文件的目录
+    /**
+     * 得到分块文件的目录
+     *
+     * @param fileMd5 文件id即md5值
+     */
     private String getChunkFileFolderPath(String fileMd5) {
         return fileMd5.charAt(0) + "/" + fileMd5.charAt(1) + "/" + fileMd5 + "/" + "chunk" + "/";
     }
@@ -427,7 +418,7 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @param fileExt 文件扩展名
      * @return
      */
-    private String getFilePathByMd5(String fileMd5, String fileExt) {
+    public String getFilePathByMd5(String fileMd5, String fileExt) {
         return fileMd5.charAt(0) + "/" + fileMd5.charAt(1) + "/" + fileMd5 + "/" + fileMd5 + fileExt;
     }
 
@@ -462,6 +453,37 @@ public class MediaFileServiceImpl implements MediaFileService {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("清除分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath);
+        }
+    }
+
+
+    /**
+     * 添加待处理任务
+     *
+     * @param mediaFiles 媒资文件信息
+     */
+    private void addWaitingTask(MediaFiles mediaFiles) {
+        //文件名称
+        String filename = mediaFiles.getFilename();
+        //文件扩展名
+        String extension = filename.substring(filename.lastIndexOf("."));
+        //文件mimeType
+        String mimeType = getMimeType(extension);
+        // 如果视频文件则添加到视频待处理表
+        // 分别对应：mpeg、QuickTime、m4v、wmv、avi、webm、flv、mp4、mkv、3gp、ogv、ts、asf、vob
+        String[] video_type = {"video/mpeg", "video/quicktime", "video/x-m4v", "video/x-ms-wmv",
+                "video/x-msvideo", "video/webm", "video/x-flv", "video/mp4", "video/x-matroska",
+                "video/3gpp", "video/ogg", "video/MP2T", "video/x-ms-asf", "video/dvd"};
+        Set<String> videoTypeSet = new HashSet<>();
+        Collections.addAll(videoTypeSet, video_type);
+        if (videoTypeSet.contains(mimeType)) {
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles, mediaProcess);
+            mediaProcess.setStatus("1"); // 未处理
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            mediaProcess.setFailCount(0); // 失败次数默认为0
+            mediaProcess.setUrl(null);
+            mediaProcessMapper.insert(mediaProcess);
         }
     }
 

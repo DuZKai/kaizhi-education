@@ -22,6 +22,8 @@
 
 - 课程管理界面加入清空选择器功能
 
+- 视频转换加入除avi外其余视频转换
+
 
 
 ### BUG修复
@@ -78,6 +80,14 @@ npm run serve
 
 - 进入doc/db执行tables_xxl_job.sql新建数据库
 - 账号:admin 密码：123456
+
+
+
+## ffmpeg
+
+从https://ffbinaries.com/downloads下载window-64的exe放到ffmpeg文件夹中
+
+并将nacos的media-service-dev.yaml配置改为对应exe地址
 
 
 

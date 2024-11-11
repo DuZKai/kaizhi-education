@@ -8,6 +8,8 @@ import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
 import com.edu.kaizhi.media.model.po.MediaFiles;
 
+import java.io.File;
+
 /**
  * 媒资文件管理业务类
  */
@@ -80,4 +82,33 @@ public interface MediaFileService {
      * @return RestResponse
      */
     public RestResponse<Boolean> mergechunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamsDto uploadFileParamsDto);
+
+    /**
+     * 从MinIO下载文件
+     *
+     * @param bucket     存储桶
+     * @param objectName 对象名称
+     * @return File
+     */
+    public File downloadFileFromMinIO(String bucket, String objectName);
+
+    /**
+     * 添加媒资文件到MinIO
+     *
+     * @param localFilePath 本地文件路径
+     * @param mimeType      文件类型
+     * @param bucket        存储桶
+     * @param objectName    对象名称
+     * @return boolean
+     */
+    public boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName);
+
+    /**
+     * 根据文件md5获取文件路径
+     *
+     * @param fileMd5 文件md5
+     * @param fileExt 文件扩展名
+     * @return String
+     */
+    public String getFilePathByMd5(String fileMd5, String fileExt);
 }
