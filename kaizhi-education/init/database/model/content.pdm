@@ -501,7 +501,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\PDMPCKG\Code]
 Template=
@@ -514,7 +514,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\PDMDOMN]
 
@@ -529,7 +529,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\PDMDOMN\Code]
 Template=
@@ -542,7 +542,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\TABL]
 
@@ -557,7 +557,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\TABL\Code]
 Template=
@@ -570,7 +570,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\COLN]
 
@@ -585,7 +585,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\COLN\Code]
 Template=
@@ -598,7 +598,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\INDX]
 
@@ -613,7 +613,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\INDX\Code]
 Template=
@@ -626,7 +626,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\REFR]
 
@@ -641,7 +641,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\REFR\Code]
 Template=
@@ -654,7 +654,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VREF]
 
@@ -669,7 +669,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VREF\Code]
 Template=
@@ -682,7 +682,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VIEW]
 
@@ -697,7 +697,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VIEW\Code]
 Template=
@@ -710,7 +710,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VIEWC]
 
@@ -725,7 +725,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\VIEWC\Code]
 Template=
@@ -738,7 +738,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WEBSERV]
 
@@ -753,7 +753,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WEBSERV\Code]
 Template=
@@ -766,7 +766,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WEBOP]
 
@@ -781,7 +781,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WEBOP\Code]
 Template=
@@ -794,7 +794,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WPARAM]
 
@@ -809,7 +809,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\WPARAM\Code]
 Template=
@@ -822,7 +822,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FACT]
 
@@ -837,7 +837,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FACT\Code]
 Template=
@@ -850,7 +850,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DIMN]
 
@@ -865,7 +865,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DIMN\Code]
 Template=
@@ -878,7 +878,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\MEAS]
 
@@ -893,7 +893,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\MEAS\Code]
 Template=
@@ -906,7 +906,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DATTR]
 
@@ -921,7 +921,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DATTR\Code]
 Template=
@@ -934,7 +934,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FILO]
 
@@ -949,7 +949,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FILO\Code]
 Template=
@@ -962,7 +962,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FRMEOBJ]
 
@@ -977,7 +977,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FRMEOBJ\Code]
 Template=
@@ -990,7 +990,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FRMELNK]
 
@@ -1005,7 +1005,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\FRMELNK\Code]
 Template=
@@ -1018,7 +1018,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DefaultClass]
 
@@ -1033,7 +1033,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Physical Objects\ClssNamingOptions\DefaultClass\Code]
 Template=
@@ -1046,7 +1046,7 @@ NoAccent=No
 DefaultChar=
 Script=
 ConvTable=
-ConvTablePath=D:\itcast2022\xc_edu3.0\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
+ConvTablePath=.\系统开发\db\PowerDesigner 16\Resource Files\Conversion Tables
 
 [ModelOptions\Connection]
 
