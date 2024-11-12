@@ -167,4 +167,10 @@ public class TeachplanServiceImpl implements TeachplanService {
         return teachplanMedia;
     }
 
+    public void unassociationMedia(Long teachPlanId, String mediaId) {
+        LambdaQueryWrapper<TeachplanMedia> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TeachplanMedia::getTeachplanId, teachPlanId)
+                .eq(TeachplanMedia::getMediaId, mediaId);
+        teachplanMediaMapper.delete(queryWrapper);
+    }
 }
