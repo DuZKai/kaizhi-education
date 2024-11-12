@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.api;
 
+import com.edu.kaizhi.content.model.dto.BindTeachplanMediaDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.service.TeachplanService;
@@ -55,4 +56,11 @@ public class TeachplanController {
     public List<TeachplanDto> moveDown(@PathVariable Long id){
         return teachplanService.exchangeTeachplan(id, false);
     }
+
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/teachplan/association/media")
+    public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
+        teachplanService.associationMedia(bindTeachplanMediaDto);
+    }
+
 }

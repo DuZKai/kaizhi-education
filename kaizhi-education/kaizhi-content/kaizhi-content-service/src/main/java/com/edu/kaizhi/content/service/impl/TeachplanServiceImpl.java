@@ -5,6 +5,7 @@ import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.mapper.CourseCategoryMapper;
 import com.edu.kaizhi.content.mapper.TeachplanMapper;
 import com.edu.kaizhi.content.mapper.TeachplanMediaMapper;
+import com.edu.kaizhi.content.model.dto.BindTeachplanMediaDto;
 import com.edu.kaizhi.content.model.dto.CourseCategoryTreeDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
@@ -35,7 +36,7 @@ public class TeachplanServiceImpl implements TeachplanService {
     @Autowired
     TeachplanMediaMapper teachplanMediaMapper;
 
-    public List<TeachplanDto> findTeachplanTreeNodes(Long courseId){
+    public List<TeachplanDto> findTeachplanTreeNodes(Long courseId) {
         return teachplanMapper.selectTreeNodes(courseId);
     }
 
@@ -59,10 +60,9 @@ public class TeachplanServiceImpl implements TeachplanService {
 
             teachplanMapper.insert(teachplan);
 
-        }
-        else{
+        } else {
             // 修改
-             Teachplan teachplan = teachplanMapper.selectById(id);
+            Teachplan teachplan = teachplanMapper.selectById(id);
             // 将参数赋值到teachplan
             BeanUtils.copyProperties(teachplanDto, teachplan);
             teachplanMapper.updateById(teachplan);
@@ -77,7 +77,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         Teachplan teachplan = teachplanMapper.selectById(id);
         if (teachplan == null)
             CustomizeException.cast("删除课程计划失败，课程计划不存在");
-        if(teachplan.getGrade() == 1){
+        if (teachplan.getGrade() == 1) {
             // 大章节删除前判断
             // 判断子节点是否存在
             LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
@@ -86,8 +86,7 @@ public class TeachplanServiceImpl implements TeachplanService {
             if (count > 0) {
                 CustomizeException.cast("删除课程计划失败，存在子章节，无法操作");
             }
-        }
-        else{
+        } else {
             // 小章节删除前判断，需要将teachplan_media表关联的信息也删除
             LambdaQueryWrapper<TeachplanMedia> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(TeachplanMedia::getTeachplanId, id);
@@ -101,7 +100,7 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     // 课程计划上移下移
     @Transactional
-    public List<TeachplanDto> exchangeTeachplan(Long id, Boolean upMode){
+    public List<TeachplanDto> exchangeTeachplan(Long id, Boolean upMode) {
         Teachplan teachplan = teachplanMapper.selectById(id);
         if (teachplan == null)
             CustomizeException.cast("课程计划不存在");
@@ -117,8 +116,8 @@ public class TeachplanServiceImpl implements TeachplanService {
                 eq(Teachplan::getOrderby, newOrderby);
         Teachplan lastTeachplan = teachplanMapper.selectOne(queryWrapper);
 
-        if(lastTeachplan == null){
-            if(upMode)
+        if (lastTeachplan == null) {
+            if (upMode)
                 CustomizeException.cast("已到达该章节顶端，无法继续上移");
             else
                 CustomizeException.cast("已到达该章节底端，无法继续下移");
@@ -138,6 +137,34 @@ public class TeachplanServiceImpl implements TeachplanService {
         LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper = queryWrapper.eq(Teachplan::getParentid, parentId).eq(Teachplan::getCourseId, courseId);
         return teachplanMapper.selectCount(queryWrapper);
+    }
+
+    @Transactional
+    public TeachplanMedia associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
+        //教学计划id
+        Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
+        Teachplan teachplan = teachplanMapper.selectById(teachplanId);
+        if (teachplan == null) {
+            CustomizeException.cast("教学计划不存在");
+        }
+        if (teachplan.getGrade() != 2) {
+            CustomizeException.cast("只允许第二级教学计划绑定媒资文件");
+        }
+        //课程id
+        Long courseId = teachplan.getCourseId();
+
+        //先删除原来该教学计划绑定的媒资
+        teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>().eq(TeachplanMedia::getTeachplanId, teachplanId));
+
+        //再添加教学计划与媒资的绑定关系
+        TeachplanMedia teachplanMedia = new TeachplanMedia();
+        BeanUtils.copyProperties(bindTeachplanMediaDto, teachplanMedia);
+        teachplanMedia.setCourseId(courseId);
+        teachplanMedia.setMediaFilename(bindTeachplanMediaDto.getFileName());
+        teachplanMedia.setCreateDate(LocalDateTime.now());
+        teachplanMediaMapper.insert(teachplanMedia);
+        // TODO:createPeople,changePeople
+        return teachplanMedia;
     }
 
 }
