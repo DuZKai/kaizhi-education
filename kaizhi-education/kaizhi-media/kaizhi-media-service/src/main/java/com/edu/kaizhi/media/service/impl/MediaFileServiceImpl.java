@@ -6,12 +6,15 @@ import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.base.model.RestResponse;
+import com.edu.kaizhi.base.utils.DateUtil;
 import com.edu.kaizhi.media.mapper.MediaFilesMapper;
+import com.edu.kaizhi.media.mapper.MediaMinioChunkMapper;
 import com.edu.kaizhi.media.mapper.MediaProcessMapper;
 import com.edu.kaizhi.media.model.dto.QueryMediaParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
 import com.edu.kaizhi.media.model.po.MediaFiles;
+import com.edu.kaizhi.media.model.po.MediaMinioChunk;
 import com.edu.kaizhi.media.model.po.MediaProcess;
 import com.edu.kaizhi.media.service.MediaFileService;
 import com.j256.simplemagic.ContentInfo;
@@ -22,14 +25,12 @@ import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.plugin2.os.windows.Windows;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -52,6 +53,9 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     @Autowired
     MediaProcessMapper mediaProcessMapper;
+
+    @Autowired
+    MediaMinioChunkMapper mediaMinioChunkMapper;
 
     // 注入自己，使得事务生效
     @Autowired
@@ -298,10 +302,19 @@ public class MediaFileServiceImpl implements MediaFileService {
         String mimeType = getMimeType(null);
         //将文件存储至minIO
         boolean uploadSuccess = addMediaFilesToMinIO(localChunkFilePath, mimeType, bucket_video, chunkFilePath);
+
         if (!uploadSuccess) {
             log.debug("上传分块文件失败:{}", chunkFilePath);
             return RestResponse.validfail("上传分块失败", false);
         }
+
+        // 将分块信息存到数据库中
+        uploadSuccess = currentProxy.addMediaChunkToDb(fileMd5, chunkFileFolderPath, bucket_video, chunk);
+        if (!uploadSuccess) {
+            log.debug("上传分块记录到数据库失败:{}, {}", chunkFilePath, chunk);
+            return RestResponse.validfail("上传分块记录到数据库失败", false);
+        }
+
         log.debug("上传分块文件成功:{}", chunkFilePath);
         return RestResponse.success(true);
     }
@@ -368,14 +381,82 @@ public class MediaFileServiceImpl implements MediaFileService {
             return RestResponse.validfail("文件信息入库失败", false);
         }
 
-        //=====清除分块文件=====
+        //清除分块文件
         clearChunkFiles(chunkFileFolderPath, chunkTotal);
+
+        // 清除数据库中文件分块上传信息
+        clearChunkFromDb(fileMd5);
 
         // 记录待处理任务
         addWaitingTask(mediaFiles);
 
         // 向MediaProcess插入记录
         return RestResponse.success(true);
+    }
+
+    /**
+     * 把文件分块信息入库
+     * @param fileMd5 文件md5
+     * @param bucket minio桶
+     * @param chunkFilePath 分块文件夹路径
+     * @param chunk 分块序号
+     * @return MediaMinioFiles
+     */
+    public boolean addMediaChunkToDb(String fileMd5, String chunkFilePath, String bucket, int chunk) {
+        MediaMinioChunk mediaMinioFile = new MediaMinioChunk();
+        mediaMinioFile.setFileId(fileMd5);
+        mediaMinioFile.setBucket(bucket);
+        mediaMinioFile.setFilePath(chunkFilePath);
+        mediaMinioFile.setChunk(chunk);
+        mediaMinioFile.setCreateDate(LocalDateTime.now());
+        if (mediaMinioChunkMapper.insert(mediaMinioFile) <= 0) {
+            log.error("保存分块文件信息到数据库失败，{}", mediaMinioFile);
+            CustomizeException.cast("保存分块文件信息失败");
+        }
+        log.debug("保存分块文件信息到数据库成功，{}", mediaMinioFile);
+        return true;
+    }
+
+    /**
+     * 删除数据库中的分块文件所有上传记录
+     * @param fileMd5 文件md5
+     */
+    public void clearChunkFromDb(String fileMd5) {
+        LambdaQueryWrapper<MediaMinioChunk> deleteQueryWrapper = new LambdaQueryWrapper<>();
+        deleteQueryWrapper.eq(MediaMinioChunk::getFileId, fileMd5);
+        try {
+            mediaMinioChunkMapper.delete(deleteQueryWrapper);
+            log.debug("删除分块上传记录成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("删除分块上传记录失败");
+        }
+    }
+
+    /**
+     * 删除数据库中的分块文件单独一条上传记录
+     * @param fileMd5 文件md5
+     * @param chunk 分块序号
+     */
+    public void clearOneChunkFromDb(String fileMd5, int chunk) {
+        LambdaQueryWrapper<MediaMinioChunk> deleteQueryWrapper = new LambdaQueryWrapper<>();
+        deleteQueryWrapper.eq(MediaMinioChunk::getFileId, fileMd5).eq(MediaMinioChunk::getChunk, chunk);
+        try {
+            mediaMinioChunkMapper.delete(deleteQueryWrapper);
+            log.debug("删除一条分块上传记录成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("删除一条分块上传记录失败");
+        }
+    }
+
+    /**
+     * 拿到数据库中所有上传超时的文件分块信息
+     * @param time 当前任务执行时间
+     * @return List<MediaMinioFiles>
+     */
+    public List<MediaMinioChunk> getChunkTimeoutFiles(LocalDateTime time) {
+        return mediaMinioChunkMapper.selectTimeoutChunks(time);
     }
 
     /**
@@ -428,8 +509,7 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @param chunkFileFolderPath 分块文件路径
      * @param chunkTotal          分块文件总数
      */
-    private void clearChunkFiles(String chunkFileFolderPath, int chunkTotal) {
-
+    public void clearChunkFiles(String chunkFileFolderPath, int chunkTotal) {
         try {
             // List<DeleteObject> deleteObjects = Stream.iterate(0, i -> ++i)
             //         .limit(chunkTotal)
@@ -440,22 +520,76 @@ public class MediaFileServiceImpl implements MediaFileService {
                     .collect(Collectors.toList());
 
 
-            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket("video").objects(deleteObjects).build();
-            Iterable<Result<DeleteError>> results = minioClient.removeObjects(removeObjectsArgs);
-            results.forEach(r -> {
-                try {
-                    r.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("清除分块文件失败");
-                }
-            });
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().
+                    bucket("video").objects(deleteObjects).build();
+            removeMinioChunk(removeObjectsArgs);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("清除分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath);
         }
     }
 
+    /**
+     * 清除单块分块文件
+     *
+     * @param chunkFileFolderPath 分块文件路径
+     * @param chunk               分块文件序号
+     */
+    public void clearSingleChunk(String chunkFileFolderPath, int chunk) {
+
+        try {
+            DeleteObject deleteObject = new DeleteObject(chunkFileFolderPath + chunk);
+
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket("video").
+                    objects(Collections.singletonList(deleteObject)).build();
+            removeMinioChunk(removeObjectsArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("清除分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath);
+        }
+    }
+
+    /**
+     * 批量删除方法，接收待删除的分块信息列表
+     * @param chunksToDelete
+     */
+    public void clearSomeChunksFromDb(List<MediaMinioChunk> chunksToDelete) {
+        if (chunksToDelete == null || chunksToDelete.isEmpty()) {
+            return;
+        }
+
+        LambdaQueryWrapper<MediaMinioChunk> deleteQueryWrapper = new LambdaQueryWrapper<>();
+
+        // 使用or条件将每个fileId和chunk的组合条件加入
+        for (MediaMinioChunk chunk : chunksToDelete) {
+            deleteQueryWrapper.or(wrapper ->
+                    wrapper.eq(MediaMinioChunk::getFileId, chunk.getFileId())
+                            .eq(MediaMinioChunk::getChunk, chunk.getChunk()));
+        }
+
+        try {
+            mediaMinioChunkMapper.delete(deleteQueryWrapper);
+            log.debug("批量删除分块上传记录成功，共删除 {} 条记录", chunksToDelete.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("批量删除分块上传记录失败");
+        }
+    }
+
+    /**
+     * 调用minioClient内部函数清除分块文件
+     * @param removeObjectsArgs
+     * */
+    private void removeMinioChunk(RemoveObjectsArgs removeObjectsArgs){
+        minioClient.removeObjects(removeObjectsArgs).forEach(r -> {
+            try {
+                r.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("清除分块文件失败");
+            }
+        });
+    }
 
     /**
      * 添加待处理任务
@@ -486,5 +620,4 @@ public class MediaFileServiceImpl implements MediaFileService {
             mediaProcessMapper.insert(mediaProcess);
         }
     }
-
 }

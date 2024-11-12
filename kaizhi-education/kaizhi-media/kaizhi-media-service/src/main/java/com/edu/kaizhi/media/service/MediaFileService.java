@@ -7,8 +7,11 @@ import com.edu.kaizhi.media.model.dto.QueryMediaParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
 import com.edu.kaizhi.media.model.po.MediaFiles;
+import com.edu.kaizhi.media.model.po.MediaMinioChunk;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 媒资文件管理业务类
@@ -111,4 +114,59 @@ public interface MediaFileService {
      * @return String
      */
     public String getFilePathByMd5(String fileMd5, String fileExt);
+
+    /**
+     * 添加分块文件到数据库
+     *
+     * @param fileMd5   文件md5
+     * @param fileName  文件名称
+     * @param bucket    存储桶
+     * @param chunk     块数
+     * @return boolean
+     */
+    public boolean addMediaChunkToDb(String fileMd5, String fileName, String bucket, int chunk);
+
+    /**
+     * 删除数据库中的分块文件单独一条上传记录
+     * @param fileMd5 文件md5
+     * @param chunk 分块序号
+     */
+    public void clearOneChunkFromDb(String fileMd5, int chunk);
+
+    /**
+     * 批量删除方法，接收待删除的分块信息列表
+     * @param chunksToDelete
+     */
+    public void clearSomeChunksFromDb(List<MediaMinioChunk> chunksToDelete);
+
+    /**
+     * 清除分块文件
+     *
+     * @param fileMd5 文件md5
+     */
+    public void clearChunkFromDb(String fileMd5);
+
+    /**
+     * 获取超时的分块文件
+     *
+     * @param time 时间
+     * @return List<MediaMinioChunk>
+     */
+    public List<MediaMinioChunk> getChunkTimeoutFiles(LocalDateTime time);
+
+    /**
+     * 清除单块分块文件
+     *
+     * @param chunkFileFolderPath 分块文件路径
+     * @param chunk               分块文件序号
+     */
+    public void clearSingleChunk(String chunkFileFolderPath, int chunk);
+
+    /**
+     * 清除分块文件
+     *
+     * @param chunkFileFolderPath 分块文件路径
+     * @param chunkTotal          分块文件总数
+     */
+    public void clearChunkFiles(String chunkFileFolderPath, int chunkTotal);
 }

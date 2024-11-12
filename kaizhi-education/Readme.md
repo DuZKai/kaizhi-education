@@ -16,6 +16,8 @@
 
 ### 小功能
 
+- 视频上传分块信息超时残余部分用XXL-JOB删除
+- 视频线程处理中任务补偿机制（超过执行时间释放线程锁）
 - 课程计划删除、排序实现
 - 加入JSR303校验的师资管理增删改查
 - 删除课程实现
@@ -23,6 +25,7 @@
 - 课程管理界面加入清空选择器功能
 
 - 视频转换加入除avi外其余视频转换
+
 
 
 
@@ -80,6 +83,7 @@ npm run serve
 
 - 进入doc/db执行tables_xxl_job.sql新建数据库
 - 账号:admin 密码：123456
+- 需要按照.\kaizhi-education\kaizhi-media\kaizhi-media-service\src\main\java\com\edu\kaizhi\media\service\jobhandler\VideoTask.java对应加入任务到执行器media-process-service
 
 
 

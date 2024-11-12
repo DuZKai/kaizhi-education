@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 
 @Data
 @ToString
-@TableName("media_process")
-public class MediaProcess implements Serializable {
+@TableName("media_minio_chunk")
+public class MediaMinioChunk implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,49 +23,26 @@ public class MediaProcess implements Serializable {
     private String fileId;
 
     /**
-     * 文件名称
-     */
-    private String filename;
-
-    /**
      * 存储源
      */
     private String bucket;
 
+    /**
+     * 存储路径
+     */
     private String filePath;
 
     /**
-     * 状态,1:未处理，视频处理完成更新为2
-     */
-    private String status;
+     * 分块块数
+     * */
+    private int chunk;
+
 
     /**
      * 上传时间
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
-
-    /**
-     * 完成时间
-     */
-    private LocalDateTime finishDate;
-
-    /**
-     * 媒资文件访问地址
-     */
-    private String url;
-
-    /**
-     * 失败原因
-     */
-    private String errormsg;
-
-    /**
-     * 失败次数
-     */
-    private int failCount;
-
-
 
 
 }

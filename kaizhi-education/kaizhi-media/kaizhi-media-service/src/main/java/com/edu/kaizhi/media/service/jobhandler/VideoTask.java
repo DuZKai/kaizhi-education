@@ -1,6 +1,7 @@
 package com.edu.kaizhi.media.service.jobhandler;
 
 import com.edu.kaizhi.base.utils.Mp4VideoUtil;
+import com.edu.kaizhi.media.model.po.MediaMinioChunk;
 import com.edu.kaizhi.media.model.po.MediaProcess;
 import com.edu.kaizhi.media.service.MediaFileProcessService;
 import com.edu.kaizhi.media.service.MediaFileService;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -151,5 +154,30 @@ public class VideoTask {
             //删除mediaProcess
             mediaFileProcessService.saveProcessFinishStatus(mediaProcess.getId(), "3", mediaProcess.getFileId(), null, "处理超时");
         });
+    }
+
+    /**
+     * 检查上传超时块任务
+     */
+    @XxlJob("videoChunkTimeoutJobHandler")
+    public void videoChunkTimeoutJobHandler() {
+        log.debug(">>>>>>>>>> 开始执行检查上传超时块任务");
+        // 拿到所有的超时分块任务
+        List<MediaMinioChunk> chunkTimeoutFiles = mediaFileService.getChunkTimeoutFiles(LocalDateTime.now());
+        if (chunkTimeoutFiles == null) {  // 没有超时任务
+            log.debug("没有超时任务");
+            return ;
+        }
+
+        // 根据记录中的file_path，删除minio中的所有文件.
+        List<MediaMinioChunk> chunksToDelete = new ArrayList<>();
+        chunkTimeoutFiles.forEach(chunk -> {
+            mediaFileService.clearSingleChunk(chunk.getFilePath(), chunk.getChunk());
+            // // 删除数据库中对应的记录
+            // mediaFileService.clearOneChunkFromDb(chunk.getFileId(), chunk.getChunk());
+            chunksToDelete.add(chunk);
+        });
+        // 删除数据库中对应的记录
+        mediaFileService.clearSomeChunksFromDb(chunksToDelete);
     }
 }
