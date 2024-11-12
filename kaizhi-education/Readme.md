@@ -95,6 +95,27 @@ npm run serve
 
 
 
+## 域名
+
+在C:\Windows\System32\drivers\etc\host文件下加入如下配置完成域名映射，放到公网后可以去掉
+
+```
+127.0.0.1 www.kaizhi.edu.cn kaizhi.edu.cn ucenter.kaizhi.edu.cn teacher.kaizhi.edu.cn file.kaizhi.edu.cn
+```
+
+
+
+## 静态页面Nginx
+
+下载nginx到对应文件夹，需要将配置文件改到类似nginx.conf，文件名按照自己路径命名
+
+需要重启nginx可以使用如下命令：
+```shell
+nginx.exe -s reload
+```
+
+
+
 ## 虚拟机
 
 - 使用VMnet8的NAT模式，子网IP需要设置为192.168.101.0，子网掩码设置为255.255.255.0
@@ -244,3 +265,4 @@ npm run serve
 - 清洗虚拟机Nacos不同配置Group
 - 常量移除到对应constant文件，路径后续统一抽取到父路径下
 - 机构传太多视频信息可以加入收费功能
+- 清除测试文件

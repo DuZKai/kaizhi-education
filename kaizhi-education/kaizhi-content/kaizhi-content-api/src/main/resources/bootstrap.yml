@@ -33,3 +33,6 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: kaizhi-education-common
             refresh: true
+          - data-id: freemarker-config-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
