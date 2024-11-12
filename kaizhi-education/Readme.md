@@ -103,6 +103,12 @@ npm run serve
 127.0.0.1 www.kaizhi.edu.cn kaizhi.edu.cn ucenter.kaizhi.edu.cn teacher.kaizhi.edu.cn file.kaizhi.edu.cn
 ```
 
+如果有使用代理，也需要绕过代理
+
+```
+www.kaizhi.edu.cn;kaizhi.edu.cn;ucenter.kaizhi.edu.cn;teacher.kaizhi.edu.cn;file.kaizhi.edu.cn
+```
+
 
 
 ## 静态页面Nginx
