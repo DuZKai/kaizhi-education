@@ -14,6 +14,11 @@
             <artifactId>kaizhi-content-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--<dependency>-->
+        <!--    <groupId>com.edu.kaizhi</groupId>-->
+        <!--    <artifactId>kaizhi-message-sdk</artifactId>-->
+        <!--    <version>0.0.1-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <!--让微服务请求nacos得到配置-->
         <dependency>

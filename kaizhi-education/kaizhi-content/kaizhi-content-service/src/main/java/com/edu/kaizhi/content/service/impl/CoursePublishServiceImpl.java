@@ -2,19 +2,24 @@ package com.edu.kaizhi.content.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.edu.kaizhi.base.exception.CommonError;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.mapper.CourseBaseMapper;
 import com.edu.kaizhi.content.mapper.CourseMarketMapper;
+import com.edu.kaizhi.content.mapper.CoursePublishMapper;
 import com.edu.kaizhi.content.mapper.CoursePublishPreMapper;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.model.po.CourseMarket;
+import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.model.po.CoursePublishPre;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import com.edu.kaizhi.content.service.CoursePublishService;
 import com.edu.kaizhi.content.service.TeachplanService;
+import com.edu.kaizhi.messagesdk.model.po.MqMessage;
+import com.edu.kaizhi.messagesdk.service.MqMessageService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     @Autowired
     CoursePublishPreMapper coursePublishPreMapper;
+
+    @Autowired
+    CoursePublishMapper coursePublishMapper;
+
+    @Autowired
+    MqMessageService mqMessageService;
 
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
 
@@ -119,6 +130,66 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         //更新课程基本表的审核状态
         courseBase.setAuditStatus("202003");
         courseBaseMapper.updateById(courseBase);
+    }
+
+
+    @Transactional
+    public void publish(Long companyId, Long courseId) {
+        //查预发布表
+        CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
+        if (coursePublishPre == null)
+            CustomizeException.cast("课程没有审核记录，无法发布");
+
+        // 课程没审核通过，不允许发布
+        if (!coursePublishPre.getStatus().equals("202004"))
+            CustomizeException.cast("课程未审核通过，不允许发布");
+
+        //保存课程发布信息
+        saveCoursePublish(courseId);
+
+        // 向消息表写数据
+        saveCoursePublishMessage(courseId);
+
+        // 预发布表数据删除
+        coursePublishPreMapper.deleteById(courseId);
+    }
+
+    /**
+     * 保存课程发布信息
+     * @param courseId  课程id
+     * @return void
+     */
+    private void saveCoursePublish(Long courseId){
+        CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
+        // 向课程发布表写数据
+        CoursePublish coursePublish = new CoursePublish();
+        BeanUtils.copyProperties(coursePublishPre, coursePublish);
+        coursePublish.setStatus("203002");
+        coursePublish.setCreateDate(LocalDateTime.now());
+
+        // 先查询课程发布，如果有则更新，没有则添加
+        CoursePublish coursePublishUpdate = coursePublishMapper.selectById(courseId);
+        if (coursePublishUpdate == null)
+            coursePublishMapper.insert(coursePublish);
+        else
+            coursePublishMapper.updateById(coursePublish);
+
+        //更新课程基本表的发布状态
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        courseBase.setStatus("203002");
+        courseBaseMapper.updateById(courseBase);
+    }
+
+    /**
+     * 保存消息表记录
+     * @param courseId  课程id
+     * @return void
+     */
+    private void saveCoursePublishMessage(Long courseId){
+        MqMessage mqMessage = mqMessageService.addMessage("course_publish", String.valueOf(courseId), null, null);
+        if(mqMessage==null){
+            CustomizeException.cast(CommonError.UNKOWN_ERROR);
+        }
     }
 
 }

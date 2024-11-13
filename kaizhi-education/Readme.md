@@ -77,16 +77,6 @@ npm run serve
 
 
 
-## XXL-JOB
-
-- 下载位置：https://github.com/xuxueli/xxl-job
-
-- 进入doc/db执行tables_xxl_job.sql新建数据库
-- 账号:admin 密码：123456
-- 需要按照.\kaizhi-education\kaizhi-media\kaizhi-media-service\src\main\java\com\edu\kaizhi\media\service\jobhandler\VideoTask.java对应加入任务到执行器media-process-service
-
-
-
 ## ffmpeg
 
 从https://ffbinaries.com/downloads下载window-64的exe放到ffmpeg文件夹中
@@ -200,6 +190,16 @@ nginx.exe -s reload
 
 
 
+### XXL-JOB
+
+- 下载位置：https://github.com/xuxueli/xxl-job
+
+- 进入doc/db执行tables_xxl_job.sql新建数据库
+- 账号:admin 密码：123456
+- 需要按照.\kaizhi-education\kaizhi-media\kaizhi-media-service\src\main\java\com\edu\kaizhi\media\service\jobhandler\VideoTask.java对应加入任务到执行器media-process-service
+
+
+
 ## PO、Mapper生成器（可选）
 
 - 在.\kaizhi-generator是可以生成PO类、Mapper接口和Mapper的xml文件，如果需要生成自己的PO类、Mapper接口和Mapper的xml文件，按如下步骤：
@@ -272,3 +272,6 @@ nginx.exe -s reload
 - 常量移除到对应constant文件，路径后续统一抽取到父路径下
 - 机构传太多视频信息可以加入收费功能
 - 清除测试文件
+- rabbitMQ消息队列代替sdk包?
+- 多次发布同门课程没有做幂等，需要把addMessage那里做一个saveOrUpdate?
+- 将content的message-sdk部分抽取出成为单独一个模块
