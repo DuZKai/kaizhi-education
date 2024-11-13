@@ -8,6 +8,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>kaizhi-content-service</artifactId>
+    <name>kaizhi-content-service</name>
+    <description>kaizhi-content-service</description>
     <dependencies>
         <dependency>
             <groupId>com.edu.kaizhi</groupId>
@@ -65,6 +67,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
+
+        <!--XXL-JOB调度课程发布表-->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+        </dependency>
+
 
     </dependencies>
 
