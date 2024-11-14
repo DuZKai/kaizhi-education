@@ -135,6 +135,8 @@ nginx.exe -s reload
     docker stop redis
     docker stop xxl-job-admin
     docker stop minio
+    docker stop elasticsearch
+    docker stop kibana
     # docker stop gogs
     
     docker start mysql
@@ -143,10 +145,12 @@ nginx.exe -s reload
     docker start redis
     docker start xxl-job-admin
     docker start minio
+    docker start elasticsearch
+  docker start kibana
     # docker start gogs
     ```
     
-  
+    
     - 查看状态
       
     ```shell
@@ -162,6 +166,12 @@ nginx.exe -s reload
     5. rabbitmq:3.8.34
     6. nacos/nacos-server:1.4.1
     7. mysql:8.0.26
+    
+- 有时可能centos失灵，需要再次重启（原因可能是nacos与数据库相关联，数据库启动慢导致nacos启动可能出错）
+
+```
+docker restart nacos
+```
 
 
 
@@ -197,6 +207,28 @@ nginx.exe -s reload
 - 进入doc/db执行tables_xxl_job.sql新建数据库
 - 账号:admin 密码：123456
 - 需要按照.\kaizhi-education\kaizhi-media\kaizhi-media-service\src\main\java\com\edu\kaizhi\media\service\jobhandler\VideoTask.java对应加入任务到执行器media-process-service
+
+
+
+### Elasticsearch和kibana
+
+- [链接](https://blog.csdn.net/ThinkWon/article/details/122808762)安装Elasticsearch和kibana
+- 如果已经有这两个镜像，报错:Kibana server is not ready yet，可以分别尝试如下办法并分配8G虚拟机内存和稍等片刻
+
+```shell
+1. 
+curl -XDELETE localhost:9200/.kibana_task_manager_7.12.1_001
+2. 
+cd elasticsearch
+docker-compose up -d
+最后执行: 
+docker restart kibana
+docker restart elasticsearch
+```
+
+
+
+
 
 
 
