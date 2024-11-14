@@ -18,6 +18,7 @@ public class SearchCourseParamDto {
 
   //小分类
   private String st;
+
   //难度等级
   private String grade;
 

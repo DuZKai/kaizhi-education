@@ -308,3 +308,4 @@ docker restart elasticsearch
 - 多次发布同门课程没有做幂等，需要把addMessage那里做一个saveOrUpdate?
 - 将content的message-sdk部分抽取出成为单独一个模块
 - content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法
+- 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现

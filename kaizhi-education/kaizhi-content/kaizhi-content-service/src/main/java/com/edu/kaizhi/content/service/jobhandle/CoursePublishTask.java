@@ -1,6 +1,10 @@
 package com.edu.kaizhi.content.service.jobhandle;
 
 import com.edu.kaizhi.base.exception.CustomizeException;
+import com.edu.kaizhi.content.feignclient.CourseIndex;
+import com.edu.kaizhi.content.feignclient.SearchServiceClient;
+import com.edu.kaizhi.content.mapper.CoursePublishMapper;
+import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.service.CoursePublishService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MessageProcessAbstract;
@@ -8,6 +12,7 @@ import com.edu.kaizhi.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +27,12 @@ import java.util.concurrent.TimeUnit;
 public class CoursePublishTask extends MessageProcessAbstract {
     @Autowired
     CoursePublishService coursePublishService;
+
+    @Autowired
+    SearchServiceClient searchServiceClient;
+
+    @Autowired
+    CoursePublishMapper coursePublishMapper;
 
     //任务调度入口
     @XxlJob("CoursePublishJobHandler")
@@ -51,7 +62,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
     }
 
-    // TODO:生成课程静态化页面并上传至文件系统
+    // 生成课程静态化页面并上传至文件系统
     public void generateCourseHtml(MqMessage mqMessage, long courseId) {
 
         log.debug("开始进行课程静态化,课程id:{}", courseId);
@@ -75,29 +86,6 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
         //保存第一阶段状态
         mqMessageService.completedStageOne(id);
-
-    }
-
-    // TODO:将课程信息缓存至redis
-    public void saveCourseCache(MqMessage mqMessage, long courseId) {
-        log.debug("将课程信息缓存至redis,课程id:{}", courseId);
-        //消息id
-        Long id = mqMessage.getId();
-        //消息处理的service
-        MqMessageService mqMessageService = this.getMqMessageService();
-        //消息幂等性处理
-        int stageTwo = mqMessageService.getStageTwo(id);
-        if (stageTwo > 0) {
-            log.debug("课程索引信息已缓存至Redis，无需执行，课程id:{}", courseId);
-            return;
-        }
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        //保存第二阶段状态
-        mqMessageService.completedStageTwo(id);
     }
 
     // TODO:保存课程索引信息
@@ -108,9 +96,28 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //消息处理的service
         MqMessageService mqMessageService = this.getMqMessageService();
         //消息幂等性处理
+        int stageTwo = mqMessageService.getStageTwo(id);
+        if (stageTwo > 0) {
+            log.debug("课程索引信息已写入ElasticSearch，无需执行，课程id:{}", courseId);
+            return;
+        }
+        if(saveCourseToES(courseId)){
+            //保存第二阶段状态
+            mqMessageService.completedStageTwo(id);
+        }
+    }
+
+    // TODO:将课程信息缓存至redis
+    public void saveCourseCache(MqMessage mqMessage, long courseId) {
+        log.debug("将课程信息缓存至redis,课程id:{}", courseId);
+        //消息id
+        Long id = mqMessage.getId();
+        //消息处理的service
+        MqMessageService mqMessageService = this.getMqMessageService();
+        //消息幂等性处理
         int stageThree = mqMessageService.getStageThree(id);
         if (stageThree > 0) {
-            log.debug("课程索引信息已写入ElasticSearch，无需执行，课程id:{}", courseId);
+            log.debug("课程索引信息已缓存至Redis，无需执行，课程id:{}", courseId);
             return;
         }
         try {
@@ -120,6 +127,21 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
         //保存第三阶段状态
         mqMessageService.completedStageThree(id);
+    }
+
+    private Boolean saveCourseToES(Long courseId) {
+
+        //取出课程发布信息
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        //拷贝至课程索引对象
+        CourseIndex courseIndex = new CourseIndex();
+        BeanUtils.copyProperties(coursePublish,courseIndex);
+        //远程调用搜索服务api添加课程信息到索引
+        Boolean add = searchServiceClient.add(courseIndex);
+        if(!add){
+            CustomizeException.cast("添加索引失败");
+        }
+        return add;
 
     }
 
