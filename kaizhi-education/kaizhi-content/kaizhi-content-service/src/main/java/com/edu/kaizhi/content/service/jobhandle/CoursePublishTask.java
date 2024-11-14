@@ -1,13 +1,17 @@
 package com.edu.kaizhi.content.service.jobhandle;
 
+import com.edu.kaizhi.base.exception.CustomizeException;
+import com.edu.kaizhi.content.service.CoursePublishService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MessageProcessAbstract;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class CoursePublishTask extends MessageProcessAbstract {
+    @Autowired
+    CoursePublishService coursePublishService;
 
     //任务调度入口
     @XxlJob("CoursePublishJobHandler")
@@ -59,11 +65,14 @@ public class CoursePublishTask extends MessageProcessAbstract {
             log.debug("课程静态化已处理直接返回，课程id:{}", courseId);
             return;
         }
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        // 开启课程静态化，生成HTML页面
+        File file = coursePublishService.generateCourseHtml(courseId);
+        if(file == null)
+            CustomizeException.cast("课程静态化异常");
+
+        // 将HTML页面上传至Minio
+        coursePublishService.uploadCourseHtml(courseId, file);
+
         //保存第一阶段状态
         mqMessageService.completedStageOne(id);
 
