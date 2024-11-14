@@ -25,6 +25,7 @@ import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,7 +117,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     /**
      * 将文件上传到minio
      */
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName) {
 
         String filename = uploadFileParamsDto.getFilename();
         String extension = filename.substring(filename.lastIndexOf("."));
@@ -126,7 +127,12 @@ public class MediaFileServiceImpl implements MediaFileService {
 
         String defaultFolderPath = getDefaultFolderPath();
         String fileMd5 = getFileMd5(new File(localFilePath));
-        String objectName = defaultFolderPath + fileMd5 + extension;
+        //存储到minio中的对象名(带目录)
+        if (StringUtils.isEmpty(objectName)) {
+            objectName = defaultFolderPath + fileMd5 + extension;
+        }
+        // String objectName = defaultFolderPath + fileMd5 + extension;
+
 
         // 上传文件到minio
         boolean result = addMediaFilesToMinIO(localFilePath, mimeType, bucket_Files, objectName);
@@ -399,10 +405,11 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 把文件分块信息入库
-     * @param fileMd5 文件md5
-     * @param bucket minio桶
+     *
+     * @param fileMd5       文件md5
+     * @param bucket        minio桶
      * @param chunkFilePath 分块文件夹路径
-     * @param chunk 分块序号
+     * @param chunk         分块序号
      * @return MediaMinioFiles
      */
     public boolean addMediaChunkToDb(String fileMd5, String chunkFilePath, String bucket, int chunk) {
@@ -422,6 +429,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 删除数据库中的分块文件所有上传记录
+     *
      * @param fileMd5 文件md5
      */
     public void clearChunkFromDb(String fileMd5) {
@@ -438,8 +446,9 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 删除数据库中的分块文件单独一条上传记录
+     *
      * @param fileMd5 文件md5
-     * @param chunk 分块序号
+     * @param chunk   分块序号
      */
     public void clearOneChunkFromDb(String fileMd5, int chunk) {
         LambdaQueryWrapper<MediaMinioChunk> deleteQueryWrapper = new LambdaQueryWrapper<>();
@@ -455,6 +464,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 拿到数据库中所有上传超时的文件分块信息
+     *
      * @param time 当前任务执行时间
      * @return List<MediaMinioFiles>
      */
@@ -554,6 +564,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 批量删除方法，接收待删除的分块信息列表
+     *
      * @param chunksToDelete
      */
     public void clearSomeChunksFromDb(List<MediaMinioChunk> chunksToDelete) {
@@ -581,9 +592,10 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     /**
      * 调用minioClient内部函数清除分块文件
+     *
      * @param removeObjectsArgs
-     * */
-    private void removeMinioChunk(RemoveObjectsArgs removeObjectsArgs){
+     */
+    private void removeMinioChunk(RemoveObjectsArgs removeObjectsArgs) {
         minioClient.removeObjects(removeObjectsArgs).forEach(r -> {
             try {
                 r.get();

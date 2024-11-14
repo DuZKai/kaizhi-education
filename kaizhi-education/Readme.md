@@ -275,3 +275,4 @@ nginx.exe -s reload
 - rabbitMQ消息队列代替sdk包?
 - 多次发布同门课程没有做幂等，需要把addMessage那里做一个saveOrUpdate?
 - 将content的message-sdk部分抽取出成为单独一个模块
+- content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法

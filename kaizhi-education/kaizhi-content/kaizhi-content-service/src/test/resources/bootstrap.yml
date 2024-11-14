@@ -10,6 +10,9 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.101.65:8848
+      discovery:
+        namespace: kaizhi_edu
+        group: kaizhi-education
       config: # 配置文件相关信息
         namespace: kaizhi_edu
         group: kaizhi-education
@@ -19,5 +22,8 @@ spring:
         # 找到共享的配置文件
         shared-configs:
           - data-id: logging-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
+          - data-id: feign-${spring.profiles.active}.yaml
             group: kaizhi-education-common
             refresh: true
