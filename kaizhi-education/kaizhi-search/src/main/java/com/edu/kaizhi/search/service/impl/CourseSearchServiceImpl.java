@@ -125,8 +125,6 @@ public class CourseSearchServiceImpl implements CourseSearchService {
             CourseIndex courseIndex = JSON.parseObject(sourceAsString, CourseIndex.class);
 
             //取出source
-            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-
             //课程id
             Long id = courseIndex.getId();
             //取出名称

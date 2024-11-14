@@ -63,4 +63,9 @@ public class CourseBaseInfoDto extends CourseBase {
      */
     private String stName;
 
+    /**
+     * 是否广告
+     */
+    private String isAd;
+
 }

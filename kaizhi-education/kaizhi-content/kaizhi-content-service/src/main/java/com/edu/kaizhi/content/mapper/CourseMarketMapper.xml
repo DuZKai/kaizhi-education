@@ -8,6 +8,7 @@
         <result column="charge" property="charge" />
         <result column="price" property="price" />
         <result column="original_price" property="originalPrice" />
+        <result column="isAd" property="isAd" />
         <result column="qq" property="qq" />
         <result column="wechat" property="wechat" />
         <result column="phone" property="phone" />
@@ -16,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, charge, price, original_price, qq, wechat, phone, valid_days
+        id, charge, price, original_price, is_ad, qq, wechat, phone, valid_days
     </sql>
 
 </mapper>

@@ -25,6 +25,7 @@ Content-Type: application/json
   "wechat": "223344",
   "phone": "13333333",
   "validDays": 365,
+  "isAd": "800001",
   "mt": "1-1",
   "st": "1-1-1",
   "name": "",

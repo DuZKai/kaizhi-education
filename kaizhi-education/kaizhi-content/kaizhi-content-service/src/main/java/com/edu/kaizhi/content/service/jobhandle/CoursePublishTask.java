@@ -88,7 +88,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         mqMessageService.completedStageOne(id);
     }
 
-    // TODO:保存课程索引信息
+    // 保存课程索引信息
     public void saveCourseIndex(MqMessage mqMessage, long courseId) {
         log.debug("保存课程索引信息到ElasticSearch,课程id:{}", courseId);
         //消息id

@@ -47,7 +47,7 @@
     >
       <el-table-column prop="name" label="课程名称" width="250"></el-table-column>
       <el-table-column prop="subsectionNum" label="任务数" align="center" width="100"></el-table-column>
-      <el-table-column label="创建时间" align="center" width="160">
+      <el-table-column label="创建时间" align="center" width="110">
         <template slot-scope="scope">
           <div>{{scope.row.createDate | dateTimeFormat}}</div>
         </template>
@@ -56,6 +56,11 @@
       <el-table-column label="是否付费" align="center" width="80">
         <template slot-scope="scope">
           <div>{{scope.row.charge | chargeText}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否广告课程" align="center" width="110">
+        <template slot-scope="scope">
+          <div>{{scope.row.isAd | ADText}}</div>
         </template>
       </el-table-column>
       <el-table-column label="审核状态" align="center" width="100">
@@ -147,7 +152,7 @@ import Pagination from '@/components/pagination/index.vue'
 import CourseAddTypeDialog from './course-addtype-dialog.vue'
 import { IKVData } from '@/api/types' // 通用 interface
 import {
-  AUDIT_STATUS,
+  AUDIT_STATUS, COURSE_AD_TYPE_STATUS,
   COURSE_CHARGE_TYPE_STATUS,
   COUSE_PUBLIC_STATUS,
   COUSE_TYPE_STATUS
@@ -179,6 +184,14 @@ import MixinTools from '@/utils/mixins.vue'
     },
     chargeText: function(value: string) {
       let finds = COURSE_CHARGE_TYPE_STATUS.filter(item => {
+        return item.code == value
+      })
+      if (finds && finds.length > 0) {
+        return finds[0].desc
+      }
+    },
+    ADText: function(value: string) {
+      let finds = COURSE_AD_TYPE_STATUS.filter(item => {
         return item.code == value
       })
       if (finds && finds.length > 0) {

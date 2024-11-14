@@ -6,10 +6,7 @@ import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.mapper.*;
-import com.edu.kaizhi.content.model.dto.AddCourseDto;
-import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
-import com.edu.kaizhi.content.model.dto.EditCourseDto;
-import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
+import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.model.po.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.edu.kaizhi.base.constant.CourseBaseInfo.*;
 
@@ -43,32 +42,84 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     TeachplanMapper teachplanMapper;
 
     // 课程分页查询
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseListDto> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
 
-        //构建条件查询器
-        LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
+        Long pageNo = pageParams.getPageNo();
+        Long pageSize = pageParams.getPageSize();
+        // 使用分页器会导致无法一次查询多张表
+        // // 查询基础课程信息
+        // //构建条件查询器
+        // LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
+        //
+        // //拼接查询条件
+        // //根据课程名称模糊查询  name like '%名称%'
+        // queryWrapperBase.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()), CourseBase::getName, queryCourseParamsDto.getCourseName());
+        // //根据课程审核状态
+        // queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus, queryCourseParamsDto.getAuditStatus());
+        // //根据课程发布状态
+        // queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
+        //
+        // //分页参数
+        // Page<CourseBase> page = new Page<>(pageNo, pageSize);
+        //
+        // //分页查询E page 分页参数, @Param("ew") Wrapper<T> queryWrapper 查询条件
+        // Page<CourseBase> pageResultBase = courseBaseMapper.selectPage(page, queryWrapperBase);
+        //
+        // //数据
+        // List<CourseBase> items = pageResultBase.getRecords();
+        //
+        // //总记录数
+        // long total = pageResultBase.getTotal();
+        //
+        // //准备返回数据 List<T> items, long counts, long page, long pageSize
+        // return new PageResult<>(items, total, pageParams.getPageNo(), pageParams.getPageSize());
+
+        LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
 
         //拼接查询条件
         //根据课程名称模糊查询  name like '%名称%'
-        queryWrapper.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()), CourseBase::getName, queryCourseParamsDto.getCourseName());
+        queryWrapperBase.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()), CourseBase::getName, queryCourseParamsDto.getCourseName());
         //根据课程审核状态
-        queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus, queryCourseParamsDto.getAuditStatus());
+        queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus, queryCourseParamsDto.getAuditStatus());
         //根据课程发布状态
-        queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
-
-        //分页参数
-        Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
+        queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
 
         //分页查询E page 分页参数, @Param("ew") Wrapper<T> queryWrapper 查询条件
-        Page<CourseBase> pageResult = courseBaseMapper.selectPage(page, queryWrapper);
+        List<CourseBase> pageResultBase = courseBaseMapper.selectList(queryWrapperBase);
 
-        //数据
-        List<CourseBase> items = pageResult.getRecords();
+        List<CourseListDto> items = new ArrayList<>();
+        for (CourseBase courseBase : pageResultBase) {
+            CourseListDto courseListDto = new CourseListDto();
+            BeanUtils.copyProperties(courseBase, courseListDto);
+            Long id = courseBase.getId();
+            //查询课程营销信息
+            CourseMarket courseMarket = courseMarketMapper.selectById(id);
+            // 不存在营销信息说明信息不完整，不加入
+            if (courseMarket == null)
+                continue;
+
+            BeanUtils.copyProperties(courseMarket, courseListDto);
+
+            LambdaQueryWrapper<Teachplan> queryWrapperTeachPlan = new LambdaQueryWrapper<>();
+            queryWrapperTeachPlan.eq(Teachplan::getCourseId, id);
+            int subsectionNum = teachplanMapper.selectCount(queryWrapperTeachPlan);
+            if(subsectionNum == 0)
+                continue;
+
+            courseListDto.setSubsectionNum(subsectionNum);
+            items.add(courseListDto);
+        }
         //总记录数
-        long total = pageResult.getTotal();
+        long total = items.size();
+
+        // 手动进行分页
+        List<CourseListDto> collect = items.stream().skip((pageParams.getPageNo() - 1) * pageParams.getPageSize()) // 跳过前面的数据
+                .limit(pageParams.getPageSize())  // 获取当前页的数据
+                .collect(Collectors.toList());
+
 
         //准备返回数据 List<T> items, long counts, long page, long pageSize
-        return new PageResult<>(items, total, pageParams.getPageNo(), pageParams.getPageSize());
+        return new PageResult<>(collect, total, pageNo, pageSize);
     }
 
     // 新增课程

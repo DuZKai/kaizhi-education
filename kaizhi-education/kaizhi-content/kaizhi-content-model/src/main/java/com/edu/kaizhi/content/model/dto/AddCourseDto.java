@@ -59,6 +59,8 @@ public class AddCourseDto {
     @ApiModelProperty(value = "原价")
     private Float originalPrice;
 
+    @ApiModelProperty(value = "是否为广告", required = true)
+    private String isAd;
 
     @ApiModelProperty(value = "qq")
     private String qq;

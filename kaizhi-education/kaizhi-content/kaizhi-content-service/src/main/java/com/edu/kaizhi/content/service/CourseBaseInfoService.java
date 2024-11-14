@@ -2,10 +2,7 @@ package com.edu.kaizhi.content.service;
 
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
-import com.edu.kaizhi.content.model.dto.AddCourseDto;
-import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
-import com.edu.kaizhi.content.model.dto.EditCourseDto;
-import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
+import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.model.po.CourseBase;
 
 /**
@@ -19,7 +16,7 @@ public interface CourseBaseInfoService {
      * @param queryCourseParamsDto 查询条件
      * @return PageResult<CourseBase> 查询课程信息列表
      */
-    PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseListDto> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     /**
      * 新增课程

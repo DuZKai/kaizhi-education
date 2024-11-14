@@ -35,3 +35,6 @@ export const COURSE_WORK_STATUS: IKVData[] = getDictByCode('306')
 
 // 课程收费情况	201
 export const COURSE_CHARGE_TYPE_STATUS: IKVData[] = getDictByCode('201')
+
+// 广告情况 800
+export const COURSE_AD_TYPE_STATUS: IKVData[] = getDictByCode('800')

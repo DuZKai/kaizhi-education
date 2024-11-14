@@ -39,6 +39,11 @@ public class CourseMarket implements Serializable {
     private Float originalPrice;
 
     /**
+     * 是否广告
+     */
+    private String isAd;
+
+    /**
      * 咨询qq
      */
     private String qq;
