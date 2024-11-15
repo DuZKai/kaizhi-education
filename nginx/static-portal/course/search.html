@@ -120,11 +120,13 @@
                                                 <span v-else>高级</span>
                                                 <span v-html="course.name"></span>
                                             </li>
-                                            <li>
+                                            <li style="width:100%">
                                                 <span v-if="course.charge=='201000'">免费</span>
                                                 <span v-else>¥{{course.price}}</span>
                                                 <em> · </em> 1125人在学
-                                                <span v-if="course.isAd" class="ad-text">广告</span>
+                                                <span v-if="course.isAd=='800002'"
+                                                      style="color: gray; font-size: 8px; font-style: italic; float:right;"
+                                                >广告</span>
                                             </li>
                                         </ul>
                                     </a>
@@ -143,8 +145,6 @@
 
                             </div>
                             <div class="clearfix">
-
-
 
                             </div>
                         </div>
@@ -249,26 +249,6 @@
             color: red;
         }
 
-
-
-        li {
-            display: flex;
-            /* 使用 flexbox 来布局 */
-            justify-content: space-between;
-            /* 内容左右两端分布 */
-            align-items: center;
-            /* 垂直居中对齐 */
-        }
-
-        .recom-item ul li span.ad-text {
-            color: gray !important;
-            /* 使用 !important 来确保覆盖掉其他规则 */
-            font-size: 12px;
-            font-style: italic;
-            /* 可选：使广告文字为斜体 */
-
-            float:right;
-        }
     </style>
     <script>
         /*查询课程列表*/

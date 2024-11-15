@@ -33,6 +33,24 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
     }
 
     public MqMessage addMessage(String messageType, String businessKey1, String businessKey2, String businessKey3) {
+        LambdaQueryWrapper<MqMessage> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper = queryWrapper.eq(MqMessage::getMessageType, messageType);
+        if(businessKey1 != null)
+            queryWrapper = queryWrapper.eq(MqMessage::getBusinessKey1, businessKey1);
+        if(businessKey2 != null)
+            queryWrapper = queryWrapper.eq(MqMessage::getBusinessKey2, businessKey2);
+        if(businessKey3 != null)
+            queryWrapper = queryWrapper.eq(MqMessage::getBusinessKey3, businessKey3);
+
+        List<MqMessage> mqMessages = mqMessageMapper.selectList(queryWrapper);
+        if (mqMessages.size() > 1) {
+            log.error("消息重复，数据库已经有大于一条的消息");
+            return null;
+        }
+        if(mqMessages.size() == 1){
+            return mqMessages.get(0);
+        }
+        // 数据库没有该信息，新增
         MqMessage mqMessage = new MqMessage();
         mqMessage.setMessageType(messageType);
         mqMessage.setBusinessKey1(businessKey1);

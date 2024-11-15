@@ -1,6 +1,6 @@
 使用elasticsearch需要建立索引，Mapping相当于表结构，Mapping创建后其字段不能删除，如果要删除需要删除整个索引，下边介绍创建索引、查询索引、删除索引的方法：
 
-创建索引，并指定Mapping。
+## 创建索引，并指定Mapping
 
 ```
 PUT /course-publish
@@ -87,6 +87,9 @@ PUT /course-publish
       },
       "validDays": {
         "type": "integer"
+      },
+      "isAd": {
+        "type": "keyword"
       }
     }
   }
@@ -106,7 +109,7 @@ GET /_cat/indices?v
 GET /course-publish/_mapping
 ```
 
-删除索引
+## 删除索引
 
 如果发现创建的course-publish不正确可以删除重新创建。
 
@@ -114,5 +117,23 @@ GET /course-publish/_mapping
 
 ```
 DELETE /course-publish
+```
+
+## 插入数据
+
+执行.\kaizhi-education\api-test\kaizhi-search-api.http前两条POST
+
+
+
+## 查看已有数据
+
+```java
+GET /course-publish/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 10
+}
 ```
 

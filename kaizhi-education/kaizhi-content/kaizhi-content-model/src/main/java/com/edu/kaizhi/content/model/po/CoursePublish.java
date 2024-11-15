@@ -156,5 +156,8 @@ public class CoursePublish implements Serializable {
      */
     private Integer validDays;
 
-
+    /**
+     * 是否广告
+     */
+    private String isAd;
 }

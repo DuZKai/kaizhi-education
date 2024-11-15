@@ -14,7 +14,7 @@ Content-Type: application/json
   "mtName" : "编程开发",
   "name" : "Spring编程思想",
   "originalPrice" : 200.0,
-  "pic" : "/mediafiles/2022/09/20/1d0f0e6ed8a0c4a89bfd304b84599d9c.png",
+  "pic" : "/mediafiles/2024/11/14/6eaf4f0a702b40a136bb620d4e5b4165.png",
   "price" : 100.0,
   "remark" : "没有备注",
   "st" : "1-3-2",
@@ -22,7 +22,35 @@ Content-Type: application/json
   "status" : "203002",
   "tags" : "没有标签",
   "teachmode" : "200002",
-  "validDays" : 222
+  "validDays" : 222,
+  "isAd": "800001"
+}
+
+### 添加课程索引
+POST {{search_host}}/search/index/course
+Content-Type: application/json
+
+{
+  "charge" : "201000",
+  "companyId" : 1232141425,
+  "createDate" : "2024-11-15 11:45:17",
+  "description" : "course_market",
+  "grade" : "204002",
+  "id" : 137,
+  "mt" : "1-11",
+  "mtName" : "系统运维",
+  "name" : "course_market",
+  "originalPrice" : 32.0,
+  "pic" : "/mediafiles/2024/11/14/fc2f21deecac67d02863ac8837385f30.png",
+  "price" : 21.0,
+  "st" : "1-11-1",
+  "stName" : "Linux",
+  "status" : "203002",
+  "tags" : "course_market",
+  "teachmode" : "200002",
+  "users" : "course_market",
+  "validDays" : 365,
+  "isAd" : "800002"
 }
 
 ### 搜索课程

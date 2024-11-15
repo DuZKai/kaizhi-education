@@ -31,11 +31,12 @@
         <result column="price" property="price" />
         <result column="original_price" property="originalPrice" />
         <result column="valid_days" property="validDays" />
+        <result column="isAd" property="isAd" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, company_id, company_name, name, users, tags, username, mt, mt_name, st, st_name, grade, teachmode, pic, description, market, teachplan, teachers, create_date, online_date, offline_date, status, remark, charge, price, original_price, valid_days
+        id, company_id, company_name, name, users, tags, username, mt, mt_name, st, st_name, grade, teachmode, pic, description, market, teachplan, teachers, create_date, online_date, offline_date, status, remark, charge, price, original_price, valid_days, is_ad
     </sql>
 
 </mapper>

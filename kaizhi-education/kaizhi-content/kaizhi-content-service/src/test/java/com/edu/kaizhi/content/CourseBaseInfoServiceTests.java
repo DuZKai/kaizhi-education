@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.mapper.CourseBaseMapper;
+import com.edu.kaizhi.content.model.dto.CourseListDto;
 import com.edu.kaizhi.content.model.dto.QueryCourseParamsDto;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
@@ -37,7 +38,7 @@ class CourseBaseInfoServiceTests {
         pageParams.setPageNo(1L);//页码
         pageParams.setPageSize(5L);//每页记录数
 
-        PageResult<CourseBase> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
+        PageResult<CourseListDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
         System.out.println(courseBasePageResult);
     }
 

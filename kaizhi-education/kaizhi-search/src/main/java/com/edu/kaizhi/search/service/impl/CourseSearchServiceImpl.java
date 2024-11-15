@@ -18,6 +18,8 @@ import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -83,6 +85,7 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         if (StringUtils.isNotEmpty(courseSearchParam.getGrade())) {
             boolQueryBuilder.filter(QueryBuilders.termQuery("grade", courseSearchParam.getGrade()));
         }
+
         //分页
         Long pageNo = pageParams.getPageNo();
         Long pageSize = pageParams.getPageSize();
@@ -91,6 +94,28 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         searchSourceBuilder.size(Math.toIntExact(pageSize));
         //布尔查询
         searchSourceBuilder.query(boolQueryBuilder);
+
+        // 在原有查询的基础上应用 Function Score Query
+        FunctionScoreQueryBuilder functionScoreQuery = QueryBuilders.functionScoreQuery(
+                boolQueryBuilder, // 原有的bool查询
+                new FunctionScoreQueryBuilder.FilterFunctionBuilder[] {
+                        new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+                                // 过滤条件：只考虑 isAd 为 800002 的文档
+                                QueryBuilders.termQuery("isAd", "800002"),
+                                // 算分函数：给符合条件的文档增加权重
+                                // ScoreFunctionBuilders.weightFactorFunction(10)
+                                // 使用随机权重生成器
+                                ScoreFunctionBuilders.randomFunction() // 生成一个随机分数
+                                        .seed(System.currentTimeMillis()) // 使用当前时间戳作为种子，确保随机性
+                                        .setWeight(3.0f) // 设置一个基础权重
+                                        .setField("id") // 设置一个随机字段，确保每次查询都是随机的
+                        )
+                }
+        );
+
+        // 将 function score 查询设置到搜索源中
+        searchSourceBuilder.query(functionScoreQuery);
+
         //高亮设置
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.preTags("<font class='eslight'>");
@@ -165,12 +190,12 @@ public class CourseSearchServiceImpl implements CourseSearchService {
     private void buildAggregation(SearchRequest request) {
         request.source().aggregation(AggregationBuilders
                 .terms("mtAgg")
-                .field("mtName")
+                .field("mtName.keyword")
                 .size(100)
         );
         request.source().aggregation(AggregationBuilders
                 .terms("stAgg")
-                .field("stName")
+                .field("stName.keyword")
                 .size(100)
         );
 

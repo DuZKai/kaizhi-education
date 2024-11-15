@@ -92,6 +92,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
         //约束校验
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
+
         //课程审核状态
         String auditStatus = courseBase.getAuditStatus();
         //当前审核状态为已提交不允许再次提交

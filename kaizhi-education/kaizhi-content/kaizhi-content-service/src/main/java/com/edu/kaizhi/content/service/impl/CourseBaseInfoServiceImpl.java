@@ -228,6 +228,11 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         // 封装数据
         BeanUtils.copyProperties(editCourseDto, courseBase);
         courseBase.setChangeDate(LocalDateTime.now());
+        // 每次重新修改数据，都需要将状态设置为未发布、未审核
+        //设置审核状态
+        courseBase.setAuditStatus(REVIEW_DELAYED);
+        //设置发布状态
+        courseBase.setStatus(PUBLISH_NOT_IN);
         // TODO: 获取修改人
         // courseBase.setChangePeople();
 

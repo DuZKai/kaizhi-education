@@ -12,7 +12,7 @@ import java.util.List;
 @ToString
 public class CoursePreviewDto {
 
-    //课程基本信息,课程营销信息
+    //课程基本信息, 课程营销信息
     CourseBaseInfoDto courseBase;
 
 
