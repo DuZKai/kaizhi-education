@@ -310,7 +310,7 @@ docker restart elasticsearch
 
 - 太多无用输出，8效率低下，项目完成时尽量尝试换为21，虚拟机也是尽量换成最新版本
 - 清洗虚拟机Nacos不同配置Group
-- 常量移除到对应constant文件，路径后续统一抽取到父路径下
+- 常量移除到对应constant文件，路径后续统一抽取到父路径下（token-config的秘钥可以统一配置）
 - 机构传太多视频信息可以加入收费功能
 - 清除测试文件
 - rabbitMQ消息队列代替sdk包?
@@ -319,3 +319,4 @@ docker restart elasticsearch
 - content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - Redis优化查询课程部分，每次刷新都得查询
+- Redis优化存储的JWT令牌

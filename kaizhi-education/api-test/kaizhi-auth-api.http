@@ -1,8 +1,11 @@
 ### 授权码模式
-### 第一步申请授权码(浏览器请求)
+### 第一步申请授权码(浏览器请求localhost:63070/auth/oauth/authorize?client_id=WebApp&response_type=code&scope=all&redirect_uri=http://www.kaizhi.edu.cn)
 GET {{auth_host}}/auth/oauth/authorize?client_id=WebApp&response_type=code&scope=all&redirect_uri=http://www.kaizhi.edu.cn
-### 第二步申请令牌
+### 第二步申请令牌，code需要修改
 POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=authorization_code&code=w1k1WE&redirect_uri=http://www.kaizhi.edu.cn
 
 ### 密码模式
 POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=password&username=zhangsan&password=123
+
+###校验jwt令牌，token需要修改
+POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsia2FpemhpX2VkdWNhdGlvbiJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MzE3Njc2NDcsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjgzODUwMDliLTlkNWQtNDdjZC04YjRkLWM4YTc4ZjA1NzhiYyIsImNsaWVudF9pZCI6IldlYkFwcCJ9.Otq2IxPwhOvcf8I3Jr4VDu5FRRzbZVLFs1lBp6rI27A

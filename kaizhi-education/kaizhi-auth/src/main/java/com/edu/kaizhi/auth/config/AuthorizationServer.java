@@ -33,11 +33,12 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients)
             throws Exception {
+        // TODO:全部使用常量管控
         clients.inMemory()// 使用in-memory存储
                 .withClient("WebApp")// client_id
                 .secret("WebApp")//客户端密钥
                // .secret(new BCryptPasswordEncoder().encode("WebApp"))//客户端密钥
-                .resourceIds("kaizhi_education")//资源列表
+                .resourceIds("kaizhi-education")//资源列表
                 .authorizedGrantTypes("authorization_code", "password", "client_credentials", "implicit", "refresh_token")// 该client允许的授权类型authorization_code,password,refresh_token,implicit,client_credentials
                 .scopes("all")// 允许的授权范围
                 .autoApprove(false)//false跳转到授权页面
