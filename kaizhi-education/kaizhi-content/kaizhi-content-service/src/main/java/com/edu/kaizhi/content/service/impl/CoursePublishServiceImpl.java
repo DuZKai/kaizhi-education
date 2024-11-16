@@ -13,12 +13,10 @@ import com.edu.kaizhi.content.mapper.CoursePublishPreMapper;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
-import com.edu.kaizhi.content.model.po.CourseBase;
-import com.edu.kaizhi.content.model.po.CourseMarket;
-import com.edu.kaizhi.content.model.po.CoursePublish;
-import com.edu.kaizhi.content.model.po.CoursePublishPre;
+import com.edu.kaizhi.content.model.po.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import com.edu.kaizhi.content.service.CoursePublishService;
+import com.edu.kaizhi.content.service.CourseTeacherService;
 import com.edu.kaizhi.content.service.TeachplanService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
@@ -73,6 +71,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     @Autowired
     MediaServiceClient mediaServiceClient;
 
+    @Autowired
+    CourseTeacherService courseTeacherService;
+
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
 
         //课程基本信息、营销信息
@@ -81,9 +82,13 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         //课程计划信息
         List<TeachplanDto> teachplanTree = teachplanService.findTeachplanTreeNodes(courseId);
 
+        // 师资信息
+        List<CourseTeacher> courseTeacher = courseTeacherService.getCourseTeacherList(courseId);
+
         CoursePreviewDto coursePreviewDto = new CoursePreviewDto();
         coursePreviewDto.setCourseBase(courseBaseInfo);
         coursePreviewDto.setTeachplans(teachplanTree);
+        coursePreviewDto.setCourseTeacher(courseTeacher);
         return coursePreviewDto;
     }
 

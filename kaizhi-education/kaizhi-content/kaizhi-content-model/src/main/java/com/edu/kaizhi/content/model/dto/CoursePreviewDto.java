@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.model.dto;
 
+import com.edu.kaizhi.content.model.po.CourseTeacher;
 import lombok.Data;
 import lombok.ToString;
 
@@ -19,7 +20,7 @@ public class CoursePreviewDto {
     //课程计划信息
     List<TeachplanDto> teachplans;
 
-    // TODO：师资信息暂时不加...
-
+    // 师资信息
+    List<CourseTeacher> courseTeacher;
 
 }
