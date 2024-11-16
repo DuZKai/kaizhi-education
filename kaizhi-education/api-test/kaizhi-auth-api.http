@@ -10,3 +10,6 @@ POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_
 
 ###校验jwt令牌，token需要修改
 POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsia2FpemhpLWVkdWNhdGlvbiJdLCJ1c2VyX25hbWUiOiJ7XCJjb21wYW55SWRcIjpcIjEyMzIxNDE0MjVcIixcImNyZWF0ZVRpbWVcIjpcIjIwMjItMDktMjhUMDg6MzI6MDNcIixcImlkXCI6XCI1MlwiLFwibmFtZVwiOlwiTeiAgeW4iFwiLFwic2V4XCI6XCIxXCIsXCJzdGF0dXNcIjpcIlwiLFwidXNlcm5hbWVcIjpcInQxXCIsXCJ1dHlwZVwiOlwiMTAxMDAyXCJ9Iiwic2NvcGUiOlsiYWxsIl0sImV4cCI6MTczMTc3MjM2OSwiYXV0aG9yaXRpZXMiOlsidGVzdCJdLCJqdGkiOiI2YTNmZmNiZC1lY2Q2LTQ0Y2UtOTZlZC04MmE3MWU1NWZmYzkiLCJjbGllbnRfaWQiOiJXZWJBcHAifQ.d4ffQdi66S-hcIGWEjMlL7xfzSIJdZ5Rw8qacNankk0
+
+### 密码模式，请求AuthParamsDto
+POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=password&username={"username":"t1", "password":"111111", "authType":"password"}

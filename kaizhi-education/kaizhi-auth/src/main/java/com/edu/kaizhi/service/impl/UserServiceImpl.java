@@ -1,11 +1,13 @@
 package com.edu.kaizhi.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.edu.kaizhi.service.AuthService;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
-import com.edu.kaizhi.ucenter.model.po.User;
+import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
+import com.edu.kaizhi.ucenter.model.dto.UserExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,25 +20,50 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     UserMapper userMapper;
 
+    // 需要注入ApplicationContext，因为在AuthService多种实现，无法直接注入
+    @Autowired
+    ApplicationContext applicationContext;
 
+
+    // 传入请求参数就是AuthParamsDto
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 根据Username查询用户
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
-        if (user == null) {
-            //返回空表示用户不存在, Spring Security会抛出异常：用户不存在
-            return null;
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        // 将Json转为AuthParamsDto
+        AuthParamsDto authParamsDto = null;
+        try {
+            authParamsDto = JSON.parseObject(s, AuthParamsDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("请求认证参数不符合要求");
         }
-        // 取出数据库存储的正确密码，封装一个UserDetails对象给Spring Security框架做密码校验
-        String password = user.getPassword();
-        //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
-        String[] authorities = {"test"};
-        // 用户信息转json
-        user.setPassword(null);
-        String userJson = JSON.toJSONString(user);
 
+        // 认证类型
+        String authType = authParamsDto.getAuthType();
+        // 根据认证类型获取对应的AuthService，记得需要authType传入参数首字母大写
+        String beanName = authType + "AuthService";
+        AuthService authService = applicationContext.getBean(beanName, AuthService.class);
+        // 调用多态方法execute实现认证
+        UserExt userExt = authService.execute(authParamsDto);
+        // 封装UserExt到UserDetails
+        return getUserPrincipal(userExt);
+    }
+
+    /**
+     * 查询用户信息
+     *
+     * @param user 用户id，主键
+     * @return com.edu.kaizhi.ucenter.model.po.XcUser 用户信息
+     */
+    public UserDetails getUserPrincipal(UserExt user) {
+        //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
+        String[] authorities = {"p1"};
+        String password = user.getPassword();
+        //为了安全在令牌中不放密码
+        user.setPassword(null);
+        //将user对象转json
+        String userString = JSON.toJSONString(user);
         //创建UserDetails对象,权限信息待实现授权功能时再向UserDetail中加入
-        return org.springframework.security.core.userdetails.User.withUsername(userJson).
+        return org.springframework.security.core.userdetails.User.withUsername(userString).
                 password(password).authorities(authorities).build();
     }
+
 }
