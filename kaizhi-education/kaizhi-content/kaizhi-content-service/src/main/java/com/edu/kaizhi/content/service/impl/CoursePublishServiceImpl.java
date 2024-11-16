@@ -136,6 +136,15 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         String teachplanTreeString = JSON.toJSONString(teachplanTree);
         coursePublishPre.setTeachplan(teachplanTreeString);
 
+        //查询课程师资信息
+        List<CourseTeacher> courseTeacherList = courseTeacherService.getCourseTeacherList(courseId);
+        if (courseTeacherList.isEmpty()) {
+            CustomizeException.cast("提交失败，还没有添加课程师资");
+        }
+        //转json
+        String courseTeacherListString = JSON.toJSONString(courseTeacherList);
+        coursePublishPre.setTeachers(courseTeacherListString);
+
         //设置预发布记录状态,已提交
         coursePublishPre.setStatus("202003");
         //教学机构id
