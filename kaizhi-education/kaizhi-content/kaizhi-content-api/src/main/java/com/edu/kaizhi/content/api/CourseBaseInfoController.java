@@ -3,6 +3,7 @@ package com.edu.kaizhi.content.api;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.base.utils.SecurityUtil;
 import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
@@ -42,6 +43,8 @@ public class CourseBaseInfoController {
     @ApiOperation("根据课程id查询接口")
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable Long courseId) {
+        // SecurityUtil.User user = SecurityUtil.getUser();
+        // System.out.println(user);
         return courseBaseInfoService.getCourseBaseInfo(courseId);
     }
 
