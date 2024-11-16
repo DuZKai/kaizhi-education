@@ -24,7 +24,7 @@ public class LearningCodeGenerator {
 	private static final String DATA_SOURCE_PASSWORD  = "mysql";
 	//生成的表
 	private static final String[] TABLE_NAMES = new String[]{
-			"xc_learn_record"
+			"kaizhi_learn_record"
 	};
 
 	// TODO 默认生成entity，需要生成DTO修改此变量

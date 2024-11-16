@@ -1,0 +1,8 @@
+### 授权码模式
+### 第一步申请授权码(浏览器请求)
+GET {{auth_host}}/auth/oauth/authorize?client_id=WebApp&response_type=code&scope=all&redirect_uri=http://www.kaizhi.edu.cn
+### 第二步申请令牌
+POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=authorization_code&code=w1k1WE&redirect_uri=http://www.kaizhi.edu.cn
+
+### 密码模式
+POST {{auth_host}}/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=password&username=zhangsan&password=123

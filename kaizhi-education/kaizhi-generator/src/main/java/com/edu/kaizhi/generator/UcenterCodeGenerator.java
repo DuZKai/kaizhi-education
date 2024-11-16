@@ -24,14 +24,14 @@ public class UcenterCodeGenerator {
 	private static final String DATA_SOURCE_PASSWORD  = "mysql";
 	//生成的表
 	private static final String[] TABLE_NAMES = new String[]{
-			"xc_company",
-			"xc_company_user",
-			"xc_menu",
-			"xc_permission",
-			"xc_role",
-			"xc_teacher",
-			"xc_user",
-			"xc_user_role"
+			"kaizhi_company",
+			"kaizhi_company_user",
+			"kaizhi_menu",
+			"kaizhi_permission",
+			"kaizhi_role",
+			"kaizhi_teacher",
+			"kaizhi_user",
+			"kaizhi_user_role"
 	};
 
 	// TODO 默认生成entity，需要生成DTO修改此变量

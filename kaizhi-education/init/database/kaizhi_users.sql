@@ -1,8 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
---
--- Host: 192.168.101.65    Database: xc148_users
--- ------------------------------------------------------
--- Server version	8.0.26
+-- Host: 192.168.101.65    Database: kaizhi_edu_system
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -177,13 +173,13 @@ INSERT INTO `oauth_refresh_token` (`token_id`, `token`, `authentication`) VALUES
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_company`
+-- Table structure for table `kaizhi_company`
 --
 
-DROP TABLE IF EXISTS `xc_company`;
+DROP TABLE IF EXISTS `kaizhi_company`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_company` (
+CREATE TABLE `kaizhi_company` (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `linkname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '联系人名称',
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
@@ -200,52 +196,52 @@ CREATE TABLE `xc_company` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_company`
+-- Dumping data for table `kaizhi_company`
 --
 
-LOCK TABLES `xc_company` WRITE;
-/*!40000 ALTER TABLE `xc_company` DISABLE KEYS */;
-INSERT INTO `xc_company` (`id`, `linkname`, `name`, `mobile`, `email`, `intro`, `logo`, `identitypic`, `worktype`, `businesspic`, `status`) VALUES ('1','张老师','传智播客','13333334444','abc@126.com','2006年创建！',NULL,NULL,NULL,NULL,NULL),('1232141425','M老师','传智教育','123456789','mm@qq.com',NULL,NULL,NULL,NULL,NULL,NULL),('2','李老师','博学谷','','',NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `xc_company` ENABLE KEYS */;
+LOCK TABLES `kaizhi_company` WRITE;
+/*!40000 ALTER TABLE `kaizhi_company` DISABLE KEYS */;
+INSERT INTO `kaizhi_company` (`id`, `linkname`, `name`, `mobile`, `email`, `intro`, `logo`, `identitypic`, `worktype`, `businesspic`, `status`) VALUES ('1','张老师','传智播客','13333334444','abc@126.com','2006年创建！',NULL,NULL,NULL,NULL,NULL),('1232141425','M老师','传智教育','123456789','mm@qq.com',NULL,NULL,NULL,NULL,NULL,NULL),('2','李老师','博学谷','','',NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `kaizhi_company` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_company_user`
+-- Table structure for table `kaizhi_company_user`
 --
 
-DROP TABLE IF EXISTS `xc_company_user`;
+DROP TABLE IF EXISTS `kaizhi_company_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_company_user` (
+CREATE TABLE `kaizhi_company_user` (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `company_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `xc_company_user_unique` (`company_id`,`user_id`) USING BTREE,
-  KEY `FK_xc_company_user_user_id` (`user_id`) USING BTREE,
-  CONSTRAINT `FK_xc_company_user_company_id` FOREIGN KEY (`company_id`) REFERENCES `xc_company` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_xc_company_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `xc_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  UNIQUE KEY `kaizhi_company_user_unique` (`company_id`,`user_id`) USING BTREE,
+  KEY `FK_kaizhi_company_user_user_id` (`user_id`) USING BTREE,
+  CONSTRAINT `FK_kaizhi_company_user_company_id` FOREIGN KEY (`company_id`) REFERENCES `kaizhi_company` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FK_kaizhi_company_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `kaizhi_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_company_user`
+-- Dumping data for table `kaizhi_company_user`
 --
 
-LOCK TABLES `xc_company_user` WRITE;
-/*!40000 ALTER TABLE `xc_company_user` DISABLE KEYS */;
-INSERT INTO `xc_company_user` (`id`, `company_id`, `user_id`) VALUES ('1','1','49'),('2','1232141425','52');
-/*!40000 ALTER TABLE `xc_company_user` ENABLE KEYS */;
+LOCK TABLES `kaizhi_company_user` WRITE;
+/*!40000 ALTER TABLE `kaizhi_company_user` DISABLE KEYS */;
+INSERT INTO `kaizhi_company_user` (`id`, `company_id`, `user_id`) VALUES ('1','1','49'),('2','1232141425','52');
+/*!40000 ALTER TABLE `kaizhi_company_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_menu`
+-- Table structure for table `kaizhi_menu`
 --
 
-DROP TABLE IF EXISTS `xc_menu`;
+DROP TABLE IF EXISTS `kaizhi_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_menu` (
+CREATE TABLE `kaizhi_menu` (
   `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '菜单编码',
   `p_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '父菜单ID',
@@ -264,51 +260,51 @@ CREATE TABLE `xc_menu` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_menu`
+-- Dumping data for table `kaizhi_menu`
 --
 
-LOCK TABLES `xc_menu` WRITE;
-/*!40000 ALTER TABLE `xc_menu` DISABLE KEYS */;
-INSERT INTO `xc_menu` (`id`, `code`, `p_id`, `menu_name`, `url`, `is_menu`, `level`, `sort`, `status`, `icon`, `create_time`, `update_time`) VALUES ('','xc_teachmanager_course_pic',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('000000000000000000','root','0','系统根目录',NULL,'0',0,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('111111111111111111','xc_sysmanager','000000000000000000','系统管理',NULL,'1',1,10,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('222222222222222222','xc_teachmanager','000000000000000000','教学管理',NULL,'1',1,2,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('893288715881807872','xc_sysmanager_user','111111111111111111','用户管理',NULL,'1',2,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('893304960282787840','xc_sysmanager_user_add','893288715881807872','添加用户',NULL,'1',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894396523532517376','xc_sysmanager_user_edit','893288715881807872','用户修改',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894473486712438784','xc_sysmanager_user_view','893288715881807872','用户列表',NULL,'1',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894473651837992960','xc_sysmanager_user_delete','893288715881807872','用户删除',NULL,'0',3,4,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475142061621248','xc_sysmanager_role','111111111111111111','角色管理',NULL,'1',2,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475827880656896','xc_sysmanager_role_add','894475142061621248','角色添加',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475985452269568','xc_sysmanager_role_edit','894475142061621248','角色编辑',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476118730473472','xc_sysmanager_role_delete','894475142061621248','角色删除',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476276402749440','xc_sysmanager_role_permission','894475142061621248','角色配权',NULL,'0',3,3,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476950951690240','xc_sysmanager_menu','111111111111111111','菜单管理',NULL,'1',2,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477107919323136','xc_sysmanager_menu_add','894476950951690240','菜单添加',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477244926263296','xc_sysmanager_menu_edit','894476950951690240','菜单编辑',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477420512411648','xc_sysmanager_menu_delete','894476950951690240','菜单删除',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477851082883072','xc_sysmanager_doc','111111111111111111','文档查询',NULL,'1',2,9,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477995903811584','xc_sysmanager_log','111111111111111111','add',NULL,'1',2,10,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894752734459199488','xc_sysmanager_company','111111111111111111','机构管理',NULL,'1',1,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395840','xc_sysmanager_user_resetpwd','893288715881807872','密码重置',NULL,'1',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395841','xc_teachmanager_course','222222222222222222','课程管理',NULL,'1',2,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395842','xc_teachmanager_course_add','903459378655395841','添加课程',NULL,'1',3,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395843','xc_teachmanager_course_del','903459378655395841','删除课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395845','xc_teachmanager_course_market','903459378655395841','编辑课程营销信息',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395846','xc_teachmanager_course_base','903459378655395841','编辑课程基础信息',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395847','xc_teachmanager_course_plan','903459378655395841','编辑课程计划',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395848','xc_teachmanager_course_publish','903459378655395841','发布课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395849','xc_teachmanager_course_list','903459378655395841','我的课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395850','course_find_list','903459378655395841','查询课程列表',NULL,NULL,NULL,NULL,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25');
-/*!40000 ALTER TABLE `xc_menu` ENABLE KEYS */;
+LOCK TABLES `kaizhi_menu` WRITE;
+/*!40000 ALTER TABLE `kaizhi_menu` DISABLE KEYS */;
+INSERT INTO `kaizhi_menu` (`id`, `code`, `p_id`, `menu_name`, `url`, `is_menu`, `level`, `sort`, `status`, `icon`, `create_time`, `update_time`) VALUES ('','kaizhi_teachmanager_course_pic',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('000000000000000000','root','0','系统根目录',NULL,'0',0,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('111111111111111111','kaizhi_sysmanager','000000000000000000','系统管理',NULL,'1',1,10,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('222222222222222222','kaizhi_teachmanager','000000000000000000','教学管理',NULL,'1',1,2,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('893288715881807872','kaizhi_sysmanager_user','111111111111111111','用户管理',NULL,'1',2,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('893304960282787840','kaizhi_sysmanager_user_add','893288715881807872','添加用户',NULL,'1',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894396523532517376','kaizhi_sysmanager_user_edit','893288715881807872','用户修改',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894473486712438784','kaizhi_sysmanager_user_view','893288715881807872','用户列表',NULL,'1',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894473651837992960','kaizhi_sysmanager_user_delete','893288715881807872','用户删除',NULL,'0',3,4,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475142061621248','kaizhi_sysmanager_role','111111111111111111','角色管理',NULL,'1',2,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475827880656896','kaizhi_sysmanager_role_add','894475142061621248','角色添加',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894475985452269568','kaizhi_sysmanager_role_edit','894475142061621248','角色编辑',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476118730473472','kaizhi_sysmanager_role_delete','894475142061621248','角色删除',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476276402749440','kaizhi_sysmanager_role_permission','894475142061621248','角色配权',NULL,'0',3,3,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894476950951690240','kaizhi_sysmanager_menu','111111111111111111','菜单管理',NULL,'1',2,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477107919323136','kaizhi_sysmanager_menu_add','894476950951690240','菜单添加',NULL,'0',3,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477244926263296','kaizhi_sysmanager_menu_edit','894476950951690240','菜单编辑',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477420512411648','kaizhi_sysmanager_menu_delete','894476950951690240','菜单删除',NULL,'0',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477851082883072','kaizhi_sysmanager_doc','111111111111111111','文档查询',NULL,'1',2,9,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894477995903811584','kaizhi_sysmanager_log','111111111111111111','add',NULL,'1',2,10,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('894752734459199488','kaizhi_sysmanager_company','111111111111111111','机构管理',NULL,'1',1,1,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395840','kaizhi_sysmanager_user_resetpwd','893288715881807872','密码重置',NULL,'1',3,2,'1','','2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395841','kaizhi_teachmanager_course','222222222222222222','课程管理',NULL,'1',2,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395842','kaizhi_teachmanager_course_add','903459378655395841','添加课程',NULL,'1',3,1,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395843','kaizhi_teachmanager_course_del','903459378655395841','删除课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395845','kaizhi_teachmanager_course_market','903459378655395841','编辑课程营销信息',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395846','kaizhi_teachmanager_course_base','903459378655395841','编辑课程基础信息',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395847','kaizhi_teachmanager_course_plan','903459378655395841','编辑课程计划',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395848','kaizhi_teachmanager_course_publish','903459378655395841','发布课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395849','kaizhi_teachmanager_course_list','903459378655395841','我的课程',NULL,NULL,NULL,NULL,NULL,NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25'),('903459378655395850','course_find_list','903459378655395841','查询课程列表',NULL,NULL,NULL,NULL,'1',NULL,'2022-09-28 08:35:25','2022-09-28 08:35:25');
+/*!40000 ALTER TABLE `kaizhi_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_permission`
+-- Table structure for table `kaizhi_permission`
 --
 
-DROP TABLE IF EXISTS `xc_permission`;
+DROP TABLE IF EXISTS `kaizhi_permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_permission` (
+CREATE TABLE `kaizhi_permission` (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `menu_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `xu_permission_unique` (`role_id`,`menu_id`) USING BTREE,
-  KEY `fk_xc_permission_menu_id` (`menu_id`) USING BTREE
+  KEY `fk_kaizhi_permission_menu_id` (`menu_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_permission`
+-- Dumping data for table `kaizhi_permission`
 --
 
-LOCK TABLES `xc_permission` WRITE;
-/*!40000 ALTER TABLE `xc_permission` DISABLE KEYS */;
-INSERT INTO `xc_permission` (`id`, `role_id`, `menu_id`, `create_time`) VALUES ('11','20','222222222222222222','2022-09-28 08:34:56'),('12','20','903459378655395841','2022-09-28 08:34:56'),('13','20','903459378655395842','2022-09-28 08:34:56'),('14','20','903459378655395843','2022-09-28 08:34:56'),('15','20','903459378655395845','2022-09-28 08:34:56'),('16','20','903459378655395846','2022-09-28 08:34:56'),('17','20','903459378655395847','2022-09-28 08:34:56'),('18','20','903459378655395848','2022-09-28 08:34:56'),('19','20','903459378655395849','2022-09-28 08:34:56'),('89328714465778073617','17','111111111111111111','2022-09-28 08:34:56'),('8932871446577807366','6','111111111111111111','2022-09-28 08:34:56'),('8932871446577807367','6','903459378655395846','2022-09-28 08:34:56'),('8932871446577807368','8','111111111111111111','2022-09-28 08:34:56'),('8932887158818078726','6','893288715881807872','2022-09-28 08:34:56'),('8932887158818078728','8','893288715881807872','2022-09-28 08:34:56'),('8933049602827878406','6','893304960282787840','2022-09-28 08:34:56'),('8933049602827878408','8','893304960282787840','2022-09-28 08:34:56'),('8943965235325173766','6','894396523532517376','2022-09-28 08:34:56'),('8943965235325173768','8','894396523532517376','2022-09-28 08:34:56'),('8944734867124387846','6','894473486712438784','2022-09-28 08:34:56'),('8944734867124387848','8','894473486712438784','2022-09-28 08:34:56'),('8944736518379929606','6','894473651837992960','2022-09-28 08:34:56'),('8944736518379929608','8','894473651837992960','2022-09-28 08:34:56'),('8944751420616212488','8','894475142061621248','2022-09-28 08:34:56'),('8944758278806568968','8','894475827880656896','2022-09-28 08:34:56'),('8944759854522695688','8','894475985452269568','2022-09-28 08:34:56'),('8944761187304734728','8','894476118730473472','2022-09-28 08:34:56'),('8944762764027494408','8','894476276402749440','2022-09-28 08:34:56'),('8944769509516902408','8','894476950951690240','2022-09-28 08:34:56'),('8944771079193231368','8','894477107919323136','2022-09-28 08:34:56'),('8944772449262632968','8','894477244926263296','2022-09-28 08:34:56'),('8944774205124116488','8','894477420512411648','2022-09-28 08:34:56'),('89447785108288307217','17','894477851082883072','2022-09-28 08:34:56'),('8944778510828830726','6','894477851082883072','2022-09-28 08:34:56'),('8944778510828830728','8','894477851082883072','2022-09-28 08:34:56'),('89447799590381158417','17','894477995903811584','2022-09-28 08:34:56'),('8944779959038115846','6','894477995903811584','2022-09-28 08:34:56'),('8944779959038115848','8','894477995903811584','2022-09-28 08:34:56'),('89475273445919948817','17','894752734459199488','2022-09-28 08:34:56'),('8947527344591994888','8','894752734459199488','2022-09-28 08:34:56'),('8947692177635409926','6','903459378655395842','2022-09-28 08:34:56'),('8947692177635409930','6','903459378655395841','2022-09-28 08:34:56'),('903459378655395849','17','903459378655395849','2022-09-30 14:29:08');
-/*!40000 ALTER TABLE `xc_permission` ENABLE KEYS */;
+LOCK TABLES `kaizhi_permission` WRITE;
+/*!40000 ALTER TABLE `kaizhi_permission` DISABLE KEYS */;
+INSERT INTO `kaizhi_permission` (`id`, `role_id`, `menu_id`, `create_time`) VALUES ('11','20','222222222222222222','2022-09-28 08:34:56'),('12','20','903459378655395841','2022-09-28 08:34:56'),('13','20','903459378655395842','2022-09-28 08:34:56'),('14','20','903459378655395843','2022-09-28 08:34:56'),('15','20','903459378655395845','2022-09-28 08:34:56'),('16','20','903459378655395846','2022-09-28 08:34:56'),('17','20','903459378655395847','2022-09-28 08:34:56'),('18','20','903459378655395848','2022-09-28 08:34:56'),('19','20','903459378655395849','2022-09-28 08:34:56'),('89328714465778073617','17','111111111111111111','2022-09-28 08:34:56'),('8932871446577807366','6','111111111111111111','2022-09-28 08:34:56'),('8932871446577807367','6','903459378655395846','2022-09-28 08:34:56'),('8932871446577807368','8','111111111111111111','2022-09-28 08:34:56'),('8932887158818078726','6','893288715881807872','2022-09-28 08:34:56'),('8932887158818078728','8','893288715881807872','2022-09-28 08:34:56'),('8933049602827878406','6','893304960282787840','2022-09-28 08:34:56'),('8933049602827878408','8','893304960282787840','2022-09-28 08:34:56'),('8943965235325173766','6','894396523532517376','2022-09-28 08:34:56'),('8943965235325173768','8','894396523532517376','2022-09-28 08:34:56'),('8944734867124387846','6','894473486712438784','2022-09-28 08:34:56'),('8944734867124387848','8','894473486712438784','2022-09-28 08:34:56'),('8944736518379929606','6','894473651837992960','2022-09-28 08:34:56'),('8944736518379929608','8','894473651837992960','2022-09-28 08:34:56'),('8944751420616212488','8','894475142061621248','2022-09-28 08:34:56'),('8944758278806568968','8','894475827880656896','2022-09-28 08:34:56'),('8944759854522695688','8','894475985452269568','2022-09-28 08:34:56'),('8944761187304734728','8','894476118730473472','2022-09-28 08:34:56'),('8944762764027494408','8','894476276402749440','2022-09-28 08:34:56'),('8944769509516902408','8','894476950951690240','2022-09-28 08:34:56'),('8944771079193231368','8','894477107919323136','2022-09-28 08:34:56'),('8944772449262632968','8','894477244926263296','2022-09-28 08:34:56'),('8944774205124116488','8','894477420512411648','2022-09-28 08:34:56'),('89447785108288307217','17','894477851082883072','2022-09-28 08:34:56'),('8944778510828830726','6','894477851082883072','2022-09-28 08:34:56'),('8944778510828830728','8','894477851082883072','2022-09-28 08:34:56'),('89447799590381158417','17','894477995903811584','2022-09-28 08:34:56'),('8944779959038115846','6','894477995903811584','2022-09-28 08:34:56'),('8944779959038115848','8','894477995903811584','2022-09-28 08:34:56'),('89475273445919948817','17','894752734459199488','2022-09-28 08:34:56'),('8947527344591994888','8','894752734459199488','2022-09-28 08:34:56'),('8947692177635409926','6','903459378655395842','2022-09-28 08:34:56'),('8947692177635409930','6','903459378655395841','2022-09-28 08:34:56'),('903459378655395849','17','903459378655395849','2022-09-30 14:29:08');
+/*!40000 ALTER TABLE `kaizhi_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_role`
+-- Table structure for table `kaizhi_role`
 --
 
-DROP TABLE IF EXISTS `xc_role`;
+DROP TABLE IF EXISTS `kaizhi_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_role` (
+CREATE TABLE `kaizhi_role` (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `role_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
@@ -323,23 +319,23 @@ CREATE TABLE `xc_role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_role`
+-- Dumping data for table `kaizhi_role`
 --
 
-LOCK TABLES `xc_role` WRITE;
-/*!40000 ALTER TABLE `xc_role` DISABLE KEYS */;
-INSERT INTO `xc_role` (`id`, `role_name`, `role_code`, `description`, `create_time`, `update_time`, `status`) VALUES ('17','学生','student',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('18','老师','teacher',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('20','教学管理员','teachmanager',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('6','管理员','admin',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('8','超级管理员','super',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1');
-/*!40000 ALTER TABLE `xc_role` ENABLE KEYS */;
+LOCK TABLES `kaizhi_role` WRITE;
+/*!40000 ALTER TABLE `kaizhi_role` DISABLE KEYS */;
+INSERT INTO `kaizhi_role` (`id`, `role_name`, `role_code`, `description`, `create_time`, `update_time`, `status`) VALUES ('17','学生','student',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('18','老师','teacher',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('20','教学管理员','teachmanager',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('6','管理员','admin',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1'),('8','超级管理员','super',NULL,'2022-09-28 08:32:57','2022-09-28 08:32:57','1');
+/*!40000 ALTER TABLE `kaizhi_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_teacher`
+-- Table structure for table `kaizhi_teacher`
 --
 
-DROP TABLE IF EXISTS `xc_teacher`;
+DROP TABLE IF EXISTS `kaizhi_teacher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_teacher` (
+CREATE TABLE `kaizhi_teacher` (
   `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '称呼',
@@ -348,27 +344,27 @@ CREATE TABLE `xc_teacher` (
   `pic` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '老师照片',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `xu_teacher_user_id` (`user_id`) USING BTREE,
-  CONSTRAINT `fk_xc_teacher_user_id` FOREIGN KEY (`user_id`) REFERENCES `xc_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `fk_kaizhi_teacher_user_id` FOREIGN KEY (`user_id`) REFERENCES `kaizhi_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_teacher`
+-- Dumping data for table `kaizhi_teacher`
 --
 
-LOCK TABLES `xc_teacher` WRITE;
-/*!40000 ALTER TABLE `xc_teacher` DISABLE KEYS */;
-/*!40000 ALTER TABLE `xc_teacher` ENABLE KEYS */;
+LOCK TABLES `kaizhi_teacher` WRITE;
+/*!40000 ALTER TABLE `kaizhi_teacher` DISABLE KEYS */;
+/*!40000 ALTER TABLE `kaizhi_teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_user`
+-- Table structure for table `kaizhi_user`
 --
 
-DROP TABLE IF EXISTS `xc_user`;
+DROP TABLE IF EXISTS `kaizhi_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_user` (
+CREATE TABLE `kaizhi_user` (
   `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `username` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(96) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
@@ -391,44 +387,40 @@ CREATE TABLE `xc_user` (
   UNIQUE KEY `unique_user_username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `xc_user`
---
-
-LOCK TABLES `xc_user` WRITE;
-/*!40000 ALTER TABLE `xc_user` DISABLE KEYS */;
-INSERT INTO `xc_user` (`id`, `username`, `password`, `salt`, `wx_unionid`, `nickname`, `name`, `userpic`, `company_id`, `utype`, `birthday`, `sex`, `email`, `cellphone`, `qq`, `status`, `create_time`, `update_time`) VALUES ('17b9d8be-cef3-400c-bec5-1478a6ef7ddc','o5PB1sytMXJGGv2x5OBP2uMzCpS8','o5PB1sytMXJGGv2x5OBP2uMzCpS8',NULL,'o5PB1sytMXJGGv2x5OBP2uMzCpS8','Mr.M','Mr.M','https://thirdwx.qlogo.cn/mmopen/vi_32/P8h3wxWDqCqfI0BmHxAYHEzppsaBp4xt7nscyiaQ2ZptEhzyKcEia7loT6pO6zExaM9FR7BnSguxqKYuIe5B3aEA/132',NULL,'101001',NULL,NULL,NULL,NULL,NULL,'1','2022-09-30 20:08:51',NULL),('46','super','$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe',NULL,NULL,NULL,'超级管理员',NULL,NULL,'101003',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('48','admin','$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe',NULL,NULL,NULL,'系统管理员',NULL,NULL,'101003',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('49','itcast','$2a$10$wLAyszibjsvqjEFLtgo43eJxKtYkD7wcZZhzNYNX/piFXsClxEERS',NULL,NULL,NULL,'test02',NULL,NULL,'101002',NULL,'1','','12345',NULL,'1','2022-09-28 08:32:03',NULL),('50','stu1','$2a$10$0pt7WlfTbnPDTcWtp/.2Mu5CTXvohnNQhR628qq4RoKSc0dGAdEgm',NULL,NULL,'大水牛','学生1','http://file.123.com/dddf',NULL,'101001','2022-09-28 19:28:46','1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('51','stu2','$2a$10$nxPKkYSez7uz2YQYUnwhR.z57km3yqKn3Hr/p1FR6ZKgc18u.Tvqm',NULL,NULL,NULL,'学生2',NULL,NULL,'101001',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('52','t1','$2a$10$0pt7WlfTbnPDTcWtp/.2Mu5CTXvohnNQhR628qq4RoKSc0dGAdEgm',NULL,NULL,NULL,'M老师',NULL,'1232141425','101002',NULL,'1',NULL,NULL,NULL,'','2022-09-28 08:32:03',NULL);
-/*!40000 ALTER TABLE `xc_user` ENABLE KEYS */;
+ 
+LOCK TABLES `kaizhi_user` WRITE;
+/*!40000 ALTER TABLE `kaizhi_user` DISABLE KEYS */;
+INSERT INTO `kaizhi_user` (`id`, `username`, `password`, `salt`, `wx_unionid`, `nickname`, `name`, `userpic`, `company_id`, `utype`, `birthday`, `sex`, `email`, `cellphone`, `qq`, `status`, `create_time`, `update_time`) VALUES ('17b9d8be-cef3-400c-bec5-1478a6ef7ddc','o5PB1sytMXJGGv2x5OBP2uMzCpS8','o5PB1sytMXJGGv2x5OBP2uMzCpS8',NULL,'o5PB1sytMXJGGv2x5OBP2uMzCpS8','Mr.M','Mr.M','https://thirdwx.qlogo.cn/mmopen/vi_32/P8h3wxWDqCqfI0BmHxAYHEzppsaBp4xt7nscyiaQ2ZptEhzyKcEia7loT6pO6zExaM9FR7BnSguxqKYuIe5B3aEA/132',NULL,'101001',NULL,NULL,NULL,NULL,NULL,'1','2022-09-30 20:08:51',NULL),('46','super','$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe',NULL,NULL,NULL,'超级管理员',NULL,NULL,'101003',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('48','admin','$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe',NULL,NULL,NULL,'系统管理员',NULL,NULL,'101003',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('49','itcast','$2a$10$wLAyszibjsvqjEFLtgo43eJxKtYkD7wcZZhzNYNX/piFXsClxEERS',NULL,NULL,NULL,'test02',NULL,NULL,'101002',NULL,'1','','12345',NULL,'1','2022-09-28 08:32:03',NULL),('50','stu1','$2a$10$0pt7WlfTbnPDTcWtp/.2Mu5CTXvohnNQhR628qq4RoKSc0dGAdEgm',NULL,NULL,'大水牛','学生1','http://file.kaizhi.cn/dddf',NULL,'101001','2022-09-28 19:28:46','1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('51','stu2','$2a$10$nxPKkYSez7uz2YQYUnwhR.z57km3yqKn3Hr/p1FR6ZKgc18u.Tvqm',NULL,NULL,NULL,'学生2',NULL,NULL,'101001',NULL,'1',NULL,NULL,NULL,'1','2022-09-28 08:32:03',NULL),('52','t1','$2a$10$0pt7WlfTbnPDTcWtp/.2Mu5CTXvohnNQhR628qq4RoKSc0dGAdEgm',NULL,NULL,NULL,'M老师',NULL,'1232141425','101002',NULL,'1',NULL,NULL,NULL,'','2022-09-28 08:32:03',NULL);
+/*!40000 ALTER TABLE `kaizhi_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_user_role`
+-- Table structure for table `kaizhi_user_role`
 --
 
-DROP TABLE IF EXISTS `xc_user_role`;
+DROP TABLE IF EXISTS `kaizhi_user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_user_role` (
+CREATE TABLE `kaizhi_user_role` (
   `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `role_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `fk_xc_user_role_user_id` (`user_id`) USING BTREE,
-  KEY `fk_xc_user_role_role_id` (`role_id`) USING BTREE
+  KEY `fk_kaizhi_user_role_user_id` (`user_id`) USING BTREE,
+  KEY `fk_kaizhi_user_role_role_id` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_user_role`
+-- Dumping data for table `kaizhi_user_role`
 --
 
-LOCK TABLES `xc_user_role` WRITE;
-/*!40000 ALTER TABLE `xc_user_role` DISABLE KEYS */;
-INSERT INTO `xc_user_role` (`id`, `user_id`, `role_id`, `create_time`, `creator`) VALUES ('1','46','8','2017-09-11 13:02:45','超级管理员'),('19','50','6','2017-09-12 14:20:20','超级管理员'),('2','48','6','2017-09-11 13:02:56','超级管理员'),('20','50','17','2017-09-12 14:20:20','超级管理员'),('2034706c-7d15-43fb-8b0d-bd581c7ace02','e63fb882-3226-4365-9711-d3fd467a4813','17',NULL,NULL),('21','52','20',NULL,NULL),('3','49','20','2017-09-11 13:03:12',NULL),('48d759c1-a597-4220-8ddf-91696638d91d','17b9d8be-cef3-400c-bec5-1478a6ef7ddc','17',NULL,NULL),('88f646ec-7257-4987-816e-92adfb68e0c1','e47ade0d-377d-4e58-99fc-6d5e2af5c148','17',NULL,NULL);
-/*!40000 ALTER TABLE `xc_user_role` ENABLE KEYS */;
+LOCK TABLES `kaizhi_user_role` WRITE;
+/*!40000 ALTER TABLE `kaizhi_user_role` DISABLE KEYS */;
+INSERT INTO `kaizhi_user_role` (`id`, `user_id`, `role_id`, `create_time`, `creator`) VALUES ('1','46','8','2017-09-11 13:02:45','超级管理员'),('19','50','6','2017-09-12 14:20:20','超级管理员'),('2','48','6','2017-09-11 13:02:56','超级管理员'),('20','50','17','2017-09-12 14:20:20','超级管理员'),('2034706c-7d15-43fb-8b0d-bd581c7ace02','e63fb882-3226-4365-9711-d3fd467a4813','17',NULL,NULL),('21','52','20',NULL,NULL),('3','49','20','2017-09-11 13:03:12',NULL),('48d759c1-a597-4220-8ddf-91696638d91d','17b9d8be-cef3-400c-bec5-1478a6ef7ddc','17',NULL,NULL),('88f646ec-7257-4987-816e-92adfb68e0c1','e47ade0d-377d-4e58-99fc-6d5e2af5c148','17',NULL,NULL);
+/*!40000 ALTER TABLE `kaizhi_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

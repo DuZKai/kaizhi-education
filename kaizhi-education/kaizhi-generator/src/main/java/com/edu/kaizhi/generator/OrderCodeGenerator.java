@@ -26,9 +26,9 @@ public class OrderCodeGenerator {
 	private static final String[] TABLE_NAMES = new String[]{
 //			"mq_message",
 //			"mq_message_history",
-			"xc_orders",
-			"xc_orders_goods",
-			"xc_pay_record"
+			"kaizhi_orders",
+			"kaizhi_orders_goods",
+			"kaizhi_pay_record"
 	};
 
 	// TODO 默认生成entity，需要生成DTO修改此变量
