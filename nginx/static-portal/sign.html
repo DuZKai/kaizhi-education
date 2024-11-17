@@ -41,8 +41,8 @@
                 <div>
                     <p>验证码</p>
                     <p>
-                        <img :src="checkcode_img"/>
                         <input type="text" name="checkcode" v-model="usernamejson.checkcode">
+                        <img :src="checkcode_img"/>
                         <input type="hidden" name="checkcodekey" v-model="usernamejson.checkcodekey">
                         <span class="proof cl-orange"></span>
                     </p>
@@ -83,8 +83,8 @@
               formdata:{
                   username:'',
                   grant_type:'password',
-                  client_secret:'XcWebApp',
-                  client_id:'XcWebApp'
+                  client_secret:'WebApp',
+                  client_id:'WebApp'
               },
               autologin:false,
               checkcode_img:'',

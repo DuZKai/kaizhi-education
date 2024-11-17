@@ -57,14 +57,12 @@ public class RSAUtil {
 			byte[] encodedKey = decoder.decode(public_key);
 			PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
 
-
 			Signature signature = Signature.getInstance(SIGN_ALGORITHMS);
 
 			signature.initVerify(pubKey);
 			signature.update(content.getBytes(input_charset));
 
-			boolean bverify = signature.verify(decoder.decode(sign));
-			return bverify;
+            return signature.verify(decoder.decode(sign));
 
 		} catch (Exception e) {
 			e.printStackTrace();

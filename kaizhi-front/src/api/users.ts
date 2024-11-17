@@ -7,8 +7,8 @@ export async function login(
   password: string
 ): Promise<IUserLogin> {
   const { data } = await createFormAPI('/uaa/oauth/token', 'post', {
-    client_id: 'XcWebApp',
-    client_secret: 'XcWebApp',
+    client_id: 'WebApp',
+    client_secret: 'WebApp',
     grant_type: 'password',
     username: JSON.stringify({
       username: username,

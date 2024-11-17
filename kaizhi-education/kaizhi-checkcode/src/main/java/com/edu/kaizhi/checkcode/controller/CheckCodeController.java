@@ -39,7 +39,6 @@ public class CheckCodeController {
     })
     @PostMapping(value = "/verify")
     public Boolean verify(String key, String code){
-        Boolean isSuccess = picCheckCodeService.verify(key,code);
-        return isSuccess;
+        return picCheckCodeService.verify(key,code);
     }
 }
