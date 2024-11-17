@@ -42,7 +42,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     TeachplanMapper teachplanMapper;
 
     // 课程分页查询
-    public PageResult<CourseListDto> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
 
         Long pageNo = pageParams.getPageNo();
         Long pageSize = pageParams.getPageSize();
@@ -75,6 +75,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         // return new PageResult<>(items, total, pageParams.getPageNo(), pageParams.getPageSize());
 
         LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
+
+        // 根据培训机构ID拼接查询条件
+        queryWrapperBase.eq(CourseBase::getCompanyId, companyId);
 
         //拼接查询条件
         //根据课程名称模糊查询  name like '%名称%'

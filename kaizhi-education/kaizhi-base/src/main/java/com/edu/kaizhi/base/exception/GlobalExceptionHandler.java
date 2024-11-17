@@ -35,9 +35,11 @@ public class GlobalExceptionHandler {
     public RestErrorResponse exception(Exception e) {
 
         log.error("【系统异常】{}", e.getMessage());
-
+        e.printStackTrace();
+        if(e.getMessage().equals("不允许访问")){
+            return new RestErrorResponse("您没有操作此功能的权限");
+        }
         return new RestErrorResponse(CommonError.UNKOWN_ERROR.getErrMessage());
-
     }
 
     @ResponseBody
@@ -46,7 +48,7 @@ public class GlobalExceptionHandler {
     public RestErrorResponse methodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         List<String> errors = new ArrayList<>();
-        bindingResult.getFieldErrors().stream().forEach(fieldError -> {
+        bindingResult.getFieldErrors().forEach(fieldError -> {
             errors.add(fieldError.getDefaultMessage());
         });
 

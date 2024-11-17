@@ -2,9 +2,11 @@ package com.edu.kaizhi.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.edu.kaizhi.service.AuthService;
+import com.edu.kaizhi.ucenter.mapper.MenuMapper;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
 import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
 import com.edu.kaizhi.ucenter.model.dto.UserExt;
+import com.edu.kaizhi.ucenter.model.po.Menu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -12,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -24,6 +28,8 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    MenuMapper menuMapper;
 
     // 传入请求参数就是AuthParamsDto
     @Override
@@ -54,8 +60,12 @@ public class UserServiceImpl implements UserDetailsService {
      * @return com.edu.kaizhi.ucenter.model.po.XcUser 用户信息
      */
     public UserDetails getUserPrincipal(UserExt user) {
-        //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
-        String[] authorities = {"p1"};
+        // 根据用户id查询用户权限，如果不加报Cannot pass a null GrantedAuthority collection
+        String[] authorities = {};
+        List<Menu> menus = menuMapper.selectPermissionByUserId(user.getId());
+        if(!menus.isEmpty()){
+            authorities = menus.stream().map(Menu::getCode).toArray(String[]::new);
+        }
         String password = user.getPassword();
         //为了安全在令牌中不放密码
         user.setPassword(null);

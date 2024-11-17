@@ -322,4 +322,4 @@ docker restart elasticsearch
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - Redis优化查询课程部分，每次刷新都得查询
 - Redis优化存储的JWT令牌，验证码也可以放入redis
-- 扫码登录一直跳转在框架div，无法整个页面跳转
+- 用户权限太多查询数据库，放入redis

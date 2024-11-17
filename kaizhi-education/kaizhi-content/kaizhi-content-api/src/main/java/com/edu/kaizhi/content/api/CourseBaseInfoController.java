@@ -10,6 +10,7 @@ import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,15 @@ public class CourseBaseInfoController {
     private CourseBaseInfoService courseBaseInfoService;
 
     @ApiOperation("课程分页查询信息列表")
+    @PreAuthorize("hasAuthority('kaizhi_teachmanager_course_list')") // 指定权限标识符
     @PostMapping("/course/list")
     public PageResult<CourseListDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParams) {
-        return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParams);
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        String companyId = user != null ? user.getCompanyId() : "1232141425";
+
+        return courseBaseInfoService.queryCourseBaseList(Long.parseLong(companyId), pageParams, queryCourseParams);
     }
 
 
