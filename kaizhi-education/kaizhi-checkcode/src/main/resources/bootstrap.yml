@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: checkcode
+
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848
+      discovery:
+        namespace: kaizhi_edu
+        group: kaizhi-education
+      config:
+        namespace: kaizhi_edu
+        group: kaizhi-education
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
+          - data-id: redis-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true

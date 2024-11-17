@@ -10,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 /**
- * @description 课程索引与搜索测试
- * @author Mr.M
- * @date 2022/9/25 7:39
- * @version 1.0
+ * 课程索引与搜索测试
  */
  @SpringBootTest
 public class CourseIndexSearchTest {

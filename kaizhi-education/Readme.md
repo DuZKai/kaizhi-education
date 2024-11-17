@@ -237,7 +237,9 @@ docker restart elasticsearch
 
 
 
+### Redis
 
+- 密码redis
 
 
 
@@ -319,4 +321,4 @@ docker restart elasticsearch
 - content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - Redis优化查询课程部分，每次刷新都得查询
-- Redis优化存储的JWT令牌
+- Redis优化存储的JWT令牌，验证码也可以放入redis
