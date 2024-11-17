@@ -14,17 +14,22 @@ import org.springframework.stereotype.Service;
 @Service("wxAuthService")
 public class WxAuthServiceImpl implements AuthService {
 
-    // @Autowired
-    // UserMapper userMapper;
-    //
+    @Autowired
+    UserMapper userMapper;
+
     // @Autowired
     // PasswordEncoder passwordEncoder;
-    //
-    //
-    @Override
+
     public UserExt execute(AuthParamsDto authParamsDto) {
-        return null;
-        // return UserExt;
+        //账号
+        String username = authParamsDto.getUsername();
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        if(user==null){
+            //返回空表示用户不存在
+            throw new RuntimeException("账号不存在");
+        }
+        UserExt xcUserExt = new UserExt();
+        BeanUtils.copyProperties(user, xcUserExt);
+        return xcUserExt;
     }
 }
-
