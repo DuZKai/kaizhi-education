@@ -47,28 +47,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-       // 密码为明文方式
-       //  return NoOpPasswordEncoder.getInstance();
-       // BCryptPasswordEncoder是Spring Security提供的一个密码加密工具类
-       return new BCryptPasswordEncoder();
+        // 密码为明文方式
+        //  return NoOpPasswordEncoder.getInstance();
+        // BCryptPasswordEncoder是Spring Security提供的一个密码加密工具类
+        return new BCryptPasswordEncoder();
     }
 
     //配置安全拦截机制
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // TODO: 暂时放行全部请求
+        // http
+        //         .authorizeRequests()
+        //         .antMatchers("/r/**").authenticated()//访问/r开始的请求需要认证通过
+        //         .anyRequest().permitAll()//其它请求全部放行
+        //         .and()
+        //         .formLogin().successForwardUrl("/login-success");//登录成功跳转到/login-success
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/r/**").authenticated()//访问/r开始的请求需要认证通过
-                .anyRequest().permitAll()//其它请求全部放行
+                .anyRequest().permitAll()
                 .and()
-                .formLogin().successForwardUrl("/login-success");//登录成功跳转到/login-success
+                .formLogin().successForwardUrl("/login-success");
     }
 
     // 密码编码测试
     public static void main(String[] args) {
         String password = "111111";
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        for(int i=0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             //每个计算出的Hash值都不一样
             String hashPass = passwordEncoder.encode(password);
             System.out.println(hashPass);
