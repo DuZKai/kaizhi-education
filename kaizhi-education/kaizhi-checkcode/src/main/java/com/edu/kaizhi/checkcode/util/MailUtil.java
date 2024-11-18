@@ -18,7 +18,7 @@ import static com.edu.kaizhi.base.constant.RedisConfig.VERIFY_CODE_TTL;
 
 public class MailUtil {
     static final int code_length = 6;
-    static final String PASSWORD = "ybvdhsxdoolidhfi";
+    static final String PASSWORD = "XXXXXXXXXXXXXXXX";
     static final String USER = "2305501037@qq.com";
     static final String RECEIVER = "2305501037@qq.com";
     static final int PORT = 465;
