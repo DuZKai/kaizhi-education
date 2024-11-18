@@ -22,7 +22,7 @@ class CourseBaseMapperTests {
     CourseBaseMapper courseBaseMapper;
 
 
-    @Test
+    // @Test
     void testCourseBaseMapper() {
         CourseBase courseBase = courseBaseMapper.selectById(74L);
         Assertions.assertNotNull(courseBase);

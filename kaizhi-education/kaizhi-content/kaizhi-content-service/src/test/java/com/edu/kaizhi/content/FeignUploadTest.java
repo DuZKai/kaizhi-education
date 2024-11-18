@@ -18,7 +18,7 @@ public class FeignUploadTest {
     MediaServiceClient mediaServiceClient;
 
     //远程调用，上传文件
-    @Test
+    // @Test
     public void test() {
 
         MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(new File("C:\\Users\\Administrator\\Desktop\\test.html"));

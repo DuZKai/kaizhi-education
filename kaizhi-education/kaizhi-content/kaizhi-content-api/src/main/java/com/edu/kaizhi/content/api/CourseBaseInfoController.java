@@ -3,15 +3,13 @@ package com.edu.kaizhi.content.api;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
-import com.edu.kaizhi.base.utils.SecurityUtil;
+import com.edu.kaizhi.content.util.SecurityUtil;
 import com.edu.kaizhi.content.model.dto.*;
-import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,10 @@
 package com.edu.kaizhi.checkcode.controller;
 
-import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.checkcode.model.CheckCodeParamsDto;
 import com.edu.kaizhi.checkcode.model.CheckCodeResultDto;
 import com.edu.kaizhi.checkcode.service.CheckCodeService;
+import com.edu.kaizhi.checkcode.service.SendCodeService;
+import com.edu.kaizhi.checkcode.util.MailUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * 验证码服务接口
@@ -20,6 +20,8 @@ import java.util.Map;
 @Api(value = "验证码服务接口")
 @RestController
 public class CheckCodeController {
+    @Autowired
+    SendCodeService sendCodeService;
 
     @Resource(name = "PicCheckCodeService")
     private CheckCodeService picCheckCodeService;
@@ -40,5 +42,12 @@ public class CheckCodeController {
     @PostMapping(value = "/verify")
     public Boolean verify(String key, String code){
         return picCheckCodeService.verify(key,code);
+    }
+
+    @ApiOperation(value = "发送邮箱验证码", tags = "发送邮箱验证码")
+    @PostMapping("/phone")
+    public void sendEMail(@RequestParam("param1") String email) {
+        String code = MailUtil.achieveCode();
+        sendCodeService.sendEMail(email, code);
     }
 }

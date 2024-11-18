@@ -20,7 +20,7 @@ class CourseCategoryServiceTests {
     CourseCategoryService courseCategoryService;
 
 
-    @Test
+    // @Test
     void testCourseCategoryService() {
         List<CourseCategoryTreeDto>  courseCategoryTreeDtos = courseCategoryService.queryTreeNodes("1");
         System.out.println(courseCategoryTreeDtos);

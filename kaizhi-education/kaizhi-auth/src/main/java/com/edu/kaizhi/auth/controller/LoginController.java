@@ -1,13 +1,14 @@
 package com.edu.kaizhi.auth.controller;
 
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
+import com.edu.kaizhi.ucenter.model.dto.FindPswDto;
 import com.edu.kaizhi.ucenter.model.po.User;
+import com.edu.kaizhi.ucenter.service.VerifyService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 测试controller
@@ -19,18 +20,18 @@ public class LoginController {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    VerifyService verifyService;
+
 
     @RequestMapping("/login-success")
     public String loginSuccess() {
-
         return "登录成功";
     }
 
-
     @RequestMapping("/user/{id}")
     public User getuser(@PathVariable("id") String id) {
-        User user = userMapper.selectById(id);
-        return user;
+        return userMapper.selectById(id);
     }
 
     @RequestMapping("/r/r1")
@@ -45,6 +46,10 @@ public class LoginController {
         return "访问r2资源";
     }
 
-
-
+    @ApiOperation(value = "找回密码", tags = "找回密码")
+    @PostMapping("/findpassword")
+    @PreAuthorize("hasAuthority('kaizhi_teachmanager')")
+    public void findPassword(@RequestBody FindPswDto findPswDto) {
+        verifyService.findPassword(findPswDto);
+    }
 }

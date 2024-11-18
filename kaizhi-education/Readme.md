@@ -157,17 +157,17 @@ nginx.exe -s reload
     docker start elasticsearch
   docker start kibana
     # docker start gogs
-    ```
-    
-    
+  ```
+  
+  
     - 查看状态
       
     ```shell
     docker ps
     ```
-    
+  
     - 一共有如下容器：
-    
+  
     1. xuxueli/xxl-job-admin:2.3.1
     2. minio/minio:RELEASE.2022-09-07T22-25-02Z
     3. redis:6.2.7
@@ -175,7 +175,7 @@ nginx.exe -s reload
     5. rabbitmq:3.8.34
     6. nacos/nacos-server:1.4.1
     7. mysql:8.0.26
-    
+  
 - 有时可能centos失灵，需要再次重启（原因可能是nacos与数据库相关联，数据库启动慢导致nacos启动可能出错）
 
 ```
@@ -263,9 +263,10 @@ docker restart elasticsearch
   - 前端
   
     - 打开kaizhi-front，使用npm运行serve服务
+    - 点进nginx.exe打开静态页面
   
   
-
+  
   
   - 虚拟机中(个人虚拟机密码：centos)
   
@@ -304,10 +305,6 @@ docker restart elasticsearch
 
 
 
-
-
-
-
 ## TODO
 
 - 太多无用输出，8效率低下，项目完成时尽量尝试换为21，虚拟机也是尽量换成最新版本
@@ -323,3 +320,5 @@ docker restart elasticsearch
 - Redis优化查询课程部分，每次刷新都得查询
 - Redis优化存储的JWT令牌，验证码也可以放入redis
 - 用户权限太多查询数据库，放入redis
+- 用户权限分配
+- 验证找回密码部分是否正确，一直报403 (Forbidden)，无法测试

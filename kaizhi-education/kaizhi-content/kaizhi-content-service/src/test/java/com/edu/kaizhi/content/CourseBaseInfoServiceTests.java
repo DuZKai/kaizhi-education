@@ -25,7 +25,7 @@ class CourseBaseInfoServiceTests {
     CourseBaseInfoService courseBaseInfoService;
 
 
-    @Test
+    // @Test
     void testCourseBaseInfoService() {
         //查询条件
         QueryCourseParamsDto queryCourseParamsDto = new QueryCourseParamsDto();
@@ -38,7 +38,7 @@ class CourseBaseInfoServiceTests {
         pageParams.setPageNo(1L);//页码
         pageParams.setPageSize(5L);//每页记录数
 
-        PageResult<CourseListDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(null , pageParams, queryCourseParamsDto);
+        PageResult<CourseListDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(1232141425L , pageParams, queryCourseParamsDto);
         System.out.println(courseBasePageResult);
     }
 

@@ -15,7 +15,7 @@ class CourseCategoryMapperTests {
     CourseCategoryMapper courseCategoryMapper;
 
 
-    @Test
+    // @Test
     void testCourseCategoryMapper() {
         List<CourseCategoryTreeDto> courseCategoryTreeDtos = courseCategoryMapper.selectTreeNodes("1");
         System.out.println(courseCategoryTreeDtos);

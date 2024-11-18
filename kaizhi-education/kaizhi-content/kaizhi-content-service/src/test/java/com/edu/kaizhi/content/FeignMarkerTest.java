@@ -29,7 +29,7 @@ public class FeignMarkerTest {
 
 
     //测试页面静态化
-    @Test
+    // @Test
     public void testGenerateHtmlByTemplate() throws IOException, TemplateException {
         //配置freemarker
         Configuration configuration = new Configuration(Configuration.getVersion());

@@ -1,4 +1,4 @@
-package com.edu.kaizhi.base.utils;
+package com.edu.kaizhi.content.util;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

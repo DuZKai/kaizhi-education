@@ -1,4 +1,4 @@
-package com.edu.kaizhi.config;
+package com.edu.kaizhi.content.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

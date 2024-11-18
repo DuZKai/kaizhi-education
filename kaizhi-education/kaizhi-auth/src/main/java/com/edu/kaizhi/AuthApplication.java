@@ -18,15 +18,15 @@ import java.util.List;
 @SpringBootApplication
 @EnableFeignClients(basePackages={"com.edu.kaizhi.*.feignclient"})
 public class AuthApplication {
+    @Bean
+    RestTemplate restTemplate(){
+        return new RestTemplate(new OkHttp3ClientHttpRequestFactory());
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);
     }
 
 
-    @Bean
-    RestTemplate restTemplate(){
-        return new RestTemplate(new OkHttp3ClientHttpRequestFactory());
-    }
 
 }

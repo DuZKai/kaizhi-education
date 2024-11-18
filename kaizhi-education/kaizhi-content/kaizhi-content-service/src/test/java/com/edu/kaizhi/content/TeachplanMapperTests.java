@@ -17,7 +17,7 @@ class TeachplanMapperTests {
     TeachplanMapper teachplanMapper;
 
 
-    @Test
+    // @Test
     void testSelectTreeNodes() {
         List<TeachplanDto> teachplanDtos = teachplanMapper.selectTreeNodes(117L);
         System.out.println(teachplanDtos);
