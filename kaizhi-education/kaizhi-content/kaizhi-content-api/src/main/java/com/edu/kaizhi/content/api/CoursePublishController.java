@@ -1,6 +1,7 @@
 package com.edu.kaizhi.content.api;
 
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
+import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.service.CoursePublishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,4 +48,13 @@ public class CoursePublishController {
         Long companyId = 1232141425L;
         coursePublishService.publish(companyId, courseId);
     }
+
+    @ApiOperation("查询课程发布信息")
+    @ResponseBody
+    @GetMapping("/r/coursepublish/{courseId}")
+    public CoursePublish getCoursepublish(@PathVariable("courseId") Long courseId) {
+        // 查询课程发布信息
+        return coursePublishService.getCoursePublish(courseId);
+    }
+
 }

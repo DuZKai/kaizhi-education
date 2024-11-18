@@ -1,8 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
---
--- Host: 192.168.101.65    Database: xc148_learning
--- ------------------------------------------------------
--- Server version	8.0.26
+-- Host: 192.168.101.65    Database: kaizhi_edu_learning
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,16 +11,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
-
 --
--- Table structure for table `xc_choose_course`
+-- Table structure for table `choose_course`
 --
 
-DROP TABLE IF EXISTS `xc_choose_course`;
+DROP TABLE IF EXISTS `choose_course`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_choose_course` (
+CREATE TABLE `choose_course` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `course_id` bigint NOT NULL COMMENT '课程id',
   `course_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程名称',
@@ -43,23 +37,23 @@ CREATE TABLE `xc_choose_course` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_choose_course`
+-- Dumping data for table `choose_course`
 --
 
-LOCK TABLES `xc_choose_course` WRITE;
-/*!40000 ALTER TABLE `xc_choose_course` DISABLE KEYS */;
-INSERT INTO `xc_choose_course` (`id`, `course_id`, `course_name`, `user_id`, `company_id`, `order_type`, `create_date`, `course_price`, `valid_days`, `status`, `validtime_start`, `validtime_end`, `remarks`) VALUES (16,121,'Spring Cloud 开发实战','52',1232141425,'700002','2023-02-09 11:43:32',1.00,365,'701001','2023-02-09 11:43:32','2024-02-09 11:43:32',NULL),(17,121,'Spring Cloud 开发实战','52',1232141425,'700002','2023-02-09 11:49:06',1.00,365,'701002','2023-02-09 11:49:06','2024-02-09 11:49:06',NULL);
-/*!40000 ALTER TABLE `xc_choose_course` ENABLE KEYS */;
+LOCK TABLES `choose_course` WRITE;
+/*!40000 ALTER TABLE `choose_course` DISABLE KEYS */;
+INSERT INTO `choose_course` (`id`, `course_id`, `course_name`, `user_id`, `company_id`, `order_type`, `create_date`, `course_price`, `valid_days`, `status`, `validtime_start`, `validtime_end`, `remarks`) VALUES (16,121,'Spring Cloud 开发实战','52',1232141425,'700002','2023-02-09 11:43:32',1.00,365,'701001','2023-02-09 11:43:32','2024-02-09 11:43:32',NULL),(17,121,'Spring Cloud 开发实战','52',1232141425,'700002','2023-02-09 11:49:06',1.00,365,'701002','2023-02-09 11:49:06','2024-02-09 11:49:06',NULL);
+/*!40000 ALTER TABLE `choose_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_course_tables`
+-- Table structure for table `course_tables`
 --
 
-DROP TABLE IF EXISTS `xc_course_tables`;
+DROP TABLE IF EXISTS `course_tables`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_course_tables` (
+CREATE TABLE `course_tables` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `choose_course_id` bigint NOT NULL COMMENT '选课记录id',
   `user_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户id',
@@ -78,23 +72,23 @@ CREATE TABLE `xc_course_tables` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_course_tables`
+-- Dumping data for table `course_tables`
 --
 
-LOCK TABLES `xc_course_tables` WRITE;
-/*!40000 ALTER TABLE `xc_course_tables` DISABLE KEYS */;
-INSERT INTO `xc_course_tables` (`id`, `choose_course_id`, `user_id`, `course_id`, `company_id`, `course_name`, `course_type`, `create_date`, `validtime_start`, `validtime_end`, `update_date`, `remarks`) VALUES (11,16,'52',121,1232141425,'Spring Cloud 开发实战','700002','2023-02-09 11:44:48','2023-02-09 11:43:32','2024-02-09 11:43:32',NULL,NULL);
-/*!40000 ALTER TABLE `xc_course_tables` ENABLE KEYS */;
+LOCK TABLES `course_tables` WRITE;
+/*!40000 ALTER TABLE `course_tables` DISABLE KEYS */;
+INSERT INTO `course_tables` (`id`, `choose_course_id`, `user_id`, `course_id`, `company_id`, `course_name`, `course_type`, `create_date`, `validtime_start`, `validtime_end`, `update_date`, `remarks`) VALUES (11,16,'52',121,1232141425,'Spring Cloud 开发实战','700002','2023-02-09 11:44:48','2023-02-09 11:43:32','2024-02-09 11:43:32',NULL,NULL);
+/*!40000 ALTER TABLE `course_tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xc_learn_record`
+-- Table structure for table `learn_record`
 --
 
-DROP TABLE IF EXISTS `xc_learn_record`;
+DROP TABLE IF EXISTS `learn_record`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `xc_learn_record` (
+CREATE TABLE `learn_record` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `course_id` bigint NOT NULL COMMENT '课程id',
   `course_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '课程名称',
@@ -109,13 +103,13 @@ CREATE TABLE `xc_learn_record` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xc_learn_record`
+-- Dumping data for table `learn_record`
 --
 
-LOCK TABLES `xc_learn_record` WRITE;
-/*!40000 ALTER TABLE `xc_learn_record` DISABLE KEYS */;
-INSERT INTO `xc_learn_record` (`id`, `course_id`, `course_name`, `user_id`, `learn_date`, `learn_length`, `teachplan_id`, `teachplan_name`) VALUES (1,123,'SpringBoot实战','52','2022-10-06 11:31:19',22,222,'入门程序'),(2,121,'Java编程思想','52','2022-10-06 11:31:57',10,333,'Java学习路径'),(7,117,'Nacos微服务开发实战','52','2022-10-06 13:18:24',0,269,'1.1 什么是配置中心'),(8,117,'Nacos微服务开发实战','52','2022-10-06 13:18:23',0,270,'1.2Nacos简介'),(9,117,'Nacos微服务开发实战','52','2022-10-06 13:18:25',0,271,'1.3安装Nacos Server'),(10,117,'Nacos微服务开发实战','52','2022-10-06 13:18:27',0,272,'1.4Nacos配置入门'),(11,117,'Nacos微服务开发实战','52','2022-10-06 13:41:08',0,275,'2.1什么是服务发现'),(12,117,'Nacos微服务开发实战','52','2022-10-06 13:18:46',0,276,'2.2服务发现快速入门');
-/*!40000 ALTER TABLE `xc_learn_record` ENABLE KEYS */;
+LOCK TABLES `learn_record` WRITE;
+/*!40000 ALTER TABLE `learn_record` DISABLE KEYS */;
+INSERT INTO `learn_record` (`id`, `course_id`, `course_name`, `user_id`, `learn_date`, `learn_length`, `teachplan_id`, `teachplan_name`) VALUES (1,123,'SpringBoot实战','52','2022-10-06 11:31:19',22,222,'入门程序'),(2,121,'Java编程思想','52','2022-10-06 11:31:57',10,333,'Java学习路径'),(7,117,'Nacos微服务开发实战','52','2022-10-06 13:18:24',0,269,'1.1 什么是配置中心'),(8,117,'Nacos微服务开发实战','52','2022-10-06 13:18:23',0,270,'1.2Nacos简介'),(9,117,'Nacos微服务开发实战','52','2022-10-06 13:18:25',0,271,'1.3安装Nacos Server'),(10,117,'Nacos微服务开发实战','52','2022-10-06 13:18:27',0,272,'1.4Nacos配置入门'),(11,117,'Nacos微服务开发实战','52','2022-10-06 13:41:08',0,275,'2.1什么是服务发现'),(12,117,'Nacos微服务开发实战','52','2022-10-06 13:18:46',0,276,'2.2服务发现快速入门');
+/*!40000 ALTER TABLE `learn_record` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

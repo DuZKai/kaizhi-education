@@ -128,6 +128,14 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     // 新增课程
     @Transactional
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
+        // 验证价格合理性
+        if (dto.getCharge().equals(CHARGE) && dto.getPrice() == 0) {
+            CustomizeException.cast("课程为收费价格不能为空");
+        }
+        if (dto.getCharge().equals(FREE) && dto.getPrice() != 0) {
+            CustomizeException.cast("课程为免费价格不能为空");
+        }
+
         //新增对象
         CourseBase courseBaseNew = new CourseBase();
         //将填写的课程信息赋值给新增对象，属性名称一致即可拷贝

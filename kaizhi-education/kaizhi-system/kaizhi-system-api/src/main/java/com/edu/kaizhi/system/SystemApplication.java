@@ -6,11 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * <p>
- *     系统管理启动类
- * </p>
- *
- * @Description:
+ * 系统管理启动类
  */
 @EnableScheduling
 @EnableSwagger2Doc

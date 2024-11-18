@@ -50,6 +50,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
             properties.load(resourceAsStream);
             Set<String> strings = properties.stringPropertyNames();
             whitelist = new ArrayList<>(strings);
+            log.info("加载白名单:{}", whitelist);
 
         } catch (Exception e) {
             log.error("加载/security-whitelist.properties出错:{}", e.getMessage());
@@ -61,7 +62,9 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // return chain.filter(exchange); // 放行所有请求
         String requestUrl = exchange.getRequest().getPath().value();
+        log.info("requestUrl:{}", requestUrl);
         AntPathMatcher pathMatcher = new AntPathMatcher();
         //白名单放行
         for (String url : whitelist) {

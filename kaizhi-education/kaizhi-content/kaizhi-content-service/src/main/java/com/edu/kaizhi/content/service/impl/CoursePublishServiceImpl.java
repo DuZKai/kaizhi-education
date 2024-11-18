@@ -281,5 +281,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
     }
 
+    public CoursePublish getCoursePublish(Long courseId){
+        return coursePublishMapper.selectById(courseId);
+    }
 
 }
