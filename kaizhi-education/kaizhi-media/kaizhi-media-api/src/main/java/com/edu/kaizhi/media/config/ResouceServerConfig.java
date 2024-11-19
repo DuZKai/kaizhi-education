@@ -1,4 +1,4 @@
-package com.edu.kaizhi.content.config;
+package com.edu.kaizhi.media.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -9,12 +9,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-/**
- * 资源服务配置
- */
+
 @Configuration
 @EnableResourceServer
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
 
 
@@ -26,7 +24,8 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(RESOURCE_ID)//资源 id
+        resources
+                .resourceId(RESOURCE_ID)//资源 id
                 .tokenStore(tokenStore)
                 .stateless(true);
     }
@@ -35,9 +34,10 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                // .antMatchers("/r/**", "/course/**").authenticated()//所有/r/**的请求必须认证通过
-                .antMatchers("/open/**").authenticated()
-                .anyRequest().permitAll();
+               // .antMatchers("/r/**","/course/**").authenticated()//所有/r/**的请求必须认证通过
+                .anyRequest().permitAll()
+        ;
     }
+
 
 }

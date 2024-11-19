@@ -7,3 +7,7 @@ Content-Disposition: form-data; name="filedata"; filename="1.xlsx"
 Content-Type: application/octet-stream
 
 < C:/Users/Administrator/Desktop/1.xlsx
+
+
+### 预览文件
+GET {{media_host}}/media/open/preview/01191860ba4cc8e8c5b8d29032d064f4

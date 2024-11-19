@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserDetailsService {
      * 查询用户信息
      *
      * @param user 用户id，主键
-     * @return com.edu.kaizhi.ucenter.model.po.XcUser 用户信息
+     * @return com.edu.kaizhi.ucenter.model.po.User 用户信息
      */
     public UserDetails getUserPrincipal(UserExt user) {
         // 根据用户id查询用户权限，如果不加报Cannot pass a null GrantedAuthority collection

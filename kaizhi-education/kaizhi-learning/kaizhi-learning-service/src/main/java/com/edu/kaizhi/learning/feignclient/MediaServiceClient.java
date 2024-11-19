@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  *
  */
- @FeignClient(value = "media-api",fallbackFactory = MediaServiceClientFallbackFactory.class)
- @RequestMapping("/media")
- public interface MediaServiceClient {
+@FeignClient(value = "media-api", fallbackFactory = MediaServiceClientFallbackFactory.class)
+public interface MediaServiceClient {
 
-  @GetMapping("/open/preview/{mediaId}")
-  public RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
+    @GetMapping("/media/open/preview/{mediaId}")
+    public RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
 
- }
+}

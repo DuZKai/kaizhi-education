@@ -4,6 +4,7 @@ import com.edu.kaizhi.content.model.dto.BindTeachplanMediaDto;
 import com.edu.kaizhi.content.model.dto.CourseCategoryTreeDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
+import com.edu.kaizhi.content.model.po.Teachplan;
 import com.edu.kaizhi.content.model.po.TeachplanMedia;
 
 import java.util.List;
@@ -50,4 +51,6 @@ public interface TeachplanService {
      * @param mediaId           媒资信息id
      */
     void unassociationMedia(Long teachPlanId, String mediaId);
+
+    Teachplan getTeachplan(Long teachplanId);
 }

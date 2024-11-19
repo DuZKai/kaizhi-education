@@ -30,20 +30,21 @@ public class PasswordAuthServiceImpl implements AuthService {
         //账号
         String username = authParamsDto.getUsername();
 
-        // 输入验证码
-        String checkcode = authParamsDto.getCheckcode();
-        // 验证码对应KEY
-        String checkcodekey = authParamsDto.getCheckcodekey();
-
-        if(StringUtils.isEmpty(checkcode) || StringUtils.isEmpty(checkcodekey)){
-            throw new RuntimeException("请输入验证码");
-        }
-
+        // TODO:暂时屏蔽校验验证码
+        // // 输入验证码
+        // String checkcode = authParamsDto.getCheckcode();
+        // // 验证码对应KEY
+        // String checkcodekey = authParamsDto.getCheckcodekey();
+        //
+        // if(StringUtils.isEmpty(checkcode) || StringUtils.isEmpty(checkcodekey)){
+        //     throw new RuntimeException("请输入验证码");
+        // }
+        //
         // 远程调用验证码服务校验验证码
-        Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
-        if(verify == null || !verify){
-            throw new RuntimeException("验证码错误");
-        }
+        // Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
+        // if(verify == null || !verify){
+        //     throw new RuntimeException("验证码错误");
+        // }
 
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if (user == null) {

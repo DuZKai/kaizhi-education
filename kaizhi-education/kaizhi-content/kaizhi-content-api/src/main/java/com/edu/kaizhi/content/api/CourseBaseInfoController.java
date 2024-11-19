@@ -24,7 +24,7 @@ public class CourseBaseInfoController {
     private CourseBaseInfoService courseBaseInfoService;
 
     @ApiOperation("课程分页查询信息列表")
-    @PreAuthorize("hasAuthority('kaizhi_teachmanager_course_list')") // 指定权限标识符
+    // @PreAuthorize("hasAuthority('kaizhi_teachmanager_course_list')") // 指定权限标识符
     @PostMapping("/course/list")
     public PageResult<CourseListDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParams) {
         //取出用户身份

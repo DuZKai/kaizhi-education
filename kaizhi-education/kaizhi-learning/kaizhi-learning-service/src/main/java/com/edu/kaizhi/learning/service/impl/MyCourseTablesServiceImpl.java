@@ -46,7 +46,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
     @Transactional
     public ChooseCourseDto addChooseCourse(String userId, Long courseId) {
         //查询课程信息
-        CoursePublish coursepublish = contentServiceClient.getCoursepublish(courseId);
+        CoursePublish coursepublish = contentServiceClient.getCoursePublish(courseId);
         if (coursepublish == null) {
             CustomizeException.cast("查询课程信息失败");
         }

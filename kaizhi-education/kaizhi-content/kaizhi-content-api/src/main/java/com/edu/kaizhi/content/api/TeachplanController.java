@@ -3,6 +3,9 @@ package com.edu.kaizhi.content.api;
 import com.edu.kaizhi.content.model.dto.BindTeachplanMediaDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
+import com.edu.kaizhi.content.model.po.Teachplan;
+import com.edu.kaizhi.content.model.po.TeachplanMedia;
+import com.edu.kaizhi.content.service.TeachplanMediaService;
 import com.edu.kaizhi.content.service.TeachplanService;
 import com.edu.kaizhi.content.service.impl.TeachplanServiceImpl;
 import io.swagger.annotations.Api;
@@ -24,6 +27,9 @@ public class TeachplanController {
 
     @Autowired
     TeachplanService teachplanService;
+
+    @Autowired
+    TeachplanMediaService teachplanMediaService;
 
     @ApiOperation("查询课程计划树形结构")
     @ApiImplicitParam(value = "courseId", name = "课程Id", required = true, dataType = "Long", paramType = "path")
@@ -67,5 +73,17 @@ public class TeachplanController {
     @DeleteMapping("/teachplan/association/media/{teachPlanId}/{mediaId}")
     public void unassociationMedia(@PathVariable Long teachPlanId, @PathVariable String mediaId) {
         teachplanService.unassociationMedia(teachPlanId, mediaId);
+    }
+
+    @ApiOperation("课程计划查询")
+    @GetMapping("/teachplan/{teachplanId}")
+    public Teachplan getTeachplan(@PathVariable Long teachplanId) {
+        return teachplanService.getTeachplan(teachplanId);
+    }
+
+    @ApiOperation("课程媒体查询课程计划")
+    @GetMapping("/teachplan/media/{mediaFileId}")
+    public TeachplanMedia getTeachplanFromMedia(@PathVariable Long mediaFileId) {
+        return teachplanMediaService.getTeachplanFromMedia(mediaFileId);
     }
 }

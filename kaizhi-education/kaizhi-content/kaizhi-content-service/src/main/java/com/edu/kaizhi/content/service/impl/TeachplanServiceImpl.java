@@ -173,4 +173,8 @@ public class TeachplanServiceImpl implements TeachplanService {
                 .eq(TeachplanMedia::getMediaId, mediaId);
         teachplanMediaMapper.delete(queryWrapper);
     }
+
+    public Teachplan getTeachplan(Long teachplanId) {
+        return teachplanMapper.selectById(teachplanId);
+    }
 }

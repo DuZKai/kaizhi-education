@@ -1,9 +1,12 @@
 package com.edu.kaizhi.learning.api;
 
 import com.edu.kaizhi.base.model.RestResponse;
+import com.edu.kaizhi.learning.service.LearningService;
+import com.edu.kaizhi.learning.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,13 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class MyLearningController {
-
+    @Autowired
+    LearningService learningService;
 
     @ApiOperation("获取视频")
-    @GetMapping("/open/learn/getvideo/{courseId}/{teachplanId}/{mediaId}")
-    public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId, @PathVariable("courseId") Long teachplanId, @PathVariable("mediaId") String mediaId) {
+    @GetMapping("/open/learn/getvideo/{courseId}/{mediaFileId}/{mediaId}")
+    public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId, @PathVariable("mediaFileId") Long mediaFileId, @PathVariable("mediaId") String mediaId) {
+        //登录用户
+        SecurityUtil.User user = SecurityUtil.getUser();
+        String userId = null;
+        if(user != null){
+            userId = user.getId();
+        }
 
-        return null;
+        //获取视频
+        return learningService.getVideo(userId, courseId, mediaFileId, mediaId);
 
     }
 
