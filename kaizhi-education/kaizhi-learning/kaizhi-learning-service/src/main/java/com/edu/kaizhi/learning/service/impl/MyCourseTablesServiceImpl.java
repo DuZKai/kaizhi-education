@@ -1,13 +1,16 @@
 package com.edu.kaizhi.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.kaizhi.base.exception.CustomizeException;
+import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.learning.feignclient.ContentServiceClient;
 import com.edu.kaizhi.learning.mapper.ChooseCourseMapper;
 import com.edu.kaizhi.learning.mapper.CourseTablesMapper;
 import com.edu.kaizhi.learning.model.dto.ChooseCourseDto;
 import com.edu.kaizhi.learning.model.dto.CourseTablesDto;
+import com.edu.kaizhi.learning.model.dto.MyCourseTableParams;
 import com.edu.kaizhi.learning.model.po.ChooseCourse;
 import com.edu.kaizhi.learning.model.po.CourseTables;
 import com.edu.kaizhi.learning.service.MyCourseTablesService;
@@ -148,7 +151,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
      * 添加到我的课程表
      *
      * @param chooseCourse 选课记录
-     * @return com.edu.kaizhi.learning.model.po.XcCourseTables
+     * @return com.edu.kaizhi.learning.model.po.CourseTables
      */
     public CourseTables addCourseTabls(ChooseCourse chooseCourse) {
         //选课记录完成且未过期可以添加课程到课程表
@@ -180,7 +183,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
      *
      * @param userId
      * @param courseId
-     * @return com.edu.kaizhi.learning.model.po.XcCourseTables
+     * @return com.edu.kaizhi.learning.model.po.CourseTables
      */
     public CourseTables getCourseTables(String userId, Long courseId) {
         // 数据库有唯一标识
@@ -207,6 +210,26 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         }
         courseTablesDto.setLearnStatus("702001");
         return courseTablesDto;
+    }
+
+    public PageResult<CourseTables> myCouresTabls( MyCourseTableParams params){
+        //页码
+        long pageNo = params.getPage();
+        //每页记录数,固定为4
+        long pageSize = 4;
+        //分页条件
+        Page<CourseTables> page = new Page<>(pageNo, pageSize);
+        //根据用户id查询
+        String userId = params.getUserId();
+        LambdaQueryWrapper<CourseTables> lambdaQueryWrapper = new LambdaQueryWrapper<CourseTables>().eq(CourseTables::getUserId, userId);
+
+        //分页查询
+        Page<CourseTables> pageResult = courseTablesMapper.selectPage(page, lambdaQueryWrapper);
+        List<CourseTables> records = pageResult.getRecords();
+        //记录总数
+        long total = pageResult.getTotal();
+        return new PageResult<>(records, total, pageNo, pageSize);
+
     }
 
 }

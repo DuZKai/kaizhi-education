@@ -1,8 +1,11 @@
 package com.edu.kaizhi.learning.service;
 
 
+import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.learning.model.dto.ChooseCourseDto;
 import com.edu.kaizhi.learning.model.dto.CourseTablesDto;
+import com.edu.kaizhi.learning.model.dto.MyCourseTableParams;
+import com.edu.kaizhi.learning.model.po.CourseTables;
 
 /**
  * 选课相关接口
@@ -26,5 +29,14 @@ public interface MyCourseTablesService {
      * {"code":"702003","desc":"已过期需要申请续期或重新支付"}]
      */
     public CourseTablesDto getLearningStatus(String userId, Long courseId);
+
+    /**
+     * 我的课程表
+     * @param params
+     * @return com.edu.kaizhi.base.model.PageResult<com.edu.kaizhi.learning.model.po.CourseTables>
+     * @author Mr.M
+     * @date 2022/10/27 9:24
+     */
+    public PageResult<CourseTables> myCouresTabls(MyCourseTableParams params);
 
 }
