@@ -194,6 +194,9 @@ docker restart nacos
 
 - 需要在代码中数据库地址修改为正确地址
 
+-  数据库账号密码： username: root; password: mysql
+
+
 
 
 ### Nacos

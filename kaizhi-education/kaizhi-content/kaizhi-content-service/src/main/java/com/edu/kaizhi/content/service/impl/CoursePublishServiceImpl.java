@@ -4,6 +4,8 @@ package com.edu.kaizhi.content.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.edu.kaizhi.base.exception.CommonError;
 import com.edu.kaizhi.base.exception.CustomizeException;
+import com.edu.kaizhi.content.bloomfilter.BloomFilterHelper;
+import com.edu.kaizhi.content.bloomfilter.BloomfilterService;
 import com.edu.kaizhi.content.config.MultipartSupportConfig;
 import com.edu.kaizhi.content.feignclient.MediaServiceClient;
 import com.edu.kaizhi.content.mapper.CourseBaseMapper;
@@ -20,6 +22,10 @@ import com.edu.kaizhi.content.service.CourseTeacherService;
 import com.edu.kaizhi.content.service.TeachplanService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
+
+import com.google.common.hash.Funnel;
+
+import com.google.common.hash.Funnels;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +33,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -39,6 +48,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 课程发布接口实现
@@ -73,6 +83,30 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     @Autowired
     CourseTeacherService courseTeacherService;
+
+    @Autowired
+    BloomfilterService bloomfilterService;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    // 布隆过滤器
+    // private static final BloomFilter<Long> bloomFilter = BloomFilter.create(
+    //         Funnels.longFunnel(),
+    //         100000,  // 预计插入数据量
+    //         0.01     // 允许误判率
+    // );
+    private final BloomFilterHelper<Long> modelBloomFilterHelper = new BloomFilterHelper<>(
+            Funnels.longFunnel(), // 数据类型
+            1000,  // 预计插入数据量
+            0.01    // 允许误判率
+    );
+
+    // Redis 中存储布隆过滤器的键
+    private static final String BLOOM_FILTER_KEY = "bloom:course";
 
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
 
@@ -281,8 +315,62 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
     }
 
-    public CoursePublish getCoursePublish(Long courseId){
+    public CoursePublish getCoursePublish(Long courseId) {
         return coursePublishMapper.selectById(courseId);
     }
 
+    /**
+     * 初始化布隆过滤器，加载所有可能的 courseId
+     */
+    @PostConstruct
+    public void initBloomFilter() {
+        // 将Redis已有的布隆过滤器删除，保证每次重启都加入现有的 courseId
+        Boolean exists = stringRedisTemplate.hasKey(BLOOM_FILTER_KEY);
+        if (exists != null && exists) {
+            stringRedisTemplate.delete(BLOOM_FILTER_KEY);
+            System.out.println("Redis中布隆过滤器成功删除");
+        } else {
+            System.out.println("Redis中布隆过滤器未删除");
+        }
+        System.out.println("布隆过滤器初始化...");
+        // 从数据库中获取所有的 courseId 列表
+        List<Long> courseIdList = coursePublishMapper.selectAllId();
+        for (Long courseId : courseIdList) {
+            bloomfilterService.addByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
+        }
+    }
+
+    public CoursePublish getCoursePublishCache(Long courseId) {
+        // 使用布隆过滤器判断 courseId 是否存在
+        boolean includeFlag = bloomfilterService.includeByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
+        if (!includeFlag) {
+            System.out.println("布隆过滤器判断：该课程不存在，直接返回 null");
+            return null; // 避免缓存穿透
+        }
+        // if (!bloomFilter.mightContain(courseId)) {
+        //     System.out.println("布隆过滤器判断：该课程不存在，直接返回 null");
+        //     return null; // 避免缓存穿透
+        // }
+
+        //查询缓存
+        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+        if (jsonObj != null) {
+            String jsonString = jsonObj.toString();
+            if (jsonString.equals("null"))
+                return null;
+            System.out.println("从缓存查询...");
+            return JSON.parseObject(jsonString, CoursePublish.class);
+        } else {
+            System.out.println("从数据库查询...");
+            //从数据库查询
+            CoursePublish coursePublish = getCoursePublish(courseId);
+            // if (coursePublish != null) {
+            //     redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish));
+            // }
+            //设置过期时间300秒，使用null解决缓存穿透
+            redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish), 30, TimeUnit.SECONDS);
+
+            return coursePublish;
+        }
+    }
 }

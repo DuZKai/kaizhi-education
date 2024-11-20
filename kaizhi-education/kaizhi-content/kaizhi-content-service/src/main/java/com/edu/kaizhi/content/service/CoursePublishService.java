@@ -57,4 +57,10 @@ public interface CoursePublishService {
      * */
     public CoursePublish getCoursePublish(Long courseId);
 
+    /**
+     * 获取课程从缓存查询发布信息
+     * @param courseId  课程id
+     * @return com.edu.kaizhi.content.model.po.CoursePublish
+     * */
+    public CoursePublish getCoursePublishCache(Long courseId);
 }
