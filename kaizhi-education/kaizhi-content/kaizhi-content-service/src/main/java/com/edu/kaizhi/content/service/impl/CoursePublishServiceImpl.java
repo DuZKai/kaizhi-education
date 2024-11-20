@@ -23,8 +23,6 @@ import com.edu.kaizhi.content.service.TeachplanService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
 
-import com.google.common.hash.Funnel;
-
 import com.google.common.hash.Funnels;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -218,6 +216,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
         // 预发布表数据删除
         coursePublishPreMapper.deleteById(courseId);
+
+        // 更新布隆过滤器
+        bloomfilterService.addByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
     }
 
     /**
