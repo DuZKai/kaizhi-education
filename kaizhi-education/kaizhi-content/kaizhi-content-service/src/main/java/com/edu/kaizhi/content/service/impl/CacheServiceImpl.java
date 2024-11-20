@@ -23,7 +23,7 @@ public class CacheServiceImpl {
     private static final String TEMPORARY_KEY = "temp:";
 
     /**
-     * 缓存雪崩处理逻辑
+     * 缓存击穿处理逻辑
      *
      * @param id 缓存的 id
      * @param queryDatabase 从数据库查询数据的逻辑

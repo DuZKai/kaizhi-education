@@ -29,6 +29,8 @@ import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -91,6 +93,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    RedissonClient redissonClient;
 
     @Autowired
     private CacheServiceImpl cacheService;
@@ -349,6 +354,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
     }
 
+    // 使用Redisson实现分布式锁
     public CoursePublish getCoursePublishCache(Long courseId) {
         String redisKey = "course:" + courseId;
         // 使用布隆过滤器判断 courseId 是否存在
@@ -383,24 +389,35 @@ public class CoursePublishServiceImpl implements CoursePublishService {
                 return null;
             }
         } else {
-            System.out.println("进入数据库查询逻辑...");
-            //从数据库查询
-            // CoursePublish coursePublish = getCoursePublish(courseId);
-            // 加锁查询解决缓存雪崩
-            String withCache = cacheService.getWithCache(courseId.toString(),
-                    () -> getCoursePublish(courseId));
-            CoursePublish coursePublish = withCache == null ? null : JSON.parseObject(withCache, CoursePublish.class);
+            RLock lock = redissonClient.getLock(LOCK_KEY + courseId);
+            //获取锁
+            lock.lock();
 
-            // if (coursePublish != null) {
-            //     redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish));
-            // }
-            //设置过期时间300秒，使用null解决缓存穿透
-            redisTemplate.opsForValue().set(redisKey,
-                    coursePublish == null ? "null" : coursePublish,
-                    // 随机数加入解决缓存雪崩
-                    300 + new Random().nextInt(100), TimeUnit.SECONDS);
+            // 获取分布式锁
+            try{
+                System.out.println("进入数据库查询逻辑...");
+                //从数据库查询
+                CoursePublish coursePublish = getCoursePublish(courseId);
+                // 加锁查询解决缓存击穿
+                // String withCache = cacheService.getWithCache(courseId.toString(),
+                //         () -> getCoursePublish(courseId));
+                // CoursePublish coursePublish = withCache == null ? null : JSON.parseObject(withCache, CoursePublish.class);
 
-            return coursePublish;
+                // if (coursePublish != null) {
+                //     redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish));
+                // }
+                //设置过期时间300秒，使用null解决缓存穿透
+                redisTemplate.opsForValue().set(redisKey,
+                        coursePublish == null ? "null" : coursePublish,
+                        // 随机数加入解决缓存雪崩
+                        300 + new Random().nextInt(100), TimeUnit.SECONDS);
+
+                return coursePublish;
+            }finally {
+                // 手动释放锁
+                lock.unlock();
+            }
+
         }
     }
 
