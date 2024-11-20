@@ -92,6 +92,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private CacheServiceImpl cacheService;
+
     // 布隆过滤器
     // private static final BloomFilter<Long> bloomFilter = BloomFilter.create(
     //         Funnels.longFunnel(),
@@ -106,6 +109,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     // Redis 中存储布隆过滤器的键
     private static final String BLOOM_FILTER_KEY = "bloom:course";
+
+    private static final String LOCK_KEY = "cache_lock:";
+
+    private static final long LOCK_EXPIRE_TIME = 5; // 锁的过期时间，防止死锁
 
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
 
@@ -363,9 +370,13 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             System.out.println("从缓存查询...");
             return JSON.parseObject(jsonString, CoursePublish.class);
         } else {
-            System.out.println("从数据库查询...");
+            System.out.println("进入数据库查询逻辑...");
             //从数据库查询
-            CoursePublish coursePublish = getCoursePublish(courseId);
+            // CoursePublish coursePublish = getCoursePublish(courseId);
+            // 加锁查询解决缓存雪崩
+            CoursePublish coursePublish = cacheService.getWithCache(courseId.toString(),
+                    () -> getCoursePublish(courseId));
+
             // if (coursePublish != null) {
             //     redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish));
             // }
@@ -373,9 +384,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             redisTemplate.opsForValue().set("course:" + courseId,
                     JSON.toJSONString(coursePublish),
                     // 随机数加入解决缓存雪崩
-                    300 + new Random().nextInt(), TimeUnit.SECONDS);
+                    300 + new Random().nextInt(100), TimeUnit.SECONDS);
 
             return coursePublish;
         }
     }
+
 }
