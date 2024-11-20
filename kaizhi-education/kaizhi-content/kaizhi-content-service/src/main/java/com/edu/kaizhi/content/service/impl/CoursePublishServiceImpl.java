@@ -350,6 +350,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     }
 
     public CoursePublish getCoursePublishCache(Long courseId) {
+        String redisKey = "course:" + courseId;
         // 使用布隆过滤器判断 courseId 是否存在
         boolean includeFlag = bloomfilterService.includeByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
         if (!includeFlag) {
@@ -362,27 +363,40 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         // }
 
         //查询缓存
-        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+        Object jsonObj = redisTemplate.opsForValue().get(redisKey);
         if (jsonObj != null) {
-            String jsonString = jsonObj.toString();
+            String jsonString = JSON.toJSONString(jsonObj);
             if (jsonString.equals("null"))
                 return null;
-            System.out.println("从缓存查询...");
-            return JSON.parseObject(jsonString, CoursePublish.class);
+            try {
+                // 转换为 JSON 字符串并解析为 CoursePublish
+                CoursePublish coursePublish = JSON.parseObject(
+                        jsonString,
+                        CoursePublish.class
+                );
+                System.out.println("从缓存查询...");
+                return coursePublish;
+            } catch (Exception e) {
+                // 如果解析失败，打印日志并返回 null
+                System.err.println("从缓存中读取数据失败，Key: " + redisKey + "，错误：" + e.getMessage());
+                System.err.println("json信息为" + jsonObj.toString());
+                return null;
+            }
         } else {
             System.out.println("进入数据库查询逻辑...");
             //从数据库查询
             // CoursePublish coursePublish = getCoursePublish(courseId);
             // 加锁查询解决缓存雪崩
-            CoursePublish coursePublish = cacheService.getWithCache(courseId.toString(),
+            String withCache = cacheService.getWithCache(courseId.toString(),
                     () -> getCoursePublish(courseId));
+            CoursePublish coursePublish = withCache == null ? null : JSON.parseObject(withCache, CoursePublish.class);
 
             // if (coursePublish != null) {
             //     redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish));
             // }
             //设置过期时间300秒，使用null解决缓存穿透
-            redisTemplate.opsForValue().set("course:" + courseId,
-                    JSON.toJSONString(coursePublish),
+            redisTemplate.opsForValue().set(redisKey,
+                    coursePublish == null ? "null" : coursePublish,
                     // 随机数加入解决缓存雪崩
                     300 + new Random().nextInt(100), TimeUnit.SECONDS);
 

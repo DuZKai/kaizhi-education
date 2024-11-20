@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class CacheServiceImpl {
     private static final String LOCK_KEY = "cache_lock:";
     private static final long LOCK_EXPIRE_TIME = 5; // 锁的过期时间，防止死锁
     private static final long RETRY_INTERVAL = 100; // 重试间隔时间
-    private static final long SUCCESS_TEMPORARY_CACHE_EXPIRE_TIME = 500; // 缓存临时过期时间
+    private static final long SUCCESS_TEMPORARY_CACHE_EXPIRE_TIME = 5; // 缓存临时过期时间
     private static final String TEMPORARY_KEY = "temp:";
 
     /**
@@ -29,14 +30,15 @@ public class CacheServiceImpl {
      * @param <T> 返回的数据类型
      * @return 缓存或数据库查询的结果
      */
-    public <T> T getWithCache(String id, Supplier<T> queryDatabase) {
+    public <T> String getWithCache(String id, Supplier<T> queryDatabase) {
         // Step 1: 尝试从缓存中获取数据
-        T value = (T) redisTemplate.opsForValue().get(TEMPORARY_KEY + id);
-        if (value != null) {
+        Object o = redisTemplate.opsForValue().get(TEMPORARY_KEY + id);
+        if(o != null) {
             System.out.println("缓存命中新查询到的临时数据，直接返回");
-            return value; // 如果缓存有数据，直接返回
+            return (String) o; // 如果缓存有数据，直接返回
         }
 
+        String value = null;
 
         // Step 2: 获取分布式锁
         boolean lockAcquired = acquireLock(id);
@@ -44,8 +46,9 @@ public class CacheServiceImpl {
             try {
                 // Step 3: 缓存失效，查询数据库并返回数据
                 System.out.println("缓存未命中，查询数据库");
-                value = queryDatabase.get(); // 调用传入的数据库查询函数
-                if (value != null) {
+                T t = queryDatabase.get();
+                if (t != null) {
+                    value = JSON.toJSONString(t); // 调用传入的数据库查询函数
                     // 将查询结果放入缓存
                     redisTemplate.opsForValue().set(TEMPORARY_KEY + id, value, SUCCESS_TEMPORARY_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
                 }
@@ -67,7 +70,7 @@ public class CacheServiceImpl {
         return value;
     }
 
-    private boolean acquireLock(String id) {
+    private Boolean acquireLock(String id) {
         // 设置锁过期时间，防止死锁
         return redisTemplate.opsForValue().setIfAbsent(LOCK_KEY + id,
                 "locked", LOCK_EXPIRE_TIME, TimeUnit.SECONDS);
