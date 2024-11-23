@@ -27,5 +27,4 @@ public class ElasticsearchConfig {
         return new RestHighLevelClient(RestClient.builder(httpHostArray));
     }
 
-
 }

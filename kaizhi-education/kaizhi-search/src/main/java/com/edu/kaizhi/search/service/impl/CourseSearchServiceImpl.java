@@ -37,6 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.edu.kaizhi.base.constant.SearchServiceConstant.*;
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.ADVERTISING_COURSE;
+
+
 /**
  * 课程搜索service实现类
  */
@@ -68,22 +72,22 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         //关键字
         if (StringUtils.isNotEmpty(courseSearchParam.getKeywords())) {
             //匹配关键字
-            MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(courseSearchParam.getKeywords(), "name", "description");
+            MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(courseSearchParam.getKeywords(), FIELD_NAME, FIELD_DESCRIPTION);
             //设置匹配占比
-            multiMatchQueryBuilder.minimumShouldMatch("70%");
+            multiMatchQueryBuilder.minimumShouldMatch(MINIMUM_SHOULD_MATCH_PERCENTAGE);
             //提升另个字段的Boost值
-            multiMatchQueryBuilder.field("name", 10);
+            multiMatchQueryBuilder.field(FIELD_NAME, NAME_FIELD_BOOST);
             boolQueryBuilder.must(multiMatchQueryBuilder);
         }
         //过滤
         if (StringUtils.isNotEmpty(courseSearchParam.getMt())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("mtName", courseSearchParam.getMt()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_MT_NAME, courseSearchParam.getMt()));
         }
         if (StringUtils.isNotEmpty(courseSearchParam.getSt())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("stName", courseSearchParam.getSt()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_ST_NAME, courseSearchParam.getSt()));
         }
         if (StringUtils.isNotEmpty(courseSearchParam.getGrade())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("grade", courseSearchParam.getGrade()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_GRADE, courseSearchParam.getGrade()));
         }
 
         //分页
@@ -100,15 +104,15 @@ public class CourseSearchServiceImpl implements CourseSearchService {
                 boolQueryBuilder, // 原有的bool查询
                 new FunctionScoreQueryBuilder.FilterFunctionBuilder[] {
                         new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-                                // 过滤条件：只考虑 isAd 为 800002 的文档
-                                QueryBuilders.termQuery("isAd", "800002"),
+                                // 过滤条件：只考虑 FIELD_IS_AD 为 800002 的文档
+                                QueryBuilders.termQuery(FIELD_IS_AD, ADVERTISING_COURSE),
                                 // 算分函数：给符合条件的文档增加权重
                                 // ScoreFunctionBuilders.weightFactorFunction(10)
                                 // 使用随机权重生成器
                                 ScoreFunctionBuilders.randomFunction() // 生成一个随机分数
                                         .seed(System.currentTimeMillis()) // 使用当前时间戳作为种子，确保随机性
-                                        .setWeight(3.0f) // 设置一个基础权重
-                                        .setField("id") // 设置一个随机字段，确保每次查询都是随机的
+                                        .setWeight(ID_BASE_WEIGHT) // 设置一个基础权重
+                                        .setField(FIELD_ID) // 设置一个随机字段，确保每次查询都是随机的
                         )
                 }
         );
@@ -118,10 +122,10 @@ public class CourseSearchServiceImpl implements CourseSearchService {
 
         //高亮设置
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.preTags("<font class='eslight'>");
-        highlightBuilder.postTags("</font>");
+        highlightBuilder.preTags(HIGHLIGHT_PRE_TAG);
+        highlightBuilder.postTags(HIGHLIGHT_POST_TAG);
         //设置高亮字段
-        highlightBuilder.fields().add(new HighlightBuilder.Field("name"));
+        highlightBuilder.fields().add(new HighlightBuilder.Field(FIELD_NAME));
         searchSourceBuilder.highlighter(highlightBuilder);
         //请求搜索
         searchRequest.source(searchSourceBuilder);
@@ -157,7 +161,7 @@ public class CourseSearchServiceImpl implements CourseSearchService {
             //取出高亮字段内容
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (highlightFields != null) {
-                HighlightField nameField = highlightFields.get("name");
+                HighlightField nameField = highlightFields.get(FIELD_NAME);
                 if (nameField != null) {
                     Text[] fragments = nameField.getFragments();
                     StringBuffer stringBuffer = new StringBuffer();
@@ -177,8 +181,8 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         SearchPageResultDto<CourseIndex> pageResult = new SearchPageResultDto<>(list, totalHits.value, pageNo, pageSize);
 
         //获取聚合结果
-        List<String> mtList = getAggregation(searchResponse.getAggregations(), "mtAgg");
-        List<String> stList = getAggregation(searchResponse.getAggregations(), "stAgg");
+        List<String> mtList = getAggregation(searchResponse.getAggregations(), MT_AGGREGATION);
+        List<String> stList = getAggregation(searchResponse.getAggregations(), ST_AGGREGATION);
 
         pageResult.setMtList(mtList);
         pageResult.setStList(stList);
@@ -189,14 +193,14 @@ public class CourseSearchServiceImpl implements CourseSearchService {
 
     private void buildAggregation(SearchRequest request) {
         request.source().aggregation(AggregationBuilders
-                .terms("mtAgg")
-                .field("mtName.keyword")
-                .size(100)
+                .terms(MT_AGGREGATION)
+                .field(FIELD_MT_NAME_KEYWORD)
+                .size(Aggregation_SIZE)
         );
         request.source().aggregation(AggregationBuilders
-                .terms("stAgg")
-                .field("stName.keyword")
-                .size(100)
+                .terms(ST_AGGREGATION)
+                .field(FIELD_ST_NAME_KEYWORD)
+                .size(Aggregation_SIZE)
         );
 
     }

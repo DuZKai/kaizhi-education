@@ -1,7 +1,6 @@
 package com.edu.kaizhi.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.edu.kaizhi.base.constant.CourseBaseInfo.*;
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.*;
 
 @Service
 @Slf4j
@@ -141,9 +140,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //将填写的课程信息赋值给新增对象，属性名称一致即可拷贝
         BeanUtils.copyProperties(dto, courseBaseNew);
         //设置审核状态
-        courseBaseNew.setAuditStatus(REVIEW_DELAYED);
+        courseBaseNew.setAuditStatus(COURSE_NOT_SUBMITTED);
         //设置发布状态
-        courseBaseNew.setStatus(PUBLISH_NOT_IN);
+        courseBaseNew.setStatus(UNPUBLISHED);
         //机构id
         courseBaseNew.setCompanyId(companyId);
         //添加时间
@@ -241,9 +240,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         courseBase.setChangeDate(LocalDateTime.now());
         // 每次重新修改数据，都需要将状态设置为未发布、未审核
         //设置审核状态
-        courseBase.setAuditStatus(REVIEW_DELAYED);
+        courseBase.setAuditStatus(COURSE_NOT_SUBMITTED);
         //设置发布状态
-        courseBase.setStatus(PUBLISH_NOT_IN);
+        courseBase.setStatus(UNPUBLISHED);
         // TODO: 获取修改人
         // courseBase.setChangePeople();
 
