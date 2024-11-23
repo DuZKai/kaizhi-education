@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 自定义 LocalDateTime 对象的序列化和反序列化方式，
+ * 确保在 Spring Boot 应用中客户端和服务器之间传递 LocalDateTime 时，
+ * 能够按指定的字符串格式（yyyy-MM-dd HH:mm:ss）进行转换。
+ * */
 @Configuration
 public class LocalDateTimeConfig {
 
