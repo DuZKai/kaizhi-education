@@ -76,6 +76,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
         //检查token是否存在
         String token = getToken(exchange);
         if (StringUtils.isBlank(token)) {
+            log.info("没有认证: {}", token);
             return buildReturnMono("没有认证", exchange);
         }
         //判断是否是有效的token
@@ -85,6 +86,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
             boolean expired = oAuth2AccessToken.isExpired();
             if (expired) {
+                log.info("认证令牌已过期: {}", token);
                 return buildReturnMono("认证令牌已过期", exchange);
             }
             return chain.filter(exchange);
