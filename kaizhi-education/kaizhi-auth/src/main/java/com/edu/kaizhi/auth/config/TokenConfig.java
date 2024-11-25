@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class TokenConfig {
@@ -46,11 +47,11 @@ public class TokenConfig {
     @Bean(name = "authorizationServerTokenServicesCustom")
     public AuthorizationServerTokenServices tokenService() {
         DefaultTokenServices service = new DefaultTokenServices();
-        service.setSupportRefreshToken(true);//支持刷新令牌
-        service.setTokenStore(tokenStore);//令牌存储策略
+        service.setSupportRefreshToken(true); // 支持刷新令牌
+        service.setTokenStore(tokenStore); // 使用 JWT 令牌存储策略
 
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
+        tokenEnhancerChain.setTokenEnhancers(Collections.singletonList(accessTokenConverter));
         service.setTokenEnhancer(tokenEnhancerChain);
 
         service.setAccessTokenValiditySeconds(7200); // 令牌默认有效期2小时

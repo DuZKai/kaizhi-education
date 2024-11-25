@@ -91,7 +91,15 @@
             <artifactId>swagger-spring-boot-starter</artifactId>
         </dependency>
 
-
+        <!--网站白名单维护以及校验jwt的合法性-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

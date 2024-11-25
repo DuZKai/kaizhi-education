@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
+    private final static boolean isRefreshToken = true;
 
     @Resource(name = "authorizationServerTokenServicesCustom")
     private AuthorizationServerTokenServices authorizationServerTokenServices;
@@ -54,7 +55,9 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         endpoints
                 .authenticationManager(authenticationManager)//认证管理器
                 .tokenServices(authorizationServerTokenServices)//令牌管理服务
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST)
+                // 设置刷新令牌机制.true(重复使用:更新access_token时长后，refresh_toke时长不更新)。false(与true相反)
+                .reuseRefreshTokens(isRefreshToken);
     }
 
     //令牌端点的安全配置
