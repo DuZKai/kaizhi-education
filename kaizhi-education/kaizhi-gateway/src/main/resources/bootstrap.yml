@@ -25,3 +25,6 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: kaizhi-education-common
             refresh: true
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
