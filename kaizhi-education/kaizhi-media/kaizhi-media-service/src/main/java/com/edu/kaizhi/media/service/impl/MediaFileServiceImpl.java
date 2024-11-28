@@ -75,10 +75,21 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mediaFilesMapper.selectById(mediaId);
     }
 
-    public PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
+    public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
 
         //构建查询条件对象
         LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 文件名
+        String filename = queryMediaParamsDto.getFilename();
+        if (filename != null && !filename.isEmpty() && !filename.equals("null"))
+            queryWrapper.like(MediaFiles::getFilename, filename);
+
+        // 文件类型
+        String fileType = queryMediaParamsDto.getFileType();
+        if (fileType != null && !fileType.isEmpty() && !fileType.equals("null"))
+            queryWrapper.eq(MediaFiles::getFileType, fileType);
+
 
         //分页对象
         Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());

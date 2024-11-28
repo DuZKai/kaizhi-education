@@ -47,7 +47,7 @@
     >
       <el-table-column prop="name" label="课程名称" width="250"></el-table-column>
       <el-table-column prop="subsectionNum" label="任务数" align="center" width="100"></el-table-column>
-      <el-table-column label="创建时间" align="center" width="110">
+      <el-table-column label="创建时间" align="center" width="100">
         <template slot-scope="scope">
           <div>{{scope.row.createDate | dateTimeFormat}}</div>
         </template>

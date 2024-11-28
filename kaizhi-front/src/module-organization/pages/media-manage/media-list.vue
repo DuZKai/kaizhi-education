@@ -15,7 +15,7 @@
       <div class="searcher">
         <el-input
           class="el-input"
-          placeholder="请输入关键词"
+          placeholder="请输入文件名关键词"
           suffix-icon="el-icon-search"
           v-model="listQueryData.filename"
         />

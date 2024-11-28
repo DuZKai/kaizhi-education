@@ -34,7 +34,7 @@ public class MediaFilesController {
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
         // TODO: 机构ID
         Long companyId = 1232141425L;
-        return mediaFileService.queryMediaFiels(companyId, pageParams, queryMediaParamsDto);
+        return mediaFileService.queryMediaFiles(companyId, pageParams, queryMediaParamsDto);
     }
 
     @ApiOperation("上传图片")

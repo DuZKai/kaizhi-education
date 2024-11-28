@@ -32,7 +32,7 @@ public interface MediaFileService {
      * @param pageParams          分页参数
      * @param queryMediaParamsDto 查询条件
      */
-    public PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
+    public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
     /**
      * 上传文件
