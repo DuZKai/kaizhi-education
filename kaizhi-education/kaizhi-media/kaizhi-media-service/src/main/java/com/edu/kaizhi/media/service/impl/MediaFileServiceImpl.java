@@ -173,6 +173,25 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mimeType;
     }
 
+    public void deleteFileById(String mediaId){
+        String filePath = "";
+        try {
+            MediaFiles fileById = getFileById(mediaId);
+            filePath = fileById.getFilePath();
+
+            DeleteObject deleteObject = new DeleteObject(filePath);
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket("video").
+                    objects(Collections.singletonList(deleteObject)).build();
+            removeMinioChunk(removeObjectsArgs);
+            log.debug("在minio删除文件成功, filePath:{}", filePath);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            log.error("在minio删除文件出错, filePath:{}, 错误原因:{}", filePath, e.getMessage(), e);
+            CustomizeException.cast("文件系统删除文件失败");
+        }
+        mediaFilesMapper.deleteById(mediaId);
+    }
+
     /**
      * @param localFilePath 文件地址
      * @param bucket        桶

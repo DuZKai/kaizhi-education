@@ -38,7 +38,7 @@
         style="width: 100%"
         :header-cell-style="{ textAlign: 'center' }"
       >
-        <el-table-column label="文件名称" width="400" align="center">
+        <el-table-column label="文件名称" width="370" align="center">
           <template slot-scope="scope">
             {{ scope.row.filename }}
             <!--<br />
@@ -53,10 +53,10 @@
         </el-table-column>
         <el-table-column prop="tags" label="标签" align="center"></el-table-column>
 
-        <el-table-column label="上传时间" align="center">
+        <el-table-column label="上传时间" width="160" align="center">
           <template slot-scope="scope">
             {{ scope.row.username }}
-            <br />
+            <!--<br />-->
             {{ scope.row.createDate | dateTimeFormat }}
           </template>
         </el-table-column>

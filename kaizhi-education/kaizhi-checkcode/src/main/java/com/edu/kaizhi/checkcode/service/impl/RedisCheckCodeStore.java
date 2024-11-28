@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 使用redis存储验证码，测试用
+ * 使用redis存储验证码
  */
 @Component("RedisCheckCodeStore")
 public class RedisCheckCodeStore implements CheckCodeService.CheckCodeStore {

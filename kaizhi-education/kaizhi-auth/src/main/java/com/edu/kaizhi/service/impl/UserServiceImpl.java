@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserDetailsService {
         user.setPassword(null);
         //将user对象转json
         String userString = JSON.toJSONString(user);
-        //创建UserDetails对象,权限信息待实现授权功能时再向UserDetail中加入
+        //创建UserDetails对象,同时向UserDetail加入权限信息
         return org.springframework.security.core.userdetails.User.withUsername(userString).
                 password(password).authorities(authorities).build();
     }

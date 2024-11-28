@@ -46,6 +46,14 @@ public interface MediaFileService {
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName);
 
     /**
+     * 根据id删除媒资文件
+     *
+     * @param mediaId 媒资文件id
+     * @return void
+     */
+    public void deleteFileById(String mediaId);
+
+    /**
      * 添加媒资文件到数据库
      *
      * @param companyId

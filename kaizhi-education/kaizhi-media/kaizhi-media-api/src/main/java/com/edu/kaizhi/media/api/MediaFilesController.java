@@ -1,7 +1,9 @@
 package com.edu.kaizhi.media.api;
 
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.media.model.dto.QueryMediaParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
@@ -9,6 +11,7 @@ import com.edu.kaizhi.media.model.po.MediaFiles;
 import com.edu.kaizhi.media.service.MediaFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +58,9 @@ public class MediaFilesController {
         return mediaFileService.uploadFile(companyId, uploadFileParamsDto, absolutePath, objectName);
     }
 
-
+    @ApiOperation("刪除媒资文件")
+    @DeleteMapping("/{mediaId}")
+    public void deleteMediaByMediaId(@PathVariable String mediaId) {
+        mediaFileService.deleteFileById(mediaId);
+    }
 }
