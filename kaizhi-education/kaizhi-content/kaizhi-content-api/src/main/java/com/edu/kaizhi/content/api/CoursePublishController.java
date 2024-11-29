@@ -95,4 +95,15 @@ public class CoursePublishController {
     public CoursePublish getCoursePublishCache(Long courseId){
         return coursePublishService.getCoursePublishCache(courseId);
     }
+
+
+    @ApiOperation("下架课程")
+    @GetMapping("/courseoffline/{courseId}")
+    public void offlineCourse(@PathVariable Long courseId) {
+
+        // TODO:获取用户所属机构ID
+        Long companyId = 1232141425L;
+        coursePublishService.offlineCourse(companyId, courseId);
+
+    }
 }

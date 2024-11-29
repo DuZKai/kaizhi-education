@@ -37,7 +37,7 @@ public class MediaFilesController {
         return mediaFileService.queryMediaFiles(companyId, pageParams, queryMediaParamsDto);
     }
 
-    @ApiOperation("上传图片")
+    @ApiOperation("上传文件")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
@@ -62,5 +62,12 @@ public class MediaFilesController {
     @DeleteMapping("/{mediaId}")
     public void deleteMediaByMediaId(@PathVariable String mediaId) {
         mediaFileService.deleteFileById(mediaId);
+    }
+
+    @ApiOperation("删除单个课程文件")
+    @DeleteMapping(value = "/delete/coursefile/{courseId}")
+    public void deleteCourseFile(@PathVariable String courseId) throws IOException {
+        String FilePath = "course/" + courseId + ".html";
+        mediaFileService.deleteSingleFile(FilePath);
     }
 }

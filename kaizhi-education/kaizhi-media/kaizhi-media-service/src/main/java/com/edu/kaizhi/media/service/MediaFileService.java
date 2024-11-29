@@ -171,6 +171,14 @@ public interface MediaFileService {
      */
     public List<MediaMinioChunk> getChunkTimeoutFiles(LocalDateTime time);
 
+
+    /**
+     * 清除单个文件
+     *
+     * @param FilePath 文件路径
+     */
+    public void deleteSingleFile(String FilePath);
+
     /**
      * 清除单块分块文件
      *

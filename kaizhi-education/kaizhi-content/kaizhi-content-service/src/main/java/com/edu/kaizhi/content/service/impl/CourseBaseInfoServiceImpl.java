@@ -40,6 +40,11 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     @Autowired
     TeachplanMapper teachplanMapper;
 
+    @Autowired
+    TeachplanMediaMapper teachplanMediaMapper;
+    @Autowired
+    private CoursePublishMapper coursePublishMapper;
+
     // 课程分页查询
     public PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
 
@@ -273,10 +278,17 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         LambdaQueryWrapper<Teachplan> teachplanLambdaQueryWrapper = new LambdaQueryWrapper<>();
         teachplanLambdaQueryWrapper.eq(Teachplan::getCourseId, courseId);
         teachplanMapper.delete(teachplanLambdaQueryWrapper);
+
+        // 删除课程计划对应媒资信息
+        LambdaQueryWrapper<TeachplanMedia> teachplanMediaLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        teachplanMediaLambdaQueryWrapper.eq(TeachplanMedia::getCourseId, courseId);
+        teachplanMediaMapper.delete(teachplanMediaLambdaQueryWrapper);
+
         // 删除营销信息
         courseMarketMapper.deleteById(courseId);
         // 删除课程基本信息
         courseBaseMapper.deleteById(courseId);
     }
+
 
 }

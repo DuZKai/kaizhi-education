@@ -96,11 +96,17 @@
             size="mini"
             @click="handleEdit(scope.$index, scope.row)"
           >编辑</el-button>
+<!--          <el-button-->
+<!--            type="text"-->
+<!--            size="mini"-->
+<!--            :disabled="scope.row.auditStatus != '202002'"-->
+<!--            @click="handleDelete(scope.$index, scope.row)"-->
+<!--          >删除</el-button>-->
           <el-button
-            type="text"
-            size="mini"
-            :disabled="scope.row.auditStatus != '202002'"
-            @click="handleDelete(scope.$index, scope.row)"
+              type="text"
+              size="mini"
+              :disabled="scope.row.status == '203002' "
+              @click="handleDelete(scope.$index, scope.row)"
           >删除</el-button>
           <el-button
             type="text"
@@ -321,7 +327,7 @@ export default class extends mixins(MixinTools) {
     //   await this.getList()
     // }
 
-    this.$confirm('课程下架后无法在网站查询，但不影响现有学生学习，是否继续下架课程?', '提示', {
+    this.$confirm('课程下架后无法在网站查询，且需要重新审核，是否继续下架课程?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

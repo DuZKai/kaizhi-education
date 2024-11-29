@@ -63,4 +63,18 @@ public interface CoursePublishService {
      * @return com.edu.kaizhi.content.model.po.CoursePublish
      * */
     public CoursePublish getCoursePublishCache(Long courseId);
+
+
+    /**
+     * 下架课程
+     * @param companyId 机构ID
+     * @param courseId 课程ID
+     */
+    void offlineCourse(Long companyId, Long courseId);
+
+    /**
+     * 更新布隆过滤器
+     * @param courseId 课程ID
+     */
+    public void updateBloomFilter(Long courseId);
 }

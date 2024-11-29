@@ -7,7 +7,9 @@ import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.bloomfilter.BloomFilterHelper;
 import com.edu.kaizhi.content.bloomfilter.BloomfilterService;
 import com.edu.kaizhi.content.config.MultipartSupportConfig;
+import com.edu.kaizhi.content.feignclient.CourseIndex;
 import com.edu.kaizhi.content.feignclient.MediaServiceClient;
+import com.edu.kaizhi.content.feignclient.SearchServiceClient;
 import com.edu.kaizhi.content.mapper.CourseBaseMapper;
 import com.edu.kaizhi.content.mapper.CourseMarketMapper;
 import com.edu.kaizhi.content.mapper.CoursePublishMapper;
@@ -51,6 +53,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.COURSE_NOT_SUBMITTED;
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.OFFLINE;
+
 /**
  * 课程发布接口实现
  */
@@ -81,6 +86,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     @Autowired
     MediaServiceClient mediaServiceClient;
+
+    @Autowired
+    SearchServiceClient searchServiceClient;
 
     @Autowired
     CourseTeacherService courseTeacherService;
@@ -158,7 +166,6 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         if (StringUtils.isEmpty(courseBase.getPic())) {
             CustomizeException.cast("提交失败，请上传课程图片");
         }
-        // TODO：本机构只能提交本机构课程
 
         //添加课程预发布记录
         CoursePublishPre coursePublishPre = new CoursePublishPre();
@@ -177,6 +184,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         if (teachplanTree.isEmpty()) {
             CustomizeException.cast("提交失败，还没有添加课程计划");
         }
+        // TODO: 判断每个小节是否都有视频
         //转json
         String teachplanTreeString = JSON.toJSONString(teachplanTree);
         coursePublishPre.setTeachplan(teachplanTreeString);
@@ -190,8 +198,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         String courseTeacherListString = JSON.toJSONString(courseTeacherList);
         coursePublishPre.setTeachers(courseTeacherListString);
 
-        //设置预发布记录状态,已提交
-        coursePublishPre.setStatus("202003");
+        //设置预发布记录状态,已提交，原本202003
+        coursePublishPre.setStatus("203001");
         //教学机构id
         coursePublishPre.setCompanyId(companyId);
         //提交时间
@@ -206,6 +214,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
         //更新课程基本表的审核状态
         courseBase.setAuditStatus("202003");
+        courseBase.setStatus("203001");
         courseBaseMapper.updateById(courseBase);
     }
 
@@ -230,8 +239,6 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         // 预发布表数据删除
         coursePublishPreMapper.deleteById(courseId);
 
-        // 更新布隆过滤器
-        bloomfilterService.addByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
     }
 
     /**
@@ -354,6 +361,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
     }
 
+
+    // 更新布隆过滤器
+    public void updateBloomFilter(Long courseId) {
+        bloomfilterService.addByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
+    }
+
     // 使用Redisson实现分布式锁
     public CoursePublish getCoursePublishCache(Long courseId) {
         String redisKey = "course:" + courseId;
@@ -394,7 +407,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             lock.lock();
 
             // 获取分布式锁
-            try{
+            try {
                 System.out.println("进入数据库查询逻辑...");
                 //从数据库查询
                 CoursePublish coursePublish = getCoursePublish(courseId);
@@ -413,7 +426,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
                         300 + new Random().nextInt(100), TimeUnit.SECONDS);
 
                 return coursePublish;
-            }finally {
+            } finally {
                 // 手动释放锁
                 lock.unlock();
             }
@@ -421,4 +434,43 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
     }
 
+    // 下架课程
+    @Transactional
+    public void offlineCourse(Long companyId, Long courseId) {
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        if (!companyId.equals(courseBase.getCompanyId()))
+            CustomizeException.cast("只允许下架本机构的课程");
+
+        // 删除课程模板文件
+        try {
+            mediaServiceClient.deleteCourseFile(String.valueOf(courseId));
+        } catch (Exception e) {
+            log.info("删除课程模板文件失败");
+        }
+        // 删除ES搜索文件
+        Boolean delete = searchServiceClient.delete(String.valueOf(courseId));
+        if (!delete) {
+            log.info("删除索引失败");
+        }
+
+        // 先删数据库，再删缓存
+        // 删除课程发布信息
+        coursePublishMapper.deleteById(courseId);
+
+        // 删除课程缓存
+        String redisKey = "course:" + courseId;
+        Object jsonObj = redisTemplate.opsForValue().get(redisKey);
+        if (jsonObj != null) {
+            try {
+                redisTemplate.delete(redisKey);
+            } catch (Exception e) {
+                log.info("删除缓存失败");
+            }
+        }
+
+        courseBase.setAuditStatus(COURSE_NOT_SUBMITTED);
+        courseBase.setStatus(OFFLINE);
+        courseBaseMapper.updateById(courseBase);
+
+    }
 }

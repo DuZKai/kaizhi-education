@@ -19,7 +19,7 @@
           suffix-icon="el-icon-search"
           v-model="listQueryData.filename"
         />
-        <el-select v-model="listQueryData.fileType" placeholder="请选择文件类型">
+        <el-select v-model="listQueryData.fileType" clearable placeholder="请选择文件类型">
           <el-option
             v-for="item in mediaTypes"
             :key="item.code"

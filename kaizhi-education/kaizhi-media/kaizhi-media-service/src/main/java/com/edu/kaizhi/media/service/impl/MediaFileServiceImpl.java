@@ -90,6 +90,8 @@ public class MediaFileServiceImpl implements MediaFileService {
         if (fileType != null && !fileType.isEmpty() && !fileType.equals("null"))
             queryWrapper.eq(MediaFiles::getFileType, fileType);
 
+        // 按照创建时间排序
+        queryWrapper.orderByAsc(MediaFiles::getCreateDate);
 
         //分页对象
         Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
@@ -191,7 +193,7 @@ public class MediaFileServiceImpl implements MediaFileService {
             filePath = fileById.getFilePath();
 
             DeleteObject deleteObject = new DeleteObject(filePath);
-            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket("video").
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket(bucket_video).
                     objects(Collections.singletonList(deleteObject)).build();
             removeMinioChunk(removeObjectsArgs);
             log.debug("在minio删除文件成功, filePath:{}", filePath);
@@ -564,11 +566,30 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 
             RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().
-                    bucket("video").objects(deleteObjects).build();
+                    bucket(bucket_video).objects(deleteObjects).build();
             removeMinioChunk(removeObjectsArgs);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("清除分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath);
+        }
+    }
+
+    /**
+     * 清除文件
+     *
+     * @param FilePath 文件路径
+     */
+    public void deleteSingleFile(String FilePath) {
+
+        try {
+            DeleteObject deleteObject = new DeleteObject(FilePath);
+
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket(bucket_Files).
+                    objects(Collections.singletonList(deleteObject)).build();
+            removeMinioChunk(removeObjectsArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("清除文件失败,FilePath:{}", FilePath);
         }
     }
 
@@ -583,7 +604,7 @@ public class MediaFileServiceImpl implements MediaFileService {
         try {
             DeleteObject deleteObject = new DeleteObject(chunkFileFolderPath + chunk);
 
-            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket("video").
+            RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder().bucket(bucket_video).
                     objects(Collections.singletonList(deleteObject)).build();
             removeMinioChunk(removeObjectsArgs);
         } catch (Exception e) {

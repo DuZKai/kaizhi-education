@@ -56,8 +56,14 @@ public class CoursePublishTask extends MessageProcessAbstract {
         generateCourseHtml(mqMessage, courseId);
         //课程索引
         saveCourseIndex(mqMessage, courseId);
+
+        // 更新布隆过滤器
+        // 先更新布隆过滤器再更新缓存，不然可能会因为布隆过滤器没加入直接跳过已有的加入缓存步骤
+        coursePublishService.updateBloomFilter(courseId);
+
         //课程缓存
         saveCourseCache(mqMessage, courseId);
+
         return true;
 
     }
@@ -107,7 +113,6 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
     }
 
-    // TODO:将课程信息缓存至redis
     public void saveCourseCache(MqMessage mqMessage, long courseId) {
         log.debug("将课程信息缓存至redis,课程id:{}", courseId);
         //消息id
@@ -121,8 +126,8 @@ public class CoursePublishTask extends MessageProcessAbstract {
             return;
         }
         try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
+            coursePublishService.getCoursePublishCache(courseId);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         //保存第三阶段状态

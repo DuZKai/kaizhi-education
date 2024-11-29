@@ -16,28 +16,31 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
     protected KeyGenerator keyGenerator;
     protected CheckCodeStore checkCodeStore;
 
-    public abstract void  setCheckCodeGenerator(CheckCodeGenerator checkCodeGenerator);
-    public abstract void  setKeyGenerator(KeyGenerator keyGenerator);
-    public abstract void  setCheckCodeStore(CheckCodeStore CheckCodeStore);
+    public abstract void setCheckCodeGenerator(CheckCodeGenerator checkCodeGenerator);
+
+    public abstract void setKeyGenerator(KeyGenerator keyGenerator);
+
+    public abstract void setCheckCodeStore(CheckCodeStore CheckCodeStore);
 
 
     /**
      * 生成验证公用方法
+     *
      * @param checkCodeParamsDto 生成验证码参数
-     * @param code_length 验证码长度
-     * @param keyPrefix key的前缀
-     * @param expire 过期时间
+     * @param code_length        验证码长度
+     * @param keyPrefix          key的前缀
+     * @param expire             过期时间
      * @return com.edu.kaizhi.checkcode.service.AbstractCheckCodeService.GenerateResult 生成结果
-    */
-    public GenerateResult generate(CheckCodeParamsDto checkCodeParamsDto,Integer code_length,String keyPrefix,Integer expire){
+     */
+    public GenerateResult generate(CheckCodeParamsDto checkCodeParamsDto, Integer code_length, String keyPrefix, Integer expire) {
         //生成四位验证码
         String code = checkCodeGenerator.generate(code_length);
-        log.debug("生成验证码:{}",code);
+        log.debug("生成验证码:{}", code);
         //生成一个key
         String key = keyGenerator.generate(keyPrefix);
 
         //存储验证码
-        checkCodeStore.set(key,code,expire);
+        checkCodeStore.set(key, code, expire);
         //返回验证码生成结果
         GenerateResult generateResult = new GenerateResult();
         generateResult.setKey(key);
@@ -46,7 +49,7 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
     }
 
     @Data
-    protected class GenerateResult{
+    protected class GenerateResult {
         String key;
         String code;
     }
@@ -55,16 +58,16 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
     public abstract CheckCodeResultDto generate(CheckCodeParamsDto checkCodeParamsDto);
 
 
-    public boolean verify(String key, String code){
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(code)){
+    public boolean verify(String key, String code) {
+        if (StringUtils.isBlank(key) || StringUtils.isBlank(code)) {
             return false;
         }
         String code_l = checkCodeStore.get(key);
-        if (code_l == null){
+        if (code_l == null) {
             return false;
         }
         boolean result = code_l.equalsIgnoreCase(code);
-        if(result){
+        if (result) {
             //删除验证码
             checkCodeStore.remove(key);
         }

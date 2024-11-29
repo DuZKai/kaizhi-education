@@ -48,4 +48,5 @@ public interface CourseBaseInfoService {
      * @param courseId 课程ID
      */
     void delectCourse(Long companyId, Long courseId);
+
 }

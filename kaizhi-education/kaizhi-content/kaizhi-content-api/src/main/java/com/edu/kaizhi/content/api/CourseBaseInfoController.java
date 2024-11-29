@@ -3,6 +3,7 @@ package com.edu.kaizhi.content.api;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.content.service.CoursePublishService;
 import com.edu.kaizhi.content.util.SecurityUtil;
 import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
@@ -71,4 +72,5 @@ public class CourseBaseInfoController {
         courseBaseInfoService.delectCourse(companyId, courseId);
 
     }
+
 }

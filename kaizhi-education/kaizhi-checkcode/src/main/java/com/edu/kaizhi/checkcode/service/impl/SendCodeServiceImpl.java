@@ -5,6 +5,7 @@ import com.edu.kaizhi.checkcode.service.SendCodeService;
 import com.edu.kaizhi.checkcode.util.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import static com.edu.kaizhi.base.constant.RedisConfig.VERIFY_CODE_TTL;
 @Slf4j
 public class SendCodeServiceImpl implements SendCodeService {
     @Autowired
-    StringRedisTemplate redisTemplate;
+    RedisTemplate redisTemplate;
 
     @Override
     public void sendEMail(String email, String code) {

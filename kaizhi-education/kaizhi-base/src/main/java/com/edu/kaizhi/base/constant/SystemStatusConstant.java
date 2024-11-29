@@ -38,7 +38,7 @@ public class SystemStatusConstant {
     // 课程发布状态
     public static final String UNPUBLISHED = "203001"; // 未发布
     public static final String PUBLISHED = "203002"; // 已发布
-    public static final String OFFLINE = "203003"; // 下线
+    public static final String OFFLINE = "203003"; // 下架
 
     // 订单交易类型状态
     public static final String UNPAID = "600001"; // 未支付

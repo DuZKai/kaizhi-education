@@ -11,6 +11,7 @@ import com.edu.kaizhi.ucenter.model.po.UserRole;
 import com.edu.kaizhi.ucenter.service.VerifyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.UUID;
 public class VerifyServiceImpl implements VerifyService {
 
     @Autowired
-    StringRedisTemplate redisTemplate;
+    RedisTemplate redisTemplate;
 
     @Autowired
     UserMapper userMapper;
@@ -34,7 +35,7 @@ public class VerifyServiceImpl implements VerifyService {
 
     public Boolean verify(String email, String checkcode) {
         // 1. 从redis中获取缓存的验证码
-        String codeInRedis = redisTemplate.opsForValue().get(email);
+        String codeInRedis = (String) redisTemplate.opsForValue().get(email);
         // 2. 判断是否与用户输入的一致
         if (codeInRedis != null && codeInRedis.equalsIgnoreCase(checkcode)) {
             redisTemplate.delete(email);
