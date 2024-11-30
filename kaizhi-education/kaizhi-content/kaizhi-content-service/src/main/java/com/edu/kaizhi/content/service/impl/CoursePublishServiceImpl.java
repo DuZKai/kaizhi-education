@@ -2,18 +2,15 @@ package com.edu.kaizhi.content.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.edu.kaizhi.base.exception.CommonError;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.bloomfilter.BloomFilterHelper;
 import com.edu.kaizhi.content.bloomfilter.BloomfilterService;
 import com.edu.kaizhi.content.config.MultipartSupportConfig;
-import com.edu.kaizhi.content.feignclient.CourseIndex;
 import com.edu.kaizhi.content.feignclient.MediaServiceClient;
 import com.edu.kaizhi.content.feignclient.SearchServiceClient;
-import com.edu.kaizhi.content.mapper.CourseBaseMapper;
-import com.edu.kaizhi.content.mapper.CourseMarketMapper;
-import com.edu.kaizhi.content.mapper.CoursePublishMapper;
-import com.edu.kaizhi.content.mapper.CoursePublishPreMapper;
+import com.edu.kaizhi.content.mapper.*;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
@@ -126,6 +123,11 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     private static final String LOCK_KEY = "cache_lock:";
 
     private static final long LOCK_EXPIRE_TIME = 5; // 锁的过期时间，防止死锁
+    @Autowired
+    private TeachplanMapper teachplanMapper;
+
+    @Autowired
+    private TeachplanMediaMapper teachplanMediaMapper;
 
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
 
@@ -184,7 +186,21 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         if (teachplanTree.isEmpty()) {
             CustomizeException.cast("提交失败，还没有添加课程计划");
         }
-        // TODO: 判断每个小节是否都有视频
+
+        // 判断每个小节是否都有视频
+        LambdaQueryWrapper<Teachplan> teachplanLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        teachplanLambdaQueryWrapper.eq(Teachplan::getCourseId, courseId);
+        teachplanLambdaQueryWrapper.eq(Teachplan::getGrade, 2);
+        int teachplansCount = teachplanMapper.selectCount(teachplanLambdaQueryWrapper);
+
+        LambdaQueryWrapper<TeachplanMedia> teachplanMediaLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        teachplanMediaLambdaQueryWrapper.eq(TeachplanMedia::getCourseId, courseId);
+        int teachplanMediaCount = teachplanMediaMapper.selectCount(teachplanMediaLambdaQueryWrapper);
+
+        if(teachplansCount != teachplanMediaCount) {
+            CustomizeException.cast("提交失败，课程计划中有小节没有视频");
+        }
+
         //转json
         String teachplanTreeString = JSON.toJSONString(teachplanTree);
         coursePublishPre.setTeachplan(teachplanTreeString);
