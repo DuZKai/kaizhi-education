@@ -55,6 +55,4 @@ public class Teacher implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
-
-
 }

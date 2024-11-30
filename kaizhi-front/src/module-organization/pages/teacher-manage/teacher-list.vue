@@ -6,7 +6,7 @@
         type="primary"
         size="medium"
         class="btn-add el-button"
-        @click="handleAddTeacher"
+        @click="handleAdd"
       >+添加教师</el-button>
     </div>
 
@@ -73,7 +73,6 @@ import Pagination from '@/components/pagination/index.vue'
 import {
   deleteTeacher, getTeachersList
 } from '@/api/courses' // api interface 课程
-import { ICourseBaseDTO } from '@/entity/course-page-list'
 import MixinTools from '@/utils/mixins.vue'
 import SaveTeacherDialog from './components/teacher-add.vue'
 import {ITeacherList} from "@/entity/teacher";
@@ -129,7 +128,7 @@ export default class extends mixins(MixinTools) {
     this.isDialogVisible = true
   }
 
-  private handleEdit(index: number, row: ICourseBaseDTO) {
+  private handleEdit(data: ITeacherList) {
     this.teacherData = data
     this.isDialogVisible = true
   }
@@ -140,10 +139,6 @@ export default class extends mixins(MixinTools) {
       await deleteTeacher(data.id)
       await this.getList()
     } catch (error) {}
-  }
-
-  private handleAddTeacher() {
-    this.isDialogVisible = true
   }
 
   // 监控 watch

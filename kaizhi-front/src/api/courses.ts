@@ -4,6 +4,7 @@ import { ICoursePageList } from '@/entity/course-page-list'
 import { ICourseCategory, ICourseBaseInfo } from '@/entity/course-add-base'
 import { ICourseOutlineTreeNode } from '@/entity/course-add-outline'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
+import { ITeacherList } from '@/entity/teacher'
 import { ICoursePubDTO } from '@/entity/course-publish'
 import {IMediaPageList} from "@/entity/media-page-list";
 
@@ -156,7 +157,7 @@ export async function workUnAssociation(
 // 第三步 课程教师
 ////////////////////////////////////////////////
 
-// 读取完整列表
+// 获取课程教师
 export async function getTeachers(
   courseBaseId: number
 ): Promise<ICourseTeacherList[]> {
@@ -185,8 +186,8 @@ export async function getTeachersList(
 }
 
 
-// 保存教师
-export async function submitTeacher(
+// 保存课程教师
+export async function submitCourseTeacher(
   body: ICourseTeacherList
 ): Promise<ICourseOutlineTreeNode> {
   const { data } = await createAPI(
@@ -198,7 +199,21 @@ export async function submitTeacher(
   return data
 }
 
-// 删除教师
+// 保存教师
+export async function submitTeacher(
+    body: ITeacherList
+): Promise<ITeacherList> {
+  const { data } = await createAPI(
+      '/content/teacher',
+      'post',
+      undefined,
+      body
+  )
+  return data
+}
+
+
+// 删除课程教师
 export async function deleteCourseTeacher(
   courseBaseId: number,
   courseTeacherId?: number
@@ -209,6 +224,7 @@ export async function deleteCourseTeacher(
   )
 }
 
+// 删除教师
 export async function deleteTeacher(
     teacherId?: number
 ) {

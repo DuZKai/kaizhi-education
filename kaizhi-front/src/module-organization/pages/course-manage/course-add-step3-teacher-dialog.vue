@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
-import { submitTeacher } from '@/api/courses'
+import { submitCourseTeacher } from '@/api/courses'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
 import { ElForm } from 'element-ui/types/form'
 import CommonEnteringStep2UploadImage from '@/module-entering/pages/entering/components/common-entering-step2-upload-image.vue'
@@ -105,7 +105,7 @@ export default class extends Vue {
         this.teacherData.photograph = this.teacherData.photograph.replace(`${process.env.VUE_APP_SERVER_PICSERVER_URL}`,'')
 
       }
-      await submitTeacher(this.teacherData)
+      await submitCourseTeacher(this.teacherData)
       this.syncDialogVisible = false
       this.restForm()
       this.$emit('complete')

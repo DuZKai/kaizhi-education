@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
 import { submitTeacher } from '@/api/courses'
-import { ICourseTeacherList } from '@/entity/course-add-teacher'
+import { ITeacherList } from '@/entity/teacher'
 import { ElForm } from 'element-ui/types/form'
 import CommonEnteringStep2UploadImage from '@/module-entering/pages/entering/components/common-entering-step2-upload-image.vue'
 
@@ -52,7 +52,7 @@ export default class extends Vue {
   syncDialogVisible!: boolean
 
   @Prop()
-  private teacherData!: ICourseTeacherList
+  private teacherData!: ITeacherList
 
   // constructor() {
   //   super()

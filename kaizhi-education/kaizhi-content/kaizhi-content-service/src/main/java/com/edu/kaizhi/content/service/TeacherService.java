@@ -3,6 +3,7 @@ package com.edu.kaizhi.content.service;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.model.dto.QueryTeacherParamsDto;
+import com.edu.kaizhi.content.model.dto.TeacherDto;
 import com.edu.kaizhi.content.model.po.Teacher;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface TeacherService {
 
     // 删除教师信息
     public void deleteTeacher(Long companyId, Long teacherId);
+
+    // 保存教师信息
+    public Teacher modifyTeacher(Long companyId, TeacherDto teacherDto);
 }

@@ -8,16 +8,19 @@ import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.mapper.CourseTeacherMapper;
 import com.edu.kaizhi.content.mapper.TeacherMapper;
 import com.edu.kaizhi.content.model.dto.QueryTeacherParamsDto;
+import com.edu.kaizhi.content.model.dto.TeacherDto;
+import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.model.po.Teacher;
 import com.edu.kaizhi.content.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,6 +43,8 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacherName != null && !teacherName.isEmpty() && !teacherName.equals("null"))
             queryWrapper.like(Teacher::getTeacherName, teacherName);
 
+        // 公司权限
+        queryWrapper.eq(Teacher::getCompanyId, companyId);
         // 按照创建时间排序
         queryWrapper.orderByAsc(Teacher::getCreateDate);
 
@@ -83,5 +88,28 @@ public class TeacherServiceImpl implements TeacherService {
             CustomizeException.cast("该教师信息已被课程使用，无法删除");
 
         teacherMapper.deleteById(teacherId);
+    }
+
+    public Teacher modifyTeacher(Long companyId, TeacherDto teacherDto) {
+        // 得到课程id
+        Long teacherId = teacherDto.getId();
+        // 查询课程基本信息
+        Teacher teacher = teacherMapper.selectById(teacherId);
+        if (teacher == null) {
+            // 新增
+            teacher = new Teacher();
+            BeanUtils.copyProperties(teacherDto, teacher);
+            teacher.setCompanyId(companyId);
+            teacher.setCreateDate(LocalDateTime.now());
+            teacherMapper.insert(teacher);
+        }
+        else{
+            // 修改
+            if(!Objects.equals(teacher.getCompanyId(), companyId))
+                CustomizeException.cast("无权限修改该教师信息");
+            BeanUtils.copyProperties(teacherDto, teacher);
+            teacherMapper.updateById(teacher);
+        }
+        return teacher;
     }
 }
