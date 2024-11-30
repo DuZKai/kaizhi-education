@@ -1,6 +1,6 @@
 package com.edu.kaizhi.content.model.dto;
 
-import com.edu.kaizhi.content.model.po.CourseTeacher;
+import com.edu.kaizhi.content.model.po.Teacher;
 import lombok.Data;
 import lombok.ToString;
 
@@ -21,6 +21,6 @@ public class CoursePreviewDto {
     List<TeachplanDto> teachplans;
 
     // 师资信息
-    List<CourseTeacher> courseTeacher;
+    List<Teacher> teacher;
 
 }

@@ -5,6 +5,7 @@ import { ICourseCategory, ICourseBaseInfo } from '@/entity/course-add-base'
 import { ICourseOutlineTreeNode } from '@/entity/course-add-outline'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
 import { ICoursePubDTO } from '@/entity/course-publish'
+import {IMediaPageList} from "@/entity/media-page-list";
 
 // 课程分类列表
 export async function category(): Promise<ICourseCategory[]> {
@@ -167,10 +168,22 @@ export async function getTeachers(
       data[key].photograph = `${process.env.VUE_APP_SERVER_PICSERVER_URL}` + data[key].photograph
     }
   }
-
-
   return data
 }
+
+export async function getTeachersList(
+    params: any = undefined,
+    body: any = undefined
+): Promise<ICourseTeacherList[]> {
+  const { data } = await createAPI('/content/teacher/list', 'post', params, body)
+  for(let key in data.items){
+    if(data.items[key].photograph){
+      data.items[key].photograph = `${process.env.VUE_APP_SERVER_PICSERVER_URL}` + data.items[key].photograph
+    }
+  }
+  return data
+}
+
 
 // 保存教师
 export async function submitTeacher(
@@ -186,7 +199,7 @@ export async function submitTeacher(
 }
 
 // 删除教师
-export async function deleteTeacher(
+export async function deleteCourseTeacher(
   courseBaseId: number,
   courseTeacherId?: number
 ) {
@@ -195,3 +208,13 @@ export async function deleteTeacher(
     'delete'
   )
 }
+
+export async function deleteTeacher(
+    teacherId?: number
+) {
+  await createAPI(
+      `/content/teacher/${teacherId}`,
+      'delete'
+  )
+}
+

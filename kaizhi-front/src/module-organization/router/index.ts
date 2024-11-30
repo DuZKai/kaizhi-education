@@ -35,6 +35,11 @@ export default [
         path: 'media-list',
         component: () => import('../pages/media-manage/media-list.vue')
       },
+      // 教师管理
+      {
+        path: 'teacher-list',
+        component: () => import('../pages/teacher-manage/teacher-list.vue')
+      },
       // 作业管理
       {
         path: 'work-list',

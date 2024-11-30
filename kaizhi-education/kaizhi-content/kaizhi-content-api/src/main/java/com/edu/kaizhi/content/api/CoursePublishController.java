@@ -6,6 +6,7 @@ import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
+import com.edu.kaizhi.content.model.po.Teacher;
 import com.edu.kaizhi.content.service.CoursePublishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,12 +84,12 @@ public class CoursePublishController {
         //课程计划
         List<TeachplanDto> teachplans = JSON.parseArray(coursePublish.getTeachplan(), TeachplanDto.class);
         // 师资信息
-        List<CourseTeacher> courseTeacher = JSON.parseArray(coursePublish.getTeachers(), CourseTeacher.class);
+        List<Teacher> teacher = JSON.parseArray(coursePublish.getTeachers(), Teacher.class);
 
         CoursePreviewDto coursePreviewInfo = new CoursePreviewDto();
         coursePreviewInfo.setCourseBase(courseBase);
         coursePreviewInfo.setTeachplans(teachplans);
-        coursePreviewInfo.setCourseTeacher(courseTeacher);
+        coursePreviewInfo.setTeacher(teacher);
         return coursePreviewInfo;
     }
 

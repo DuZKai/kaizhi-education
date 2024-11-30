@@ -17,6 +17,8 @@
         <div class="divider"></div>
         <router-link to="/organization/media-list">媒资管理</router-link>
         <div class="divider"></div>
+        <router-link to="/organization/teacher-list">教师管理</router-link>
+        <div class="divider"></div>
         <router-link to="/organization/work-list">作业管理</router-link>
         <div class="divider"></div>
         <router-link to="/organization/course-comment-list">评价管理</router-link>

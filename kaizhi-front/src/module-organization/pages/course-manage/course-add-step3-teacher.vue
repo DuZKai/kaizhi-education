@@ -44,7 +44,7 @@
 import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { IKVData } from '@/api/types'
-import { getTeachers, deleteTeacher } from '@/api/courses'
+import { getTeachers, deleteCourseTeacher } from '@/api/courses'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
 import SaveTeacherDialog from './course-add-step3-teacher-dialog.vue'
 import MixinTools from '@/utils/mixins.vue'
@@ -99,7 +99,7 @@ export default class extends mixins(MixinTools) {
   private async handleDelete(data: ICourseTeacherList) {
     try {
       await this.showDeleteConfirm()
-      await deleteTeacher(this.courseBaseId, data.id)
+      await deleteCourseTeacher(this.courseBaseId, data.id)
       await this.getList()
     } catch (error) {}
   }

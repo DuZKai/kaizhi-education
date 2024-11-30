@@ -15,10 +15,7 @@ import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.*;
-import com.edu.kaizhi.content.service.CourseBaseInfoService;
-import com.edu.kaizhi.content.service.CoursePublishService;
-import com.edu.kaizhi.content.service.CourseTeacherService;
-import com.edu.kaizhi.content.service.TeachplanService;
+import com.edu.kaizhi.content.service.*;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
 
@@ -91,6 +88,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseTeacherService courseTeacherService;
 
     @Autowired
+    TeacherService teacherService;
+
+    @Autowired
     BloomfilterService bloomfilterService;
 
     @Autowired
@@ -138,12 +138,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         List<TeachplanDto> teachplanTree = teachplanService.findTeachplanTreeNodes(courseId);
 
         // 师资信息
-        List<CourseTeacher> courseTeacher = courseTeacherService.getCourseTeacherList(courseId);
+        List<Teacher> teacher = teacherService.getCourseTeacherList(courseId);
 
         CoursePreviewDto coursePreviewDto = new CoursePreviewDto();
         coursePreviewDto.setCourseBase(courseBaseInfo);
         coursePreviewDto.setTeachplans(teachplanTree);
-        coursePreviewDto.setCourseTeacher(courseTeacher);
+        coursePreviewDto.setTeacher(teacher);
         return coursePreviewDto;
     }
 
@@ -206,12 +206,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         coursePublishPre.setTeachplan(teachplanTreeString);
 
         //查询课程师资信息
-        List<CourseTeacher> courseTeacherList = courseTeacherService.getCourseTeacherList(courseId);
-        if (courseTeacherList.isEmpty()) {
+        List<Teacher> teacherList = teacherService.getCourseTeacherList(courseId);
+        if (teacherList.isEmpty()) {
             CustomizeException.cast("提交失败，还没有添加课程师资");
         }
         //转json
-        String courseTeacherListString = JSON.toJSONString(courseTeacherList);
+        String courseTeacherListString = JSON.toJSONString(teacherList);
         coursePublishPre.setTeachers(courseTeacherListString);
 
         //设置预发布记录状态,已提交，原本202003

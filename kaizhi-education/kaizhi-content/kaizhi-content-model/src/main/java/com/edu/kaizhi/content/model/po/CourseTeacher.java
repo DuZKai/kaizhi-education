@@ -36,28 +36,6 @@ public class CourseTeacher implements Serializable {
     /**
      * 教师标识
      */
-    private String teacherName;
-
-    /**
-     * 教师职位
-     */
-    private String position;
-
-    /**
-     * 教师简介
-     */
-    private String introduction;
-
-    /**
-     * 照片
-     */
-    private String photograph;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createDate;
-
+    private Long teacherId;
 
 }

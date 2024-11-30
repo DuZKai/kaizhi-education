@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 媒资文件管理接口
@@ -44,11 +45,21 @@ public class MediaFilesController {
 
         // TODO: 机构ID
         Long companyId = 1232141425L;
-
+        String originalFilename = filedata.getOriginalFilename();
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
-        uploadFileParamsDto.setFilename(filedata.getOriginalFilename());
+        uploadFileParamsDto.setFilename(originalFilename);
         uploadFileParamsDto.setFileSize(filedata.getSize());
         uploadFileParamsDto.setFileType("001001");
+        if(originalFilename!=null){
+            if(originalFilename.contains("html"))
+            {
+                uploadFileParamsDto.setFileType("001003");
+                uploadFileParamsDto.setTags("课程预览");
+            }
+            else{
+                uploadFileParamsDto.setTags("课程文件");
+            }
+        }
 
         // 创建临时文件
         File tempFile = File.createTempFile("minio", ".temp");
