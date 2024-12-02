@@ -107,8 +107,8 @@
                             </div>
                             <div class="content-com course">
                                 <div class="title"><span>课程制作</span></div>
-                                <#if model.courseTeacher??>
-                                    <#list model.courseTeacher as teacher>
+                                <#if model.teacher??>
+                                    <#list model.teacher as teacher>
                                         <div class="cont">
                                             <!-- 图片区域 -->
                                             <div class="img-box">

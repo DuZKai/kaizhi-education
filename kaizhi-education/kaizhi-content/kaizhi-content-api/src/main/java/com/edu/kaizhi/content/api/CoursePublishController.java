@@ -1,6 +1,7 @@
 package com.edu.kaizhi.content.api;
 
 import com.alibaba.fastjson.JSON;
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.model.dto.CourseBaseInfoDto;
 import com.edu.kaizhi.content.model.dto.CoursePreviewDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
@@ -12,11 +13,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -99,12 +99,18 @@ public class CoursePublishController {
 
 
     @ApiOperation("下架课程")
-    @GetMapping("/courseoffline/{courseId}")
-    public void offlineCourse(@PathVariable Long courseId) {
+    @PostMapping("/courseoffline/{courseId}")
+    public ResponseEntity<Void> offlineCourse(@PathVariable("courseId") Long courseId) {
 
         // TODO:获取用户所属机构ID
         Long companyId = 1232141425L;
-        coursePublishService.offlineCourse(companyId, courseId);
-
+        try {
+            coursePublishService.offlineCourse(companyId, courseId);
+            return ResponseEntity.ok().build();
+        } catch (CustomizeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

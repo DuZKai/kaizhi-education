@@ -214,8 +214,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         String courseTeacherListString = JSON.toJSONString(teacherList);
         coursePublishPre.setTeachers(courseTeacherListString);
 
-        //设置预发布记录状态,已提交，原本202003
-        coursePublishPre.setStatus("203001");
+        //设置预发布记录状态，已提交
+        coursePublishPre.setStatus("202003");
         //教学机构id
         coursePublishPre.setCompanyId(companyId);
         //提交时间
@@ -456,6 +456,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
         if (!companyId.equals(courseBase.getCompanyId()))
             CustomizeException.cast("只允许下架本机构的课程");
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        if(coursePublish == null)
+            CustomizeException.cast("未找到已发布课程，无法下架");
 
         // 删除课程模板文件
         try {

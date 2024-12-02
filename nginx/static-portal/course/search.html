@@ -118,7 +118,7 @@
                                                 <span v-if="course.grade=='204001'">初级</span>
                                                 <span v-else-if="course.grade=='204002'">中级</span>
                                                 <span v-else>高级</span>
-                                                <span v-html="course.name"></span>
+                                                <span v-html="truncatedCourseName(course.name)"></span>
                                             </li>
                                             <li style="width:100%">
                                                 <span v-if="course.charge=='201000'">免费</span>
@@ -280,6 +280,30 @@
                 stList: []
             },
             methods: {
+                truncatedCourseName(name) {
+                    const maxLength = 14;  // 限制最大字符数
+
+                    // 如果字符串长度超过最大限制，截取并加上省略号
+                    let count = 0;
+                    for (let i = 0; i < name.length; i++) {
+                        const char = name.charAt(i);
+                        // 判断字符是否是中文
+                        if (/[\u4e00-\u9fa5]/.test(char)) {
+                            count += 2;
+                        }
+                        // 判断字符是否是英文
+                        else if (/^[a-zA-Z]$/.test(char)) {
+                            count += 1;
+                        }
+
+                        // 判断是否达到字符限制
+                        if (count > maxLength) {
+                            return name.substring(0, i) + '...';
+                        }
+                    }
+
+                    return name;  // 如果未超过最大限制，返回原始字符串
+                },
 
                 submitSearch(mt, st, grade, sortType) {
                     this.searchParams.mt = mt

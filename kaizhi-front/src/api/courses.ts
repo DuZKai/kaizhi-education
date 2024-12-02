@@ -35,7 +35,7 @@ export async function publishCourse(courseBaseId: number): Promise<void> {
 
 // 课程下架
 export async function offlineCourse(courseBaseId: number): Promise<void> {
-  await createAPI(`/content/courseoffline/${courseBaseId}`, 'get')
+  await createAPI(`/content/courseoffline/${courseBaseId}`, 'post')
 }
 
 

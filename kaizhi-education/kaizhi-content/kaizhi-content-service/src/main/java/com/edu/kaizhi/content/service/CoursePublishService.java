@@ -70,7 +70,7 @@ public interface CoursePublishService {
      * @param companyId 机构ID
      * @param courseId 课程ID
      */
-    void offlineCourse(Long companyId, Long courseId);
+    public void offlineCourse(Long companyId, Long courseId);
 
     /**
      * 更新布隆过滤器
