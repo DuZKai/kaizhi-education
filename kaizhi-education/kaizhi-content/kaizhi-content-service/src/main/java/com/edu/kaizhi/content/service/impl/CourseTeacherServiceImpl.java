@@ -22,50 +22,40 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     private CourseTeacherMapper courseTeacherMapper;
 
     // 保存课程教师信息
-    public CourseTeacher saveCourseTeacher(CourseTeacherDto courseTeacher){
-        // TODO
-        return null;
-        // Long id = courseTeacher.getId();
-        // CourseTeacher teacher;
-        // if (id == null){
-        //     teacher = new CourseTeacher();
-        //     BeanUtils.copyProperties(courseTeacher, teacher);
-        //     teacher.setCreateDate(LocalDateTime.now());
-        //     try{
-        //         courseTeacherMapper.insert(teacher);
-        //     }catch (Exception e){
-        //         CustomizeException.cast("新增课程教师信息失败");
-        //     }
-        // }
-        // else{
-        //     teacher = courseTeacherMapper.selectById(id);
-        //     BeanUtils.copyProperties(courseTeacher, teacher);
-        //     try{
-        //         courseTeacherMapper.updateById(teacher);
-        //     }catch (Exception e){
-        //         CustomizeException.cast("修改课程教师信息失败");
-        //     }
-        // }
-        // return teacher;
+    public CourseTeacher saveCourseTeacher(CourseTeacherDto courseTeacher) {
+        CourseTeacher teacher;
+        Long teacherId = courseTeacher.getTeacherId();
+        Long courseId = courseTeacher.getCourseId();
+        LambdaQueryWrapper<CourseTeacher> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(CourseTeacher::getTeacherId, teacherId).eq(CourseTeacher::getCourseId, courseId);
+        int count = courseTeacherMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            // 已经有这个Id
+            CustomizeException.cast("新增课程教师信息失败，已经存在该教师");
+        }
+        teacher = new CourseTeacher();
+        BeanUtils.copyProperties(courseTeacher, teacher);
+        try {
+            courseTeacherMapper.insert(teacher);
+        } catch (Exception e) {
+            CustomizeException.cast("新增课程教师信息失败");
+        }
+        return teacher;
     }
 
     // 删除课程教师信息
-    public void deleteCourseTeacher(Long courseId, Long teacherId){
-        // TODO
-        return;
-        // LambdaQueryWrapper<CourseTeacher> queryWrapper = new LambdaQueryWrapper<>();
-        // queryWrapper.eq(CourseTeacher::getId, teacherId).eq(CourseTeacher::getCourseId, courseId);
-        // try{
-        //     courseTeacherMapper.delete(queryWrapper);
-        // }catch (Exception e){
-        //     CustomizeException.cast("删除课程教师信息失败");
-        // }
+    public void deleteCourseTeacher(Long courseId, Long teacherId) {
+        LambdaQueryWrapper<CourseTeacher> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(CourseTeacher::getTeacherId, teacherId).eq(CourseTeacher::getCourseId, courseId);
+        try{
+            courseTeacherMapper.delete(queryWrapper);
+        }catch (Exception e){
+            CustomizeException.cast("删除课程教师信息失败");
+        }
     }
 
     // 根据id查询课程教师信息
     public CourseTeacher getCourseTeacherById(CourseTeacher courseTeacher) {
-        // TODO
-        return null;
-        // return courseTeacherMapper.selectById(courseTeacher.getId());
+        return courseTeacherMapper.selectById(courseTeacher.getId());
     }
 }

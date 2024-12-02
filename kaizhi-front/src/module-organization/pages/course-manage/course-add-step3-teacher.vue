@@ -23,17 +23,16 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 对话框 -->
-    <SaveTeacherDialog
+    <SaveCourseTeacherDialog
       ref="dialog"
       :dialogVisible.sync="isDialogVisible"
-      :teacherData="teacherData"
+      :courseBaseId="courseBaseId"
       @complete="getList"
     />
   </div>
@@ -46,12 +45,12 @@ import { mixins } from 'vue-class-component'
 import { IKVData } from '@/api/types'
 import { getTeachers, deleteCourseTeacher } from '@/api/courses'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
-import SaveTeacherDialog from './course-add-step3-teacher-dialog.vue'
+import SaveCourseTeacherDialog from './course-add-step3-teacher-dialog.vue'
 import MixinTools from '@/utils/mixins.vue'
 
 @Component({
   name: 'CourseAddStep3Teacher',
-  components: { SaveTeacherDialog }
+  components: { SaveCourseTeacherDialog }
 })
 export default class extends mixins(MixinTools) {
   @Prop({ type: Number })
@@ -62,14 +61,6 @@ export default class extends mixins(MixinTools) {
   private listLoading: boolean = false // 是否载入中
   private isDialogVisible: boolean = false
 
-  // 当前编辑的老师
-  private teacherData: ICourseTeacherList = {
-    courseId: this.courseBaseId,
-    teacherName: '',
-    position: '',
-    introduction: ''
-  }
-
   // 获取老师列表
   public async getList() {
     this.listLoading = true
@@ -78,20 +69,7 @@ export default class extends mixins(MixinTools) {
   }
 
   // 添加
-  private handleAdd() {
-    this.teacherData = {
-      courseId: this.courseBaseId,
-      teacherName: '',
-      position: '',
-      introduction: ''
-    }
-    this.isDialogVisible = true
-  }
-
-  // 修改
-  private handleEdit(data: ICourseTeacherList) {
-    // debugger
-    this.teacherData = data
+  private async handleAdd() {
     this.isDialogVisible = true
   }
 

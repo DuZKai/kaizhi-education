@@ -1,27 +1,51 @@
 <template>
-  <el-dialog title="课程教师" :visible.sync="syncDialogVisible">
-    <div class="form-dialog">
-      <el-form ref="form" :model="teacherData" :rules="rules" label-width="120px">
-        <el-form-item label="教师姓名：" prop="teacherName">
-          <el-input v-model="teacherData.teacherName"></el-input>
-        </el-form-item>
-        <el-form-item label="教师职位：" prop="position">
-          <el-input v-model="teacherData.position"></el-input>
-        </el-form-item>
-        <el-form-item label="教师简介：" prop="introduction">
-          <el-input v-model="teacherData.introduction" type="textarea" :rows="3"></el-input>
-        </el-form-item>
-        <el-form-item label="教师照片：" prop="photograph">
-          <common-entering-step2-upload-image :imageUrl.sync="teacherData.photograph">
-            图片要求
-            <br />尺寸大于500*900 分辨率不小于96dpi
-          </common-entering-step2-upload-image>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div slot="footer">
-      <el-button @click="handleCancel">取消</el-button>
-      <el-button type="primary" @click="handleSubmit">提交</el-button>
+  <el-dialog title="教师列表" :visible.sync="syncDialogVisible">
+    <div class="workspace" style="padding: 0">
+      <!-- 搜索栏 -->
+      <div class="searcher">
+        <el-input
+            class="el-input"
+            placeholder="教师名称"
+            suffix-icon="el-icon-search"
+            v-model="listQueryData.teacherName"
+        />
+      </div>
+
+      <!-- 数据列表 -->
+      <el-table
+          class="dataList"
+          v-loading="listLoading"
+          :data="listData.items"
+          border
+          style="width: 100%"
+          :header-cell-style="{textAlign: 'center'}"
+      >
+        <el-table-column prop="teacherName" label="教师名称" align="center" width="130"></el-table-column>
+        <el-table-column prop="position" label="教师职位" align="center" width="200"></el-table-column>
+        <el-table-column prop="introduction" label="教师简介" width="400"></el-table-column>
+        <el-table-column label="教师照片" align="center" width="100">
+          <template slot-scope="scope">
+            <img :src="scope.row.photograph" :alt="scope.row.teacherName" width="90"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleAdd(scope.row)">添加</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 翻页控制 -->
+      <div class="dataList-pagination">
+        <Pagination
+            v-show="listData.counts > 0"
+            :total="listData.counts"
+            :page.sync="listQuery.pageNo"
+            :limit.sync="listQuery.pageSize"
+            @pagination="getList"
+        />
+      </div>
+
     </div>
   </el-dialog>
 </template>
@@ -35,81 +59,111 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
-import { submitCourseTeacher } from '@/api/courses'
+import {Component, Prop, PropSync, Watch} from 'vue-property-decorator'
+import {mixins} from 'vue-class-component'
+import {deleteTeacher, getTeachersList, submitCourseTeacher} from '@/api/courses'
+import Pagination from "@/components/pagination/index.vue";
+import MixinTools from '@/utils/mixins.vue'
+import {ITeacherList} from "@/entity/teacher";
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
-import { ElForm } from 'element-ui/types/form'
-import CommonEnteringStep2UploadImage from '@/module-entering/pages/entering/components/common-entering-step2-upload-image.vue'
 
 @Component({
-  name: 'SaveTeacherDialog',
+  name: 'SaveCourseTeacherDialog',
   components: {
-    CommonEnteringStep2UploadImage
+    Pagination
   }
 })
-export default class extends Vue {
-  @PropSync('dialogVisible', { type: Boolean, default: false })
+export default class extends mixins(MixinTools) {
+  @PropSync('dialogVisible', {type: Boolean, default: false})
   syncDialogVisible!: boolean
 
-  @Prop()
-  private teacherData!: ICourseTeacherList
+  @Prop({ type: Number })
+  courseBaseId!: number
 
-  // constructor() {
-  //   super()
-  //   this.teacherData = {
-  //     teacherName: '',
-  //     position: '',
-  //     introduction: ''
-  //   }
-  // }
+  @Prop({ type: Object })
+  teacherData!: ITeacherList
 
-  public restForm() {
-    // this.teacherData = {
-    //   teacherName: '',
-    //   position: '',
-    //   introduction: ''
-    // }
-    let form: ElForm = this.$refs['form'] as ElForm
-    form.resetFields()
+  // 查询
+  private listData: ITeacherList[] = [] // 数据体
+  private listLoading: boolean = false // 是否载入中
+
+  // api params
+  private listQuery = {
+    pageNo: 1,
+    pageSize: 10
+  }
+  // api post body
+  private listQueryData = {
+    teacherName: ''
   }
 
-  // 验证规则
-  private rules = {
-    teacherName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-    position: [
-      {
-        required: true,
-        message: '请输入职位',
-        trigger: 'blur'
+  // 业务函数
+  private async getList() {
+    this.listLoading = true
+    this.listData = await getTeachersList(this.listQuery, this.listQueryData)
+    this.listLoading = false
+  }
+
+  // 生命周期 life
+  created() {
+    // this.getList();
+  }
+
+  // 添加
+  private async handleAdd(data: ITeacherList) {
+    try {
+      const courseTeacherList= {
+        courseId: this.courseBaseId,
+        teacherId: data.id
       }
-    ]
-    // introduction: [
-    //   { required: true, message: '请输入教师简介', trigger: 'change' }
-    // ]
-  }
-  public validateForm(): Promise<boolean> {
-    return new Promise(resolve => {
-      let form: ElForm = this.$refs['form'] as ElForm
-      form.validate(valid => resolve(valid))
-    })
-  }
-
-  handleCancel() {
-    this.syncDialogVisible = false
-    this.restForm()
-  }
-  async handleSubmit() {
-    if (await this.validateForm()) {
-      if(this.teacherData.photograph){
-        // alert(this.teacherData.photograph.replace(`${process.env.VUE_APP_SERVER_PICSERVER_URL}`,''))
-        this.teacherData.photograph = this.teacherData.photograph.replace(`${process.env.VUE_APP_SERVER_PICSERVER_URL}`,'')
-
-      }
-      await submitCourseTeacher(this.teacherData)
-      this.syncDialogVisible = false
-      this.restForm()
+      console.log(courseTeacherList);
+      await submitCourseTeacher(courseTeacherList)
+      // 在添加完成后触发父组件的更新事件
       this.$emit('complete')
+    } catch (error) {}
+    this.syncDialogVisible = false // 设置为 true 显示对话框
+  }
+
+  // 监控 watch
+  // 搜索栏
+  @Watch('listQueryData', {deep: true, immediate: true})
+  private watchListQueryData(newVal: string) {
+    if (newVal == '') {
+      return
     }
+    this.getList()
+  }
+
+  // 翻页 pageSize
+  @Watch('listQuery.pageSize', {immediate: true})
+  private watchListQueryPageSize(newVal: number) {
+    this.listQuery.pageNo = 1
   }
 }
 </script>
+<style lang="scss" scoped>
+.workspace .banner .btn-add {
+  float: right;
+}
+
+.searcher {
+
+  div {
+    width: 218px;
+    margin-right: 10px;
+  }
+}
+
+.dataList {
+  margin-top: 16px;
+}
+
+.dataList-pagination {
+  text-align: center;
+  width: 100%;
+}
+
+.el-dialog .el-dialog__body{
+  padding: 0 20px !important;
+}
+</style>

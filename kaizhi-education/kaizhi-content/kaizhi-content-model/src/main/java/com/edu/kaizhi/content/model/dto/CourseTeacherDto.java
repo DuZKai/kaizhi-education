@@ -31,35 +31,8 @@ public class CourseTeacherDto implements Serializable {
     @ApiModelProperty(value = "课程id", required = true)
     private Long courseId;
 
-    /**
-     * 教师标识
-     */
-    @NotEmpty(message = "教师名称不能为空")
-    @ApiModelProperty(value = "教师名称", required = true)
-    private String teacherName;
-
-    /**
-     * 教师职位
-     */
-    @NotEmpty(message = "教师职位不能为空")
-    @ApiModelProperty(value = "教师职位", required = true)
-    private String position;
-
-    /**
-     * 教师简介
-     */
-    private String introduction;
-
-    /**
-     * 照片
-     */
-    private String photograph;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createDate;
-
+    @NotNull(message = "教师ID不能为空")
+    @ApiModelProperty(value = "教师id", required = true)
+    private Long teacherId;
 
 }
