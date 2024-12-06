@@ -3,6 +3,7 @@ package com.edu.kaizhi.media.api;
 import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.service.MediaFileService;
+import com.edu.kaizhi.media.util.SecurityUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import io.swagger.annotations.Api;
@@ -55,8 +56,10 @@ public class BigFilesController {
     public RestResponse<Boolean> mergechunks(@RequestParam("fileMd5") String fileMd5,
                                     @RequestParam("fileName") String fileName,
                                     @RequestParam("chunkTotal") int chunkTotal) throws Exception {
-        // TODO:机构ID
-        Long companyId = 1232141425L;
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        String companyId = user != null ? user.getCompanyId() : "1232141425";
 
         // 文件信息
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
@@ -65,7 +68,7 @@ public class BigFilesController {
         uploadFileParamsDto.setRemark("");
         uploadFileParamsDto.setFilename(fileName);
 
-        return mediaFileService.mergechunks(companyId, fileMd5, chunkTotal, uploadFileParamsDto);
+        return mediaFileService.mergechunks(Long.valueOf(companyId), fileMd5, chunkTotal, uploadFileParamsDto);
 
     }
 

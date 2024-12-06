@@ -182,7 +182,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
         //收费规则为收费
         if (charge.equals(CHARGE)) {
-            if (courseMarketNew.getPrice() == null || courseMarketNew.getPrice().floatValue() <= 0) {
+            if (courseMarketNew.getPrice() == null || courseMarketNew.getPrice() <= 0) {
                 CustomizeException.cast("课程为收费价格不能为空且必须大于0");
             }
         }

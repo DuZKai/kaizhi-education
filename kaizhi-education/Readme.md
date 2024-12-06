@@ -10,6 +10,9 @@
 
 ### 大功能
 
+- 使用Chromedriver和Beautifulsoup4下载学堂真实课程数据
+
+- 教师管理页面，添加教师功能改进，使得一个教师可以教多门课程
 - 加入Guava带有Redis过期时间的布隆过滤器，拦截课程发布表的白名单查询，且每次程序重新运行将现有布隆过滤器更新
 - 加入互斥锁解决缓存击穿问题，并且加入Redis序列化
 - 新增广告状态课程，当用户查询已有课程，会根据isAd字段，使用ElasticSearch对广告课程增加权重
@@ -267,6 +270,12 @@ docker restart elasticsearch
 
 
 
+## 真实课程下载（可选）
+
+见getInfoFromChineseMooc的Readme.md
+
+
+
 ## Tips
 
 - 每次重启后需要执行如下命令
@@ -345,6 +354,7 @@ docker restart elasticsearch
 - 在修改前后需要让缓存失效
 - 在ES的search模块中需要提前一次性添加所有文档，在修改数据库内容后完成
 - 课程发布时课程搜索索引同步可以使用Canal去实现
+- Redis秒杀课程
 
 换皮：知识付费问答平台
 

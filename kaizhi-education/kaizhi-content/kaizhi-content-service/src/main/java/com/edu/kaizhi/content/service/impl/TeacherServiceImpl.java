@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
         // 公司权限
         queryWrapper.eq(Teacher::getCompanyId, companyId);
         // 按照创建时间排序
-        queryWrapper.orderByAsc(Teacher::getCreateDate);
+        // queryWrapper.orderByAsc(Teacher::getCreateDate);
 
         //分页对象
         Page<Teacher> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());

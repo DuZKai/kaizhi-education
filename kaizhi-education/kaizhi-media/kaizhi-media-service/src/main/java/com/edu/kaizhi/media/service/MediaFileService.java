@@ -27,6 +27,13 @@ public interface MediaFileService {
     public MediaFiles getFileById(String mediaId);
 
     /**
+     * 查询所有媒资文件
+     *
+     * @return List<MediaFiles>
+     */
+    public List<MediaFiles> getMediaAllFiles(Long companyId);
+
+    /**
      * 媒资文件查询方法
      *
      * @param pageParams          分页参数

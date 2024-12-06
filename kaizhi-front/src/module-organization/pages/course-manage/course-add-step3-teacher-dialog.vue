@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="教师列表" :visible.sync="syncDialogVisible">
-    <div class="workspace" style="padding: 0">
+    <div style="padding: 0">
       <!-- 搜索栏 -->
       <div class="searcher">
         <el-input

@@ -105,6 +105,12 @@ public class MediaFileServiceImpl implements MediaFileService {
         return new PageResult<>(list, total, pageParams.getPageNo(), pageParams.getPageSize());
     }
 
+    public List<MediaFiles> getMediaAllFiles(Long companyId) {
+        LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MediaFiles::getCompanyId, companyId);
+        return mediaFilesMapper.selectList(queryWrapper);
+    }
+
     /**
      * 获取文件默认存储目录路径 年/月/日
      */

@@ -9,6 +9,7 @@ import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.model.dto.UploadFileResultDto;
 import com.edu.kaizhi.media.model.po.MediaFiles;
 import com.edu.kaizhi.media.service.MediaFileService;
+import com.edu.kaizhi.media.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,9 +35,11 @@ public class MediaFilesController {
     @ApiOperation("媒资列表查询接口")
     @PostMapping("/files")
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
-        // TODO: 机构ID
-        Long companyId = 1232141425L;
-        return mediaFileService.queryMediaFiles(companyId, pageParams, queryMediaParamsDto);
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        String companyId = user != null ? user.getCompanyId() : "1232141425";
+        return mediaFileService.queryMediaFiles(Long.valueOf(companyId), pageParams, queryMediaParamsDto);
     }
 
     @ApiOperation("上传文件")
@@ -43,8 +47,10 @@ public class MediaFilesController {
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
 
-        // TODO: 机构ID
-        Long companyId = 1232141425L;
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        String companyId = user != null ? user.getCompanyId() : "1232141425";
         String originalFilename = filedata.getOriginalFilename();
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
         uploadFileParamsDto.setFilename(originalFilename);
@@ -66,7 +72,7 @@ public class MediaFilesController {
         filedata.transferTo(tempFile);
         String absolutePath = tempFile.getAbsolutePath();
 
-        return mediaFileService.uploadFile(companyId, uploadFileParamsDto, absolutePath, objectName);
+        return mediaFileService.uploadFile(Long.valueOf(companyId), uploadFileParamsDto, absolutePath, objectName);
     }
 
     @ApiOperation("刪除媒资文件")
@@ -80,5 +86,15 @@ public class MediaFilesController {
     public void deleteCourseFile(@PathVariable String courseId) throws IOException {
         String FilePath = "course/" + courseId + ".html";
         mediaFileService.deleteSingleFile(FilePath);
+    }
+
+    @ApiOperation("查询所有媒资文件")
+    @GetMapping("/files")
+    public List<MediaFiles> getMediaAllFiles() {
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        String companyId = user != null ? user.getCompanyId() : "1232141425";
+        return mediaFileService.getMediaAllFiles(Long.valueOf(companyId));
     }
 }
