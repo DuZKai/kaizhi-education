@@ -51,37 +51,11 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         Long pageNo = pageParams.getPageNo();
         Long pageSize = pageParams.getPageSize();
         // 使用分页器会导致无法一次查询多张表
-        // // 查询基础课程信息
-        // //构建条件查询器
-        // LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
-        //
-        // //拼接查询条件
-        // //根据课程名称模糊查询  name like '%名称%'
-        // queryWrapperBase.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()), CourseBase::getName, queryCourseParamsDto.getCourseName());
-        // //根据课程审核状态
-        // queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus, queryCourseParamsDto.getAuditStatus());
-        // //根据课程发布状态
-        // queryWrapperBase.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
-        //
-        // //分页参数
-        // Page<CourseBase> page = new Page<>(pageNo, pageSize);
-        //
-        // //分页查询E page 分页参数, @Param("ew") Wrapper<T> queryWrapper 查询条件
-        // Page<CourseBase> pageResultBase = courseBaseMapper.selectPage(page, queryWrapperBase);
-        //
-        // //数据
-        // List<CourseBase> items = pageResultBase.getRecords();
-        //
-        // //总记录数
-        // long total = pageResultBase.getTotal();
-        //
-        // //准备返回数据 List<T> items, long counts, long page, long pageSize
-        // return new PageResult<>(items, total, pageParams.getPageNo(), pageParams.getPageSize());
-
         LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
 
         // 根据培训机构ID拼接查询条件
-        queryWrapperBase.eq(CourseBase::getCompanyId, companyId);
+        if(companyId != -1L)
+            queryWrapperBase.eq(CourseBase::getCompanyId, companyId);
 
         //拼接查询条件
         //根据课程名称模糊查询  name like '%名称%'
@@ -149,6 +123,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //设置发布状态
         courseBaseNew.setStatus(UNPUBLISHED);
         //机构id
+        if(companyId == -1L)
+            companyId = 1232141425L;
         courseBaseNew.setCompanyId(companyId);
         //添加时间
         courseBaseNew.setCreateDate(LocalDateTime.now());
@@ -223,7 +199,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     // 修改课程
     @Transactional
-    public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
+    public CourseBaseInfoDto updateCourseBase(Long companyId, String name, EditCourseDto editCourseDto) {
 
         // 得到课程id
         Long courseId = editCourseDto.getId();
@@ -236,7 +212,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         // 数据合法性校验
         // 根据具体业务逻辑去校验
         // 每个机构只能修改自己机构课程
-        if (!companyId.equals(courseBase.getCompanyId())) {
+        if (companyId != -1L && !companyId.equals(courseBase.getCompanyId())) {
             CustomizeException.cast("本机构只能修改本机构课程");
         }
 
@@ -248,8 +224,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         courseBase.setAuditStatus(COURSE_NOT_SUBMITTED);
         //设置发布状态
         courseBase.setStatus(UNPUBLISHED);
-        // TODO: 获取修改人
-        // courseBase.setChangePeople();
+
+        courseBase.setChangePeople(name);
 
         // 更新数据
         if (courseBaseMapper.updateById(courseBase) <= 0)
@@ -268,7 +244,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     @Transactional
     public void delectCourse(Long companyId, Long courseId) {
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
-        if (!companyId.equals(courseBase.getCompanyId()))
+        if (companyId != -1L && !companyId.equals(courseBase.getCompanyId()))
             CustomizeException.cast("只允许删除本机构的课程");
         // 删除课程教师信息
         LambdaQueryWrapper<CourseTeacher> teacherLambdaQueryWrapper = new LambdaQueryWrapper<>();

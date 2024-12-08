@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.api;
 
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.model.dto.CourseTeacherDto;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController()
@@ -34,8 +36,19 @@ public class TeacherController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-        return teacherService.queryTeacherList(Long.valueOf(companyId), pageParams, queryTeacherParamsDto);
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+        return teacherService.queryTeacherList(companyId, pageParams, queryTeacherParamsDto);
     }
 
     @ApiOperation("删除教师信息接口")
@@ -44,8 +57,19 @@ public class TeacherController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-        teacherService.deleteTeacher(Long.valueOf(companyId), teacherId);
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+        teacherService.deleteTeacher(companyId, teacherId);
     }
 
     @ApiOperation("保存教师信息接口")
@@ -54,7 +78,18 @@ public class TeacherController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-        return teacherService.modifyTeacher(Long.valueOf(companyId), teacherDto);
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+        return teacherService.modifyTeacher(companyId, teacherDto);
     }
 }

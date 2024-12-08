@@ -1,0 +1,10 @@
+INSERT INTO `kaizhi_company_user` VALUES ('1', '1232141425', '3');
+INSERT INTO `kaizhi_company_user` VALUES ('2', '1232141425', '4');
+INSERT INTO `kaizhi_company_user` VALUES ('3', '1232141425', '5');
+INSERT INTO `kaizhi_company_user` VALUES ('4', '1232141425', '6');
+INSERT INTO `kaizhi_company_user` VALUES ('5', '1232141425', '7');
+INSERT INTO `kaizhi_company_user` VALUES ('6', '1232141425', '8');
+INSERT INTO `kaizhi_company_user` VALUES ('7', '1232141425', '9');
+INSERT INTO `kaizhi_company_user` VALUES ('8', '1232141425', '10');
+INSERT INTO `kaizhi_company_user` VALUES ('9', '1232141425', '11');
+INSERT INTO `kaizhi_company_user` VALUES ('10', '1232141425', '12');

@@ -1,5 +1,6 @@
 package com.edu.kaizhi.content.api;
 
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 
 /**
@@ -31,18 +34,40 @@ public class CourseBaseInfoController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-
-        return courseBaseInfoService.queryCourseBaseList(Long.parseLong(companyId), pageParams, queryCourseParams);
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+        return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParams);
     }
 
 
     @ApiOperation("新增课程")
     @PostMapping("/course")
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated(ValidationGroups.Insert.class) AddCourseDto addCourseDto) {
-
-        // TODO:获取用户所属机构ID
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
     }
 
@@ -57,18 +82,44 @@ public class CourseBaseInfoController {
     @ApiOperation("修改课程")
     @PutMapping("/course")
     public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated(ValidationGroups.Update.class) EditCourseDto editCourseDto) {
-
-        // TODO:获取用户所属机构ID
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
-        return courseBaseInfoService.updateCourseBase(companyId, editCourseDto);
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+        String name = user.getName();
+        return courseBaseInfoService.updateCourseBase(companyId, name, editCourseDto);
     }
 
     @ApiOperation("删除课程")
     @DeleteMapping("/course/{courseId}")
     public void deleteCourse(@PathVariable Long courseId) {
 
-        // TODO:获取用户所属机构ID
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
         courseBaseInfoService.delectCourse(companyId, courseId);
 
     }

@@ -37,3 +37,7 @@ ffmpeg/
 /nginx/nginx-1.26.1/
 /nginx/static-portal/plugins/
 /kaizhi-education/kaizhi-message-sdk
+
+### .exe
+*.exe
+*/__pycache__

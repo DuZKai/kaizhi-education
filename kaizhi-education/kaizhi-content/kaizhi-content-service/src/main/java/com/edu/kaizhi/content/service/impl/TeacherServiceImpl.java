@@ -44,7 +44,8 @@ public class TeacherServiceImpl implements TeacherService {
             queryWrapper.like(Teacher::getTeacherName, teacherName);
 
         // 公司权限
-        queryWrapper.eq(Teacher::getCompanyId, companyId);
+        if (companyId != -1)
+            queryWrapper.eq(Teacher::getCompanyId, companyId);
         // 按照创建时间排序
         // queryWrapper.orderByAsc(Teacher::getCreateDate);
 
@@ -61,12 +62,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     // 查询课程教师信息
-    public List<Teacher> getCourseTeacherList(Long courseId){
+    public List<Teacher> getCourseTeacherList(Long courseId) {
         List<Teacher> res = new ArrayList<>();
         LambdaQueryWrapper<CourseTeacher> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CourseTeacher::getCourseId, courseId);
         List<CourseTeacher> courseTeachers = courseTeacherMapper.selectList(queryWrapper);
-        for(CourseTeacher courseTeacher : courseTeachers){
+        for (CourseTeacher courseTeacher : courseTeachers) {
             Long teacherId = courseTeacher.getTeacherId();
             Teacher teacher = teacherMapper.selectById(teacherId);
             res.add(teacher);
@@ -77,14 +78,14 @@ public class TeacherServiceImpl implements TeacherService {
     // 删除教师信息
     public void deleteTeacher(Long companyId, Long teacherId) {
         Teacher teacher = teacherMapper.selectById(teacherId);
-        if(teacher == null)
+        if (teacher == null)
             CustomizeException.cast("教师信息不存在");
-        if(!Objects.equals(teacher.getCompanyId(), companyId))
+        if (companyId != -1L && !Objects.equals(teacher.getCompanyId(), companyId))
             CustomizeException.cast("无权限删除该教师信息");
         LambdaQueryWrapper<CourseTeacher> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CourseTeacher::getTeacherId, teacherId);
         int count = courseTeacherMapper.selectCount(queryWrapper);
-        if(count > 0)
+        if (count > 0)
             CustomizeException.cast("该教师信息已被课程使用，无法删除");
 
         teacherMapper.deleteById(teacherId);
@@ -102,10 +103,9 @@ public class TeacherServiceImpl implements TeacherService {
             teacher.setCompanyId(companyId);
             teacher.setCreateDate(LocalDateTime.now());
             teacherMapper.insert(teacher);
-        }
-        else{
+        } else {
             // 修改
-            if(!Objects.equals(teacher.getCompanyId(), companyId))
+            if (companyId != -1L && !Objects.equals(teacher.getCompanyId(), companyId))
                 CustomizeException.cast("无权限修改该教师信息");
             BeanUtils.copyProperties(teacherDto, teacher);
             teacherMapper.updateById(teacher);

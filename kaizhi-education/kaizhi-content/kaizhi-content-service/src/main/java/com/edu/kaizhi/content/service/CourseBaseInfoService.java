@@ -40,7 +40,7 @@ public interface CourseBaseInfoService {
      * @param editCourseDto 修改课程信息
      * @return CourseBaseInfoDto 修改后的课程详细信息
      */
-    CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto);
+    CourseBaseInfoDto updateCourseBase(Long companyId, String name, EditCourseDto editCourseDto);
 
     /**
      * 删除课程

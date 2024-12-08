@@ -61,7 +61,7 @@
 <script lang="ts">
 import {Component, Prop, PropSync, Watch} from 'vue-property-decorator'
 import {mixins} from 'vue-class-component'
-import {deleteTeacher, getTeachersList, submitCourseTeacher} from '@/api/courses'
+import {getTeachersList, submitCourseTeacher} from '@/api/courses'
 import Pagination from "@/components/pagination/index.vue";
 import MixinTools from '@/utils/mixins.vue'
 import {ITeacherList} from "@/entity/teacher";
