@@ -160,7 +160,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             CustomizeException.cast("当前为等待审核状态，审核完成可以再次提交。");
         }
         //本机构只允许提交本机构的课程
-        if (!courseBase.getCompanyId().equals(companyId)) {
+        if (companyId != -1L && !courseBase.getCompanyId().equals(companyId)) {
             CustomizeException.cast("不允许提交其它机构的课程。");
         }
 
@@ -197,7 +197,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         teachplanMediaLambdaQueryWrapper.eq(TeachplanMedia::getCourseId, courseId);
         int teachplanMediaCount = teachplanMediaMapper.selectCount(teachplanMediaLambdaQueryWrapper);
 
-        if(teachplansCount != teachplanMediaCount) {
+        if (teachplansCount != teachplanMediaCount) {
             CustomizeException.cast("提交失败，课程计划中有小节没有视频");
         }
 
@@ -241,6 +241,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
         if (coursePublishPre == null)
             CustomizeException.cast("课程没有审核记录，无法发布");
+
+        if(companyId != -1L && !companyId.equals(coursePublishPre.getCompanyId()))
+            CustomizeException.cast("只允许发布本机构的课程");
 
         // 课程没审核通过，不允许发布
         if (!coursePublishPre.getStatus().equals("202004"))
@@ -454,10 +457,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     @Transactional
     public void offlineCourse(Long companyId, Long courseId) {
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
-        if (!companyId.equals(courseBase.getCompanyId()))
+        if (companyId != -1L && !companyId.equals(courseBase.getCompanyId()))
             CustomizeException.cast("只允许下架本机构的课程");
         CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
-        if(coursePublish == null)
+        if (coursePublish == null)
             CustomizeException.cast("未找到已发布课程，无法下架");
 
         // 删除课程模板文件

@@ -364,7 +364,6 @@ docker restart elasticsearch
 - content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - Redis优化查询课程部分，每次刷新都得查询
-- Redis优化存储的JWT令牌，验证码也可以放入redis
 - 用户权限太多查询数据库，放入redis
 - 用户权限分配
 - 将用户身份工具类SecurityUtil放到单独一个服务可能更好
@@ -373,11 +372,12 @@ docker restart elasticsearch
 - 部署部分
 - 给视频加入弹幕
 - 给课程加入排行榜
+- Redis优化存储的JWT令牌
 - 令牌自动过期刷新使用webClient成功，但是使用feign却发生解析错误，后续解决，可能无法用上过期刷新令牌，因为需要修改前端，保存refresh_token和新的access_token
 - 在修改前后需要让缓存失效
 - 在ES的search模块中需要提前一次性添加所有文档，在修改数据库内容后完成
 - 课程发布时课程搜索索引同步可以使用Canal去实现
-- Redis秒杀课程
+- Redis秒杀课程、发布笔记、好友关注、用户签到、网站UV统计
 
 换皮：知识付费问答平台
 

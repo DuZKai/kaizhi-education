@@ -16,7 +16,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -84,7 +86,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
         // 开启课程静态化，生成HTML页面
         File file = coursePublishService.generateCourseHtml(courseId);
-        if(file == null)
+        if (file == null)
             CustomizeException.cast("课程静态化异常");
 
         // 将HTML页面上传至Minio
@@ -107,7 +109,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
             log.debug("课程索引信息已写入ElasticSearch，无需执行，课程id:{}", courseId);
             return;
         }
-        if(saveCourseToES(courseId)){
+        if (saveCourseToES(courseId)) {
             //保存第二阶段状态
             mqMessageService.completedStageTwo(id);
         }
@@ -135,21 +137,30 @@ public class CoursePublishTask extends MessageProcessAbstract {
     }
 
     private Boolean saveCourseToES(Long courseId) {
-
         //取出课程发布信息
         CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
         //拷贝至课程索引对象
         CourseIndex courseIndex = new CourseIndex();
-        BeanUtils.copyProperties(coursePublish,courseIndex);
+        BeanUtils.copyProperties(coursePublish, courseIndex);
         //远程调用搜索服务api添加课程信息到索引
         Boolean add = searchServiceClient.add(courseIndex);
-        if(!add){
+        if (!add) {
             CustomizeException.cast("添加索引失败");
         }
         return add;
-
     }
 
+
+    // 初始化搜索服务
+    @PostConstruct
+    public void initES() {
+        coursePublishMapper.selectList(null).forEach(coursePublish -> {
+            CourseIndex courseIndex = new CourseIndex();
+            BeanUtils.copyProperties(coursePublish, courseIndex);
+            // TODO:将批量插入操作改成异步执行,未测试
+            CompletableFuture.runAsync(() -> searchServiceClient.add(courseIndex));
+        });
+    }
 }
 
 

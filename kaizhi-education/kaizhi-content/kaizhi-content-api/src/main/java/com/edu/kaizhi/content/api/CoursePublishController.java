@@ -9,6 +9,7 @@ import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.model.po.Teacher;
 import com.edu.kaizhi.content.service.CoursePublishService;
+import com.edu.kaizhi.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 课程预览，发布
@@ -43,8 +45,23 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping("/courseaudit/commit/{courseId}")
     public void commitAudit(@PathVariable("courseId") Long courseId) {
-        // TODO: 公司ID
+
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
         coursePublishService.commitAudit(companyId, courseId);
     }
 
@@ -52,8 +69,21 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping("/coursepublish/{courseId}")
     public void coursePublish(@PathVariable("courseId") Long courseId) {
-        // TODO: 公司ID
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
         coursePublishService.publish(companyId, courseId);
     }
 
@@ -101,9 +131,22 @@ public class CoursePublishController {
     @ApiOperation("下架课程")
     @PostMapping("/courseoffline/{courseId}")
     public ResponseEntity<Void> offlineCourse(@PathVariable("courseId") Long courseId) {
-
-        // TODO:获取用户所属机构ID
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
         Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
         try {
             coursePublishService.offlineCourse(companyId, courseId);
             return ResponseEntity.ok().build();

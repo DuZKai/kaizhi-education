@@ -85,6 +85,9 @@ public class MediaFileServiceImpl implements MediaFileService {
         if (filename != null && !filename.isEmpty() && !filename.equals("null"))
             queryWrapper.like(MediaFiles::getFilename, filename);
 
+        if(companyId != -1L)
+            queryWrapper.eq(MediaFiles::getCompanyId, companyId);
+
         // 文件类型
         String fileType = queryMediaParamsDto.getFileType();
         if (fileType != null && !fileType.isEmpty() && !fileType.equals("null"))
@@ -107,7 +110,8 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     public List<MediaFiles> getMediaAllFiles(Long companyId) {
         LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MediaFiles::getCompanyId, companyId);
+        if(companyId != -1L)
+            queryWrapper.eq(MediaFiles::getCompanyId, companyId);
         return mediaFilesMapper.selectList(queryWrapper);
     }
 
@@ -258,6 +262,8 @@ public class MediaFileServiceImpl implements MediaFileService {
             // 文件ID
             mediaFiles.setId(fileMd5);
             // 机构ID
+            if(companyId == -1L)
+                companyId = 1232141425L;
             mediaFiles.setCompanyId(companyId);
             // 桶
             mediaFiles.setBucket(bucket);

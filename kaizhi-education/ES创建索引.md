@@ -119,9 +119,23 @@ GET /course-publish/_mapping
 DELETE /course-publish
 ```
 
-## 插入数据
 
-执行.\kaizhi-education\api-test\kaizhi-search-api.http前两条POST
+
+## 插入数据（可选）
+
+可以执行.\kaizhi-education\api-test\kaizhi-search-api.http前两条POST
+
+在程序创建时，自动将在数据库所有已发布课程进行上传搜索服务
+
+
+
+## 删除数据（可选）
+
+```
+DELETE /course-publish/_doc/102
+```
+
+
 
 
 

@@ -31,26 +31,49 @@ import java.util.Objects;
 public class MediaFilesController {
     @Autowired
     MediaFileService mediaFileService;
-
+    // TODO：探究为什么content可以得到用户信息，media不可以
     @ApiOperation("媒资列表查询接口")
     @PostMapping("/files")
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-        return mediaFileService.queryMediaFiles(Long.valueOf(companyId), pageParams, queryMediaParamsDto);
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
+        return mediaFileService.queryMediaFiles(companyId, pageParams, queryMediaParamsDto);
     }
 
     @ApiOperation("上传文件")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
-
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
         String originalFilename = filedata.getOriginalFilename();
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
         uploadFileParamsDto.setFilename(originalFilename);
@@ -72,7 +95,7 @@ public class MediaFilesController {
         filedata.transferTo(tempFile);
         String absolutePath = tempFile.getAbsolutePath();
 
-        return mediaFileService.uploadFile(Long.valueOf(companyId), uploadFileParamsDto, absolutePath, objectName);
+        return mediaFileService.uploadFile(companyId, uploadFileParamsDto, absolutePath, objectName);
     }
 
     @ApiOperation("刪除媒资文件")
@@ -94,7 +117,19 @@ public class MediaFilesController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
-        return mediaFileService.getMediaAllFiles(Long.valueOf(companyId));
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
+        return mediaFileService.getMediaAllFiles(companyId);
     }
 }
