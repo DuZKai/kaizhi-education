@@ -116,7 +116,7 @@ def get_soup(html):
 def get_base_sql(index, company_random_code, body_soup, original):
     people = get_people_info(body_soup)
     name = original[0]
-    describe = " ".join(original[1:-1])
+    describe = " ".join(original[1:-1]).replace("'", " ")
     random_all = 14
     random_list = [10, 8, 8, 9, 7, 9, 19, 6, 11, 5, 10, 6, 9, 10]
     big_category = random.randint(1, random_all)
@@ -146,7 +146,7 @@ def get_teacher_sql(teacher, teacher_name, teacher_index, company_random_code, r
     teacher_url = teacher[1]
     if teacher_url is not None:
         use_urls_get_img(teacher_url, result_folder, teacher_name)
-    teacher_desc = teacher[-1]
+    teacher_desc = teacher[-1].replace("'", " ")
     teacher_pos = " ".join(teacher[2:-1])
 
     teacher_sql = "INSERT INTO `teacher` VALUES (" + str(

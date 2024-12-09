@@ -14,10 +14,12 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
+@DependsOn("configurableEnvironmentConfiguration")
 public class CoursePublishTask extends MessageProcessAbstract {
     @Autowired
     CoursePublishService coursePublishService;
@@ -148,18 +151,6 @@ public class CoursePublishTask extends MessageProcessAbstract {
             CustomizeException.cast("添加索引失败");
         }
         return add;
-    }
-
-
-    // 初始化搜索服务
-    @PostConstruct
-    public void initES() {
-        coursePublishMapper.selectList(null).forEach(coursePublish -> {
-            CourseIndex courseIndex = new CourseIndex();
-            BeanUtils.copyProperties(coursePublish, courseIndex);
-            // TODO:将批量插入操作改成异步执行,未测试
-            CompletableFuture.runAsync(() -> searchServiceClient.add(courseIndex));
-        });
     }
 }
 

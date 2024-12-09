@@ -153,4 +153,3 @@ if __name__ == "__main__":
 
         save_text(course_info)
 
-    

@@ -151,3 +151,6 @@ GET /course-publish/_search
 }
 ```
 
+
+
+使用init/turnESJsonToAdd.py生成对应添加ES索引脚本
