@@ -27,3 +27,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsia2FpemhpL
   "email": "2305501037@qq.com",
   "password": "111111"
 }
+
+### 返回UV统计
+GET {{auth_host}}/auth/uv

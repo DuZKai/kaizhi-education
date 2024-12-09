@@ -1,12 +1,15 @@
 package com.edu.kaizhi.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.edu.kaizhi.service.AuthService;
+import com.edu.kaizhi.service.UVService;
 import com.edu.kaizhi.ucenter.mapper.MenuMapper;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
 import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
 import com.edu.kaizhi.ucenter.model.dto.UserExt;
 import com.edu.kaizhi.ucenter.model.po.Menu;
+import com.edu.kaizhi.ucenter.model.po.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     MenuMapper menuMapper;
 
+    @Autowired
+    private UVService uvService;
+
     // 传入请求参数就是AuthParamsDto
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -49,6 +55,11 @@ public class UserServiceImpl implements UserDetailsService {
         AuthService authService = applicationContext.getBean(beanName, AuthService.class);
         // 调用多态方法execute实现认证
         UserExt userExt = authService.execute(authParamsDto);
+
+        // 根据用户名查询用户信息并存放到UV
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authParamsDto.getUsername()));
+        uvService.addUV(user.getId());
+
         // 封装UserExt到UserDetails
         return getUserPrincipal(userExt);
     }
