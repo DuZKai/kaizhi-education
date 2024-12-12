@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-upload
-      action
       list-type="picture-card"
       accept=".jpg, .png, .bmp"
       :file-list="fileList"
@@ -111,15 +110,15 @@ export default class CommonEnteringStep2UploadImage extends Vue {
   /**
    * 覆盖默认的上传行为
    */
-  private handleHttpRequest(options: HttpRequestOptions) {
-    let file = options.file
-    let filename = file.name
-    let index = filename.lastIndexOf('.')
-    let suffix = filename.substr(index)
-
-    // 文档上传到七牛云
-    this.qiniuyunUpload(file)
-  }
+  // private handleHttpRequest(options: HttpRequestOptions) {
+  //   let file = options.file
+  //   let filename = file.name
+  //   let index = filename.lastIndexOf('.')
+  //   let suffix = filename.substr(index)
+  //
+  //   // 文档上传到七牛云
+  //   this.qiniuyunUpload(file)
+  // }
 
   /**
    * 文档上传到七牛云

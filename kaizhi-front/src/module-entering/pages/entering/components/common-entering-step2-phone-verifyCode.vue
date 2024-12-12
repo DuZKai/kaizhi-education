@@ -54,24 +54,26 @@ export default class CommonEnteringStep2PhoneVerifyCode extends Vue {
    * 发送短信验证码
    */
   private async smsMsg() {
-    let form = this.$parent.$parent as ElForm
-    form.validateField('phone', async (errorMessage: string) => {
-      if (errorMessage) {
-        return
-      }
-      this.isSending = true
-      this.sendCount = TIME_COUNT
-      this.form.verifyKey = await smsMsg(this.form.phone)
-
-      this.sendTimer = setInterval(() => {
-        if (this.sendCount > 0) {
-          this.sendCount--
-        } else {
-          clearInterval(this.sendTimer)
-          this.isSending = false
+    if(this.$parent && this.$parent.$parent) {
+      let form = this.$parent.$parent as ElForm
+      form.validateField('phone', async (errorMessage: string) => {
+        if (errorMessage) {
+          return
         }
-      }, 1000)
-    })
+        this.isSending = true
+        this.sendCount = TIME_COUNT
+        this.form.verifyKey = await smsMsg(this.form.phone)
+
+        this.sendTimer = setInterval(() => {
+          if (this.sendCount > 0) {
+            this.sendCount--
+          } else {
+            clearInterval(this.sendTimer)
+            this.isSending = false
+          }
+        }, 1000)
+      })
+    }
   }
 }
 </script>

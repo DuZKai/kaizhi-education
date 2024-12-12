@@ -24,6 +24,8 @@
         <router-link to="/organization/course-comment-list">评价管理</router-link>
         <div class="divider"></div>
         <router-link to="/organization/work-record-list">作业批改</router-link>
+        <div class="divider"></div>
+        <router-link to="/organization/info-list">信息展示</router-link>
       </el-tab-pane>
       <el-tab-pane label="财务管理" name="third">
         <router-link to="/organization/order-list">财务管理</router-link>
@@ -77,7 +79,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   name: 'NavBar'
 })
 export default class extends Vue {
-  private activeName: string = 'first'
+  private activeName: string = 'second'
 
   private handleClick(tab: any, event: any) {}
 }

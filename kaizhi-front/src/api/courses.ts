@@ -76,7 +76,7 @@ export async function submitBaseInfo(
 // 读取完整列表
 export async function getOutline(
   courseBaseId: number
-): Promise<ICourseOutlineTreeNode> {
+): Promise<ICourseOutlineTreeNode[]> {
   const { data } = await createAPI(
     `/content/teachplan/${courseBaseId}/tree-nodes`
   )

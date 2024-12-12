@@ -233,32 +233,16 @@ export default class extends mixins(MixinTools) {
   // 读取大纲
   public async getList() {
     if (this.courseBaseId != 0) {
+      let newTreeNode :ICourseOutlineTreeNode = {
+        courseId: this.courseBaseId,
+        mediaType: '',
+        pname: '',
+        teachPlanTreeNodes: []
+      }
       let data = await getOutline(this.courseBaseId)
-      // debugger
 
-      // 设置可编辑状态
-      // 二级
-      // if (
-      //   data.teachPlanTreeNodes !== null &&
-      //   data.teachPlanTreeNodes !== undefined
-      // ) {
-      //   data.teachPlanTreeNodes = data.teachPlanTreeNodes.map((v: any) => {
-      //     // this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-      //     v.ctlEditTitle = false
-      //     v.ctlBarShow = false
-      //     // 三级
-      //     if (v.teachPlanTreeNodes !== null) {
-      //       v.teachPlanTreeNodes = v.teachPlanTreeNodes.map((v: any) => {
-      //         v.ctlEditTitle = false
-      //         v.ctlBarShow = false
-      //         return v
-      //       })
-      //     }
-      //     return v
-      //   })
-      // }
       if (data) {
-        data.teachPlanTreeNodes = data.map((v: any) => {
+        newTreeNode.teachPlanTreeNodes = data.map((v: any) => {
           // this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
           v.ctlEditTitle = false
           v.ctlBarShow = false
@@ -274,7 +258,7 @@ export default class extends mixins(MixinTools) {
         })
       }
 
-      this.outlineData = data
+      this.outlineData = newTreeNode
       // console.log(this.outlineData)
     }
   }
@@ -301,8 +285,8 @@ export default class extends mixins(MixinTools) {
       courseId: this.courseBaseId,
       parentid: 0,
       grade: 1,
-      pname: '新章名称 [点击修改]'
-      // mediaType: '',
+      pname: '新章名称 [点击修改]',
+      mediaType: ''
       // ctlEditTitle: false,
       // ctlBarShow: false
       // teachPlanTreeNodes: []
@@ -321,8 +305,8 @@ export default class extends mixins(MixinTools) {
       courseId: this.courseBaseId,
       parentid: parentid,
       grade: 2,
-      pname: '新小节名称 [点击修改]'
-      // mediaType: '',
+      pname: '新小节名称 [点击修改]',
+      mediaType: ''
       // isPreview: '0',
       // ctlEditTitle: false,
       // ctlBarShow: false
@@ -451,7 +435,7 @@ export default class extends mixins(MixinTools) {
       await this.showDeleteConfirm()
       await mediaUnAssociation(
         node.teachplanMedia.teachplanId,
-        node.teachplanMedia.mediaId,
+        String(node.teachplanMedia.mediaId),
         this.courseBaseId
       )
       this.getList()

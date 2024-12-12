@@ -124,3 +124,9 @@ export interface IVodTokenDTO {
   videoId?: string
   userId?: string
 }
+
+export interface IDownParamsDTO {
+  code?: number
+  result?: string
+  errMessage?: string
+}

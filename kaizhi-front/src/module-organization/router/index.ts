@@ -63,6 +63,12 @@ export default [
         component: () =>
           import('../pages/work-record-manage/work-record-overall.vue')
       },
+      // 信息管理
+      {
+        path: 'info-list',
+        component: () =>
+            import('../pages/info-manage/info-list.vue')
+      },
       // 财务管理
       {
         path: 'order-list',

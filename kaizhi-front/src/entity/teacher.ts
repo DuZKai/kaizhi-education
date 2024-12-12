@@ -6,6 +6,7 @@ export interface ITeacherList {
    * 教师标识
    */
   teacherId?: number
+  id?: number
 
   createDate?: Date
   /**

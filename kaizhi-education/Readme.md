@@ -64,8 +64,10 @@
 #### 前端
 
 - 视频转换加入除avi外其余视频转换
+- 初始位置从机构管理修改为教务教学
 - 课程管理界面加入清空选择器功能
 - 课程预览模版修改
+- 修复已知报错的BUG
 - 删除课程时判断逻辑修改为只要不是上架课程均可删除
 
 
@@ -96,14 +98,25 @@
 ## 前端
 
 - 安装node.js，版本最好小于等于16，没有openssl安全证书错误
+
 - 如果有node_modules
   - 在package.json中script的serve修改为：
 
     ```shell
+    vue-cli-service serve
+    ```
+  
+    PS:
+  
+    如果Node版本高于16，需要修改为：
+  
+    ```shell
     # 前一句话是忽略因为node版本大于17产生的证书错误设置
     set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve
     ```
-
+  
+    
+  
   - 打开npm窗口点击serve运行
 
 
@@ -111,7 +124,7 @@
 - 如果没有node_modules，用如下命令运行
 
 ```shell
-npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm install -g cnpm --registry=https://registry.npmmirror.com
 cnpm i
 npm run serve
 ```
@@ -361,7 +374,6 @@ docker restart elasticsearch
 - rabbitMQ消息队列代替sdk包?
 - 课程修改后，需要将师资、大纲等也修改课程发布状态，但是修改师资和大纲又修改课程信息，耦合度有点高，其实最好做法应该单独一张表记录是否发布、审核等字段
 - 将content的message-sdk部分抽取出成为单独一个模块
-- content-service中pom包因为不会传递到api,所以api下很多重复包，后续找到解决办法
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - Redis优化查询课程部分，每次刷新都得查询
 - 用户权限太多查询数据库，放入redis
@@ -378,7 +390,7 @@ docker restart elasticsearch
 - 课程发布时课程搜索索引同步可以使用Canal去实现
 - Redis秒杀课程、发布笔记、好友关注、用户签到、网站UV统计
 - 搜索功能
-- 
+- AOP缓存优化？每次得到值后放入内容，在进入方法前判断是否内存有值
 
 换皮：知识付费问答平台
 

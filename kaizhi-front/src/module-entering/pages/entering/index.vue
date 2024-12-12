@@ -57,7 +57,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { Route } from 'vue-router'
+// import { Route } from 'vue-router'
+import { Route } from 'vue-router/types/router';
 import CommonEnteringStep1SignAgreement from './components/common-entering-step1-sign-agreement.vue'
 import CompanyEnteringStep2SubmitInformation from './components/company-entering-step2-submit-information.vue'
 import PersonalEnteringStep2SubmitInformation from './components/personal-entering-step2-submit-information.vue'

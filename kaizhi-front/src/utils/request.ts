@@ -67,7 +67,7 @@ service.interceptors.response.use(
       duration: 5 * 1000
     })
     if(error.response.status=="401" && error.response.data.errMessage=='没有认证'){
-      window.location='http://www.kaizhi.edu.cn/sign.html'
+      window.location.href='http://www.kaizhi.edu.cn/sign.html'
     }
     return Promise.reject(error)
   }

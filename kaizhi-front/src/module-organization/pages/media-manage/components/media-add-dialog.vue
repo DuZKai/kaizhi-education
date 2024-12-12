@@ -42,7 +42,7 @@ import { Component, Vue, PropSync } from 'vue-property-decorator'
 import {
   ElUploadInternalRawFile,
   ElUploadInternalFileDetail,
-  HttpRequestOptions
+  HttpRequestOptions, FileUploadStatus
 } from 'element-ui/types/upload'
 
 import * as qiniu from 'qiniu-js'
@@ -94,8 +94,9 @@ export default class MediaAddDialog extends Vue {
         console.log('success::' + data)
       },
       error: (e) => {
-        console.log(file, fileList)
-        // 出错了可以从列表中删除吧
+        console.log(file)
+        console.log(fileList)
+        // 出错了可以从列表中删除
         // fileList.forEach((n,i) => { if(n.uid == file.uid){
         //   fileList.splice(i,1)
         // } })
@@ -131,10 +132,10 @@ export default class MediaAddDialog extends Vue {
 
     if (this.audioVideoSuffix.indexOf(suffix) !== -1) {
       // 音/视频上传到阿里云
-      this.aliyunUpload(file)
+      // this.aliyunUpload(file)
     } else {
       // 文档上传到七牛云
-      this.qiniuyunUpload(file)
+      // this.qiniuyunUpload(file)
     }
   }
 

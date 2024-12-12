@@ -2,7 +2,7 @@ import { createAPI } from '@/utils/request'
 import {
   IMediaPageList,
   IMediaBaseDTO,
-  IQnParamsDTO,
+  IDownParamsDTO,
   IVodTokenDTO
 } from '@/entity/media-page-list'
 
@@ -34,7 +34,7 @@ export async function saveMedia(body: any): Promise<IMediaBaseDTO> {
 }
 
 // 预览点播视频
-export async function previewMedia(mediaId: number): Promise<string> {
+export async function previewMedia(mediaId: number): Promise<IDownParamsDTO> {
   const { data } = await createAPI(`/media/open/preview/${mediaId}`, 'get')
   return data
 }

@@ -164,7 +164,7 @@ export interface ICourseBaseInfo {
     /**
      * 是否为广告
      * */
-    isAd: boolean
+    isAd: string
     /**
      * UI 分类选中
      */

@@ -11,4 +11,5 @@ export interface ICourseTeacherList {
    * 教师标识
    */
   teacherId?: number
+  id?: number
 }
