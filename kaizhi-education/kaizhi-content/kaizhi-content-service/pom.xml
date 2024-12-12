@@ -10,23 +10,22 @@
     <artifactId>kaizhi-content-service</artifactId>
     <name>kaizhi-content-service</name>
     <description>kaizhi-content-service</description>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.edu.kaizhi</groupId>
-            <artifactId>kaizhi-content-model</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--    <groupId>com.edu.kaizhi</groupId>-->
-        <!--    <artifactId>kaizhi-message-sdk</artifactId>-->
-        <!--    <version>0.0.1-SNAPSHOT</version>-->
-        <!--</dependency>-->
-
         <!--让微服务请求nacos得到配置-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.edu.kaizhi</groupId>
+            <artifactId>kaizhi-content-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
 
         <!-- MySQL 驱动 -->
         <dependency>
@@ -39,10 +38,6 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
         </dependency>
         <!-- Spring Boot 集成 Junit -->
         <dependency>
@@ -67,6 +62,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
+
+        <!--<dependency>-->
+        <!--    <groupId>com.edu.kaizhi</groupId>-->
+        <!--    <artifactId>kaizhi-message-sdk</artifactId>-->
+        <!--    <version>0.0.1-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <!--XXL-JOB调度课程发布表-->
         <dependency>
@@ -114,19 +115,33 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.6.2</version>
         </dependency>
-        <!--布隆过滤器-->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
-        </dependency>
         <!--Redisson-->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.11.2</version>
         </dependency>
+        <!--布隆过滤器-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
 
+        <!--cloud的基础环境包-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+        <!--认证相关-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
     </dependencies>
 
 
