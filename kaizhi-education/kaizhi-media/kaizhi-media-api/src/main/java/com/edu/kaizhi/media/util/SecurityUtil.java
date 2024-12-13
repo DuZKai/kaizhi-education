@@ -1,11 +1,13 @@
 package com.edu.kaizhi.media.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONValidator;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 /**
@@ -15,15 +17,17 @@ import java.time.LocalDateTime;
 public class SecurityUtil {
 
     public static User getUser() {
+        String principal = "";
         try {
             Object principalObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principalObj instanceof String) {
                 //取出用户身份信息
-                String principal = principalObj.toString();
+                principal = principalObj.toString();
                 //将json转成对象
                 return JSON.parseObject(principal, User.class);
             }
         } catch (Exception e) {
+            log.info("解析到当前用户信息为：" + principal);
             log.error("获取当前登录用户身份出错:{}", e.getMessage());
             e.printStackTrace();
         }

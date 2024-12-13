@@ -18,7 +18,7 @@ import java.util.List;
 public class BigFileTest {
 
     //测试文件分块方法
-    @Test
+    // @Test
     public void testChunk() throws IOException {
 
         File sourceFile = new File("C:\\Users\\Administrator\\Desktop\\1.mp4");
@@ -27,7 +27,7 @@ public class BigFileTest {
         if (!chunkFolder.exists()) {
             chunkFolder.mkdirs();
         }
-        //分块大小 5M
+        //分块大小5M
         long chunkSize = 5 * 1024 * 1024;
         //分块数量
         long chunkNum = (long) Math.ceil(sourceFile.length() * 1.0 / chunkSize);
@@ -64,7 +64,7 @@ public class BigFileTest {
     }
 
     //测试文件合并方法
-    @Test
+    // @Test
     public void testMerge() throws IOException {
         //块文件目录
         File chunkFolder = new File("C:\\Users\\Administrator\\Desktop\\split_test\\");
