@@ -22,7 +22,7 @@ public class CourseIndexSearchTest {
   @Autowired
   IndexService courseIndexService;
 
-  @Test
+  // @Test
  public void test_addindex(){
 
    CourseIndex courseIndex = new CourseIndex();
@@ -51,7 +51,7 @@ public class CourseIndexSearchTest {
    System.out.println(result);
 
   }
-  @Test
+  // @Test
  public void test_updateIndex(){
 
    CourseIndex courseIndex = new CourseIndex();

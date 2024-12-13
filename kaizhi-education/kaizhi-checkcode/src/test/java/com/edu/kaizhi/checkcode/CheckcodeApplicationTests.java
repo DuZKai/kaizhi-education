@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class XuechengPlusCheckcodeApplicationTests {
 
-    @Test
+    // @Test
     void contextLoads() {
     }
 

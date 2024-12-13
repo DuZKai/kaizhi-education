@@ -63,12 +63,6 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-        <!--    <groupId>com.edu.kaizhi</groupId>-->
-        <!--    <artifactId>kaizhi-message-sdk</artifactId>-->
-        <!--    <version>0.0.1-SNAPSHOT</version>-->
-        <!--</dependency>-->
-
         <!--XXL-JOB调度课程发布表-->
         <dependency>
             <groupId>com.xuxueli</groupId>

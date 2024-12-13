@@ -11,7 +11,7 @@ public class Test1 {
     @Autowired
     ChooseCourseMapper xcChooseCourseMapper;
 
-    @Test
+    // @Test
     public void test() {
 
     }

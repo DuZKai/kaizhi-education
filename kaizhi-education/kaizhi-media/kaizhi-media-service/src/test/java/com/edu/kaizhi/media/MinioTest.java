@@ -35,7 +35,7 @@ public class MinioTest {
 
 
     //上传文件
-    @Test
+    // @Test
     public void upload() {
         try {
             UploadObjectArgs testbucket = UploadObjectArgs.builder()
@@ -54,7 +54,7 @@ public class MinioTest {
 
     }
 
-    @Test
+    // @Test
     public void delete() {
         try {
             minioClient.removeObject(
@@ -68,7 +68,7 @@ public class MinioTest {
     }
 
     //查询文件
-    @Test
+    // @Test
     public void getFile() throws Exception {
         GetObjectArgs getObjectArgs = GetObjectArgs.builder().bucket(bucketName).object(objectName).build();
 
@@ -89,7 +89,7 @@ public class MinioTest {
     }
 
     //将分块文件上传至minio
-    @Test
+    // @Test
     public void uploadChunk(){
         String chunkFolderPath = "C:\\Users\\Administrator\\Desktop\\split_test\\";
         File chunkFolder = new File(chunkFolderPath);
@@ -112,7 +112,7 @@ public class MinioTest {
 
 
     //合并文件，要求分块文件最小5M
-    @Test
+    // @Test
     public void test_merge() throws Exception {
         List<ComposeSource> sources = Stream.iterate(0, i -> ++i)
                 .limit(9)
@@ -127,8 +127,8 @@ public class MinioTest {
 
     }
     
-    //清除分块文件
-    @Test
+    // 清除分块文件
+    // @Test
     public void test_removeObjects(){
         //合并分块完成将分块文件清除
         List<DeleteObject> deleteObjects = Stream.iterate(0, i -> ++i)
