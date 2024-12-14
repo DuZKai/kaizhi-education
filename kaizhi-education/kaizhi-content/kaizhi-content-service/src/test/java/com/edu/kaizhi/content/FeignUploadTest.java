@@ -22,7 +22,7 @@ public class FeignUploadTest {
     public void test() {
 
         MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(new File("C:\\Users\\Administrator\\Desktop\\test.html"));
-        if(mediaServiceClient.uploadFile(multipartFile,"course/test.html") == null){
+        if(mediaServiceClient.uploadFile(multipartFile,"course/test.html", 1232141425L) == null){
             System.out.println("进入熔断，走降级逻辑，上传失败");
         }
     }

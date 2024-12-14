@@ -20,7 +20,7 @@ public class MediaServiceClientFallbackFactory implements FallbackFactory<MediaS
     public MediaServiceClient create(Throwable throwable) {
         return new MediaServiceClient() {
             @Override
-            public String uploadFile(MultipartFile upload, String objectName) {
+            public String uploadFile(MultipartFile upload, String objectName, Long companyId) {
                 log.error("调用上传媒资服务发生熔断:{}", throwable.toString(),throwable);
                 return null;
             }

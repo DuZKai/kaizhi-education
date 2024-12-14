@@ -42,6 +42,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     @Autowired
     TeachplanMediaMapper teachplanMediaMapper;
+
     @Autowired
     private CoursePublishMapper coursePublishMapper;
 

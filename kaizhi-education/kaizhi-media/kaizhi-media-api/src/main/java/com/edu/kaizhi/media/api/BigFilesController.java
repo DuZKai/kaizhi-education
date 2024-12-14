@@ -1,5 +1,6 @@
 package com.edu.kaizhi.media.api;
 
+import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.model.RestResponse;
 import com.edu.kaizhi.media.model.dto.UploadFileParamsDto;
 import com.edu.kaizhi.media.service.MediaFileService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * 大文件上传接口
@@ -59,7 +61,18 @@ public class BigFilesController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        String companyId = user != null ? user.getCompanyId() : "1232141425";
+        if(user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if(Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        else{
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
 
         // 文件信息
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
@@ -68,7 +81,7 @@ public class BigFilesController {
         uploadFileParamsDto.setRemark("");
         uploadFileParamsDto.setFilename(fileName);
 
-        return mediaFileService.mergechunks(Long.valueOf(companyId), fileMd5, chunkTotal, uploadFileParamsDto);
+        return mediaFileService.mergechunks(companyId, fileMd5, chunkTotal, uploadFileParamsDto);
 
     }
 

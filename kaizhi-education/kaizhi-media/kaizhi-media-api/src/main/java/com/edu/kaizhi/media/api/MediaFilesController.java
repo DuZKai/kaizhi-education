@@ -32,23 +32,22 @@ import java.util.Objects;
 public class MediaFilesController {
     @Autowired
     MediaFileService mediaFileService;
-    // TODO：探究为什么content可以得到用户信息，media不可以
+
     @ApiOperation("媒资列表查询接口")
     @PostMapping("/files")
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        if(user == null) {
+        if (user == null) {
             CustomizeException.cast("用户未登录，未获取到用户信息");
         }
         Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
+        if (Objects.equals(user.getUtype(), "101003"))
             companyId = -1L;
         else if (Objects.equals(user.getUtype(), "101002")) {
             companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
+        } else {
             CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
         }
 
@@ -58,35 +57,34 @@ public class MediaFilesController {
     @ApiOperation("上传文件")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
-                                      @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
-        //取出用户身份
-        SecurityUtil.User user = SecurityUtil.getUser();
-        //机构id
-        if(user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
+                                      @RequestParam(value = "objectName", required = false) String objectName,
+                                      @RequestParam(value = "companyId", required = false) Long companyId) throws IOException {
+        if (companyId == null) {
+            //取出用户身份
+            SecurityUtil.User user = SecurityUtil.getUser();
+            //机构id
+            if (user == null) {
+                CustomizeException.cast("用户未登录，未获取到用户信息");
+            }
+            companyId = 1232141425L;
+            if (Objects.equals(user.getUtype(), "101003"))
+                companyId = -1L;
+            else if (Objects.equals(user.getUtype(), "101002")) {
+                companyId = Long.parseLong(user.getCompanyId());
+            } else {
+                CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            }
         }
-        Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
-            companyId = -1L;
-        else if (Objects.equals(user.getUtype(), "101002")) {
-            companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
-        }
-
         String originalFilename = filedata.getOriginalFilename();
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
         uploadFileParamsDto.setFilename(originalFilename);
         uploadFileParamsDto.setFileSize(filedata.getSize());
         uploadFileParamsDto.setFileType("001001");
-        if(originalFilename!=null){
-            if(originalFilename.contains("html"))
-            {
+        if (originalFilename != null) {
+            if (originalFilename.contains("html")) {
                 uploadFileParamsDto.setFileType("001003");
                 uploadFileParamsDto.setTags("课程预览");
-            }
-            else{
+            } else {
                 uploadFileParamsDto.setTags("课程文件");
             }
         }
@@ -118,16 +116,15 @@ public class MediaFilesController {
         //取出用户身份
         SecurityUtil.User user = SecurityUtil.getUser();
         //机构id
-        if(user == null) {
+        if (user == null) {
             CustomizeException.cast("用户未登录，未获取到用户信息");
         }
         Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
+        if (Objects.equals(user.getUtype(), "101003"))
             companyId = -1L;
         else if (Objects.equals(user.getUtype(), "101002")) {
             companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
+        } else {
             CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
         }
 

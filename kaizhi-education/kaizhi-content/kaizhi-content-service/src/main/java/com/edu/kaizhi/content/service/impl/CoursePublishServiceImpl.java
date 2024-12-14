@@ -34,6 +34,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -159,8 +161,13 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         if ("202003".equals(auditStatus)) {
             CustomizeException.cast("当前为等待审核状态，审核完成可以再次提交。");
         }
+
+        // 管理员提交审核，直接赋值为查询的公司ID
+        if(companyId == -1L)
+            companyId = courseBase.getCompanyId();
+
         //本机构只允许提交本机构的课程
-        if (companyId != -1L && !courseBase.getCompanyId().equals(companyId)) {
+        if (!courseBase.getCompanyId().equals(companyId)) {
             CustomizeException.cast("不允许提交其它机构的课程。");
         }
 
@@ -348,7 +355,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
     public void uploadCourseHtml(Long courseId, File file) {
         MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(file);
-        String course = mediaServiceClient.uploadFile(multipartFile, "course/" + courseId + ".html");
+        CourseBaseInfoDto courseBaseInfo = courseBaseInfoService.getCourseBaseInfo(courseId);
+        Long companyId = courseBaseInfo.getCompanyId();
+        String course = mediaServiceClient.uploadFile(multipartFile, "course/" + courseId + ".html", companyId);
         if (course == null) {
             log.debug("远程调度走降级逻辑，得到上传结果null，课程ID: {}", courseId);
             CustomizeException.cast("上传静态文件异常");

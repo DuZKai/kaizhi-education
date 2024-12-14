@@ -429,6 +429,8 @@ public class MediaFileServiceImpl implements MediaFileService {
         }
 
         //文件信息入库
+        if(companyId == -1L)
+            companyId = 1232141425L;
         MediaFiles mediaFiles = currentProxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_video, mergeFilePath);
         if (mediaFiles == null) {
             return RestResponse.validfail("文件信息入库失败", false);

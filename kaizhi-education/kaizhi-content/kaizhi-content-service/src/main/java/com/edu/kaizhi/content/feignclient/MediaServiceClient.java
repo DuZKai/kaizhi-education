@@ -15,7 +15,8 @@ import java.io.IOException;
 public interface MediaServiceClient {
 
     @RequestMapping(value = "/media/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    String uploadFile(@RequestPart("filedata") MultipartFile upload, @RequestParam(value = "objectName", required = false) String objectName);
+    String uploadFile(@RequestPart("filedata") MultipartFile upload, @RequestParam(value = "objectName", required = false) String objectName,
+                      @RequestParam(value = "companyId", required = false) Long companyId);
 
     @DeleteMapping(value = "/media/delete/coursefile/{courseId}")
     void deleteCourseFile(@PathVariable("courseId") String courseId);
