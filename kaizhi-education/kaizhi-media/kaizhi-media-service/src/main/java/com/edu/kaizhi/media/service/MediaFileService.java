@@ -52,6 +52,15 @@ public interface MediaFileService {
 
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName);
 
+
+    /**
+     * 根据文件路径查询文件
+     *
+     * @param filePath 文件路径
+     * @return MediaFiles
+     */
+    public MediaFiles getFileByFilePath(String filePath);
+
     /**
      * 根据id删除媒资文件
      *

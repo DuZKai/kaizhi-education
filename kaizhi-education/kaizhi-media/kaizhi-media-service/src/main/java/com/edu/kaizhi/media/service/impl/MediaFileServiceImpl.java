@@ -179,6 +179,22 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     /**
+     * 根据文件名查询文件
+     * */
+    public MediaFiles getFileByFilePath(String filePath) {
+        LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 文件路径
+        if (filePath != null && !filePath.isEmpty() && !filePath.equals("null"))
+            queryWrapper.like(MediaFiles::getFilePath, filePath);
+        List<MediaFiles> mediaFiles = mediaFilesMapper.selectList(queryWrapper);
+        if (mediaFiles != null && !mediaFiles.isEmpty()) {
+            return mediaFiles.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 根据扩展名取出mimeType
      *
      * @param extension

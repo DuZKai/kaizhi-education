@@ -106,7 +106,30 @@ public class MediaFilesController {
     @ApiOperation("删除单个课程文件")
     @DeleteMapping(value = "/delete/coursefile/{courseId}")
     public void deleteCourseFile(@PathVariable String courseId) throws IOException {
+        //取出用户身份
+        SecurityUtil.User user = SecurityUtil.getUser();
+        //机构id
+        if (user == null) {
+            CustomizeException.cast("用户未登录，未获取到用户信息");
+        }
+        Long companyId = 1232141425L;
+        if (Objects.equals(user.getUtype(), "101003"))
+            companyId = -1L;
+        else if (Objects.equals(user.getUtype(), "101002")) {
+            companyId = Long.parseLong(user.getCompanyId());
+        } else {
+            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+        }
+
         String FilePath = "course/" + courseId + ".html";
+        MediaFiles fileByFilePath = mediaFileService.getFileByFilePath(FilePath);
+        if (fileByFilePath == null) {
+            CustomizeException.cast("文件不存在");
+        }
+        Long originalCompanyId = fileByFilePath.getCompanyId();
+        if(companyId != -1 && !Objects.equals(originalCompanyId, companyId)){
+            CustomizeException.cast("无权限删除");
+        }
         mediaFileService.deleteSingleFile(FilePath);
     }
 
