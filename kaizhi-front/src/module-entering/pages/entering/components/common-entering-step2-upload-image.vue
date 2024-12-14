@@ -12,6 +12,7 @@
       :on-preview="handleOnPreview"
       :on-remove="handleOnRemove"
       :class="{disabled:uploadDisabled}"
+      :headers="uploadHeaders"
     >
       <i class="el-icon-plus"></i>
       <div class="el-upload__tip" slot="tip" style="line-height: 20px;">
@@ -33,9 +34,10 @@ import {
   ElUploadInternalFileDetail,
   HttpRequestOptions
 } from 'element-ui/types/upload'
-import * as qiniu from 'qiniu-js'
-import { IQnParamsDTO } from '@/entity/media-page-list'
-import { getQnParams } from '@/api/common'
+import {getToken} from "@/utils/cookies";
+// import * as qiniu from 'qiniu-js'
+// import { IQnParamsDTO } from '@/entity/media-page-list'
+// import { getQnParams } from '@/api/common'
 
 @Component
 export default class CommonEnteringStep2UploadImage extends Vue {
@@ -100,6 +102,9 @@ export default class CommonEnteringStep2UploadImage extends Vue {
       //   this.$message.error(res.msg)
       // }
   }
+
+  private uploadHeaders =  { Authorization: 'Bearer ' + getToken()}
+
   /**
    * 文件上传失败钩子
    */
@@ -120,50 +125,50 @@ export default class CommonEnteringStep2UploadImage extends Vue {
   //   this.qiniuyunUpload(file)
   // }
 
-  /**
-   * 文档上传到七牛云
-   * TODO: 异常系考虑 401
-   * TODO: 后端提供公开资源接口
-   */
-  private async qiniuyunUpload(file: ElUploadInternalFileDetail) {
-    // 准备工作
-    let qnParams: IQnParamsDTO = await getQnParams()
-
-    // 开始上传
-    let token = qnParams.qnToken
-    let config = {
-      useCdnDomain: true,
-      region: null // 自动分析上传域名区域
-    }
-    let putExtra = {
-      fname: '',
-      params: {},
-      mimeType: null
-    }
-    let key = qnParams.key
-
-    let next = response => {
-      let total = response.total
-      let percentage = Math.ceil(total.percent)
-      console.log(`媒资上传到七牛云进度...${percentage}%`)
-      console.log(response)
-    }
-    let error = response => {
-      console.log('媒资上传到七牛云失败...')
-      console.log(response)
-    }
-    let complete = response => {
-      this.syncedImageUrl = `http://${qnParams.domain}/${qnParams.key}`
-      console.log('媒资上传到七牛云完成...')
-      console.log(response)
-    }
-
-    let subscription
-    // 调用sdk上传接口获得相应的observable，控制上传和暂停
-    let observable = qiniu.upload(file, key, token, putExtra, config)
-    observable.subscribe(next, error, complete)
-    console.log('媒资上传到七牛云开始...')
-  }
+  // /**
+  //  * 文档上传到七牛云
+  //  * TODO: 异常系考虑 401
+  //  * TODO: 后端提供公开资源接口
+  //  */
+  // private async qiniuyunUpload(file: ElUploadInternalFileDetail) {
+  //   // 准备工作
+  //   let qnParams: IQnParamsDTO = await getQnParams()
+  //
+  //   // 开始上传
+  //   let token = qnParams.qnToken
+  //   let config = {
+  //     useCdnDomain: true,
+  //     region: null // 自动分析上传域名区域
+  //   }
+  //   let putExtra = {
+  //     fname: '',
+  //     params: {},
+  //     mimeType: null
+  //   }
+  //   let key = qnParams.key
+  //
+  //   let next = response => {
+  //     let total = response.total
+  //     let percentage = Math.ceil(total.percent)
+  //     console.log(`媒资上传到七牛云进度...${percentage}%`)
+  //     console.log(response)
+  //   }
+  //   let error = response => {
+  //     console.log('媒资上传到七牛云失败...')
+  //     console.log(response)
+  //   }
+  //   let complete = response => {
+  //     this.syncedImageUrl = `http://${qnParams.domain}/${qnParams.key}`
+  //     console.log('媒资上传到七牛云完成...')
+  //     console.log(response)
+  //   }
+  //
+  //   let subscription
+  //   // 调用sdk上传接口获得相应的observable，控制上传和暂停
+  //   let observable = qiniu.upload(file, key, token, putExtra, config)
+  //   observable.subscribe(next, error, complete)
+  //   console.log('媒资上传到七牛云开始...')
+  // }
 
   /**
    * 点击文件列表中已上传的文件时的钩子
