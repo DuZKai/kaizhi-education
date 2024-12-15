@@ -1,6 +1,8 @@
 package com.edu.kaizhi.search.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -8,6 +10,8 @@ import lombok.ToString;
  */
  @Data
  @ToString
+ @NoArgsConstructor
+ @AllArgsConstructor
 public class SearchCourseParamDto {
 
   //关键字
@@ -21,8 +25,4 @@ public class SearchCourseParamDto {
 
   //难度等级
   private String grade;
-
-
-
-
 }

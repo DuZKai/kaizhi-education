@@ -7,7 +7,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
+
+import static com.edu.kaizhi.base.constant.RedisConfig.SearchList;
 
 /**
  * 课程索引接口
@@ -24,7 +27,8 @@ public class CourseIndexController {
     IndexService indexService;
 
     @ApiOperation("添加课程信息")
-    @PostMapping("course")
+    @PostMapping("/course")
+    @CacheEvict(cacheNames = SearchList, allEntries = true)
     public Boolean add(@RequestBody CourseIndex courseIndex) {
 
         Long id = courseIndex.getId();
@@ -38,9 +42,10 @@ public class CourseIndexController {
         return result;
 
     }
-
+    // TODO: 需要判断是否成功删除
     @ApiOperation("删除课程信息")
-    @DeleteMapping("course/{courseId}")
+    @DeleteMapping("/course/{courseId}")
+    @CacheEvict(cacheNames = SearchList, allEntries = true)
     public Boolean delete(@PathVariable String courseId) {
 
         if (courseId == null || courseId.isEmpty() || courseId.equals("null")) {

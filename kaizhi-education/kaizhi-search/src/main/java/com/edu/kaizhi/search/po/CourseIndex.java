@@ -2,7 +2,13 @@ package com.edu.kaizhi.search.po;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,6 +17,8 @@ import java.time.LocalDateTime;
  * 课程索引信息
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourseIndex implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -90,6 +98,9 @@ public class CourseIndex implements Serializable {
     /**
      * 发布时间
      */
+    // 设置序列化方式，using里的值要和属性类型一致
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;

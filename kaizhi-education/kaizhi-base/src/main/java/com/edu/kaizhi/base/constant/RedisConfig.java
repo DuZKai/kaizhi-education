@@ -7,5 +7,6 @@ public class RedisConfig {
     public static final String WomanNum = "info:woman";
     public static final String AllNum = "info:all";
 
+    public static final String SearchList = "search:list";
 
 }

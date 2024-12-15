@@ -99,6 +99,69 @@ public interface MediaServiceClient {
 
 
 
+### 使用@Cacheable一直无法正确序列化时间，导致取出时候有问题
+
+原因是使用GenericJackson2JsonRedisSerializer，存入的一直是一个数组类，导致无法再序列化会正确类
+
+设置时间格式化、可以添加一个Bean、也可以使用`@JsonFormat`注解
+
+1. 添加一个Bean
+
+```java
+@Configuration
+public class JacksonConfig {
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 注册 JavaTimeModule 来处理 Java 8 时间类型
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        objectMapper.registerModule(javaTimeModule);
+        return objectMapper;
+    }
+}
+```
+
+2. 使用注解 `@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")`，其中patter设置成对应的时间格式就可
+
+二、在实体类字段上设置反序列化方式。
+
+```java
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createDate;
+```
+
+这样就可以正确解决时间无法反序列化问题
+
+
+
+### springboot下用cache注解整合redis并使用json序列化、反序列化
+
+只需要在配置文件中配置一下CacheManger,使用jackson的一个带泛型的序列化工具实现。
+
+```java
+@Bean
+    public CacheManager cacheManager(RedisConnectionFactory factory) {
+        GenericJackson2JsonRedisSerializer jsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        // 配置序列化
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
+        RedisCacheConfiguration redisCacheConfiguration = config
+                // 键序列化方式 redis字符串序列化
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer))
+                // 值序列化方式 简单json序列化
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonRedisSerializer));
+        return RedisCacheManager.builder(factory).cacheDefaults(redisCacheConfiguration).build();
+
+    }
+```
+
 
 
 ## 前端
@@ -109,7 +172,7 @@ public interface MediaServiceClient {
 
 遇到这个问题是因为需要在dialog弹出图片，图片是动态赋值的，赋值过程都没问题，显示也正常。但是刷新后第一次打开图片是显示不出来的。查阅了一下原来是因为dialog首次不加载dom的原因导致，在vue3中不推荐使用nextTick方法，没有效果。最后解决方案是：
 
-```vue
+```ts
 private handleEdit(data: ITeacherList) {
   this.isDialogVisible = true
   // 先清空表单，再赋值，才使得图片显示

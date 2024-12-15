@@ -1,6 +1,8 @@
 spring:
   application:
     name: search
+  profiles:
+    active: dev
   cloud:
     nacos:
       server-addr: 192.168.101.65:8848
@@ -19,6 +21,6 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: kaizhi-education-common
             refresh: true
-
-  profiles:
-    active: dev
+          - data-id: redis-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
