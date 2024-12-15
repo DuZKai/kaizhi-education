@@ -3,6 +3,9 @@ import RouteConfig from './router';
 
 export default class Portal {
 	public static install(router: typeof Router): void {
-		router.addRoutes(RouteConfig);
+		// router.addRoutes(RouteConfig);
+		RouteConfig.forEach(route => {
+			router.addRoute(route);
+		});
 	}
 }
