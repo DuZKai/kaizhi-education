@@ -1,9 +1,9 @@
-package com.edu.kaizhi.service.impl;
+package com.edu.kaizhi.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.edu.kaizhi.service.AuthService;
-import com.edu.kaizhi.service.UVService;
+import com.edu.kaizhi.auth.service.InfoService;
+import com.edu.kaizhi.auth.service.AuthService;
 import com.edu.kaizhi.ucenter.mapper.MenuMapper;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
 import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserDetailsService {
     MenuMapper menuMapper;
 
     @Autowired
-    private UVService uvService;
+    private InfoService infoService;
 
     // 传入请求参数就是AuthParamsDto
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserDetailsService {
 
         // 根据用户名查询用户信息并存放到UV
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authParamsDto.getUsername()));
-        uvService.addUV(user.getId());
+        infoService.addUV(user.getId());
 
         // 封装UserExt到UserDetails
         return getUserPrincipal(userExt);

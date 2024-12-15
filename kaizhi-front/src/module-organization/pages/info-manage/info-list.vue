@@ -10,29 +10,18 @@
               <div>
                 <el-statistic
                     group-separator=","
-                    :precision="2"
-                    :value="value2"
-                    :title="title"
+                    :value="UV_num"
+                    title="当日登录人数"
                 ></el-statistic>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-statistic title="男女比">
-                  <template slot="formatter">
-                    456/2
-                  </template>
-                </el-statistic>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
                 <el-statistic
                     group-separator=","
-                    :precision="2"
                     decimal-separator="."
-                    :value="value1"
-                    :title="title"
+                    :value="all_num"
+                    title="总人数"
                 >
                   <template slot="prefix">
                     <i class="el-icon-s-flag" style="color: red"></i>
@@ -45,17 +34,26 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-statistic :value="like ? 521 : 520" title="Feedback">
-                  <template slot="suffix">
-              <span @click="like = !like" class="like">
-                <i
-                    class="el-icon-star-on"
-                    style="color:red"
-                    v-show="!!like"
-                ></i>
-                <i class="el-icon-star-off" v-show="!like"></i>
-              </span>
+                <el-statistic title="男女比">
+                  <template slot="formatter">
+                    {{ man }} / {{woman }}
                   </template>
+                </el-statistic>
+              </div>
+            </el-col>
+            <!-- TODO: 好评信息显示-->
+            <el-col :span="6">
+              <div>
+                <el-statistic :value="good_rate"
+                              :precision="2"
+                              title="好评率">
+                  <template slot="prefix">
+                    <i
+                        class="el-icon-star-on"
+                        style="color:red"
+                    ></i>
+                  </template>
+                  <template slot="suffix">%</template>
                 </el-statistic>
               </div>
             </el-col>
@@ -69,6 +67,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import Pagination from '@/components/pagination/index.vue'
+import {getinfoAll, getinfoMan, getinfoUV, getinfoWoman} from "@/api/summary-info";
 
 @Component({
   components: {
@@ -77,23 +76,34 @@ import Pagination from '@/components/pagination/index.vue'
 })
 export default class InfoList extends Vue {
   private UV_num: number = 0
+  private all_num: number = 0
+  private man: number = 0
+  private woman: number = 0
+  private good_rate = 89.14
 
-  data() {
-    return {
-      like: true,
-      value1: 4154.564,
-      value2: 1314,
-      title: "增长人数",
-    };
+  // 生命周期 life
+  created() {
+    this.getUV();
+    this.getMan();
+    this.getWoman();
+    this.getAllNum();
   }
 
+
   private async getUV() {
-    // this.listLoading = true
-    // this.UV_num = await getWorkRecordPageList(
-    //     this.listQuery,
-    //     this.listQueryData
-    // )
-    // this.listLoading = false
+    this.UV_num = await getinfoUV();
+  }
+
+  private async getMan() {
+    this.man = await getinfoMan();
+  }
+
+  private async getWoman() {
+    this.woman = await getinfoWoman();
+  }
+
+  private async getAllNum() {
+    this.all_num = await getinfoAll();
   }
 }
 </script>

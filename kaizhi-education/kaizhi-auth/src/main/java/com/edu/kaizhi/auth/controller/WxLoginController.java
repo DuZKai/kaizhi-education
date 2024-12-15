@@ -1,6 +1,6 @@
 package com.edu.kaizhi.auth.controller;
 
-import com.edu.kaizhi.service.WxAuthService;
+import com.edu.kaizhi.auth.service.WxAuthService;
 import com.edu.kaizhi.ucenter.model.po.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

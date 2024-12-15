@@ -1,4 +1,4 @@
-package com.edu.kaizhi.service;
+package com.edu.kaizhi.auth.service;
 
 import com.edu.kaizhi.ucenter.model.po.User;
 

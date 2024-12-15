@@ -1,9 +1,9 @@
-package com.edu.kaizhi.service.impl;
+package com.edu.kaizhi.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.edu.kaizhi.service.AuthService;
-import com.edu.kaizhi.service.WxAuthService;
+import com.edu.kaizhi.auth.service.AuthService;
+import com.edu.kaizhi.auth.service.WxAuthService;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
 import com.edu.kaizhi.ucenter.mapper.UserRoleMapper;
 import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
