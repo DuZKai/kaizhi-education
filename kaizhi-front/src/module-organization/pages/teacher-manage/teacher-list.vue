@@ -95,6 +95,7 @@ export default class extends mixins(MixinTools) {
     pageNo: 1,
     pageSize: 10
   }
+
   // api post body
   private listQueryData = {
     teacherName: ''
@@ -103,7 +104,8 @@ export default class extends mixins(MixinTools) {
   private teacherData: ITeacherList = {
     teacherName: '',
     position: '',
-    introduction: ''
+    introduction: '',
+    photograph: ''
   }
 
   // 业务函数
@@ -123,15 +125,25 @@ export default class extends mixins(MixinTools) {
     this.teacherData = {
       teacherName: '',
       position: '',
-      introduction: ''
+      introduction: '',
+      photograph: ''
     }
     this.isDialogVisible = true
   }
 
   private handleEdit(data: ITeacherList) {
-    this.teacherData = data
     this.isDialogVisible = true
+    // 先清空表单，再赋值，才使得图片显示
+    let form = this.$refs.dialog as SaveTeacherDialog
+    setTimeout(() => {
+      if(form){
+        form.restForm()
+      }
+      // 需要解构赋值，否则会影响双向绑定
+      this.teacherData = {...data}
+    }, 200)
   }
+
   // 删除
   private async handleDelete(data: ITeacherList) {
     try {

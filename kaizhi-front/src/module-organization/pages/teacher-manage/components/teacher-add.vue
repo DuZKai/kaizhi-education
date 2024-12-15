@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
-import { submitTeacher } from '@/api/courses'
+import {category, submitTeacher} from '@/api/courses'
 import { ITeacherList } from '@/entity/teacher'
 import { ElForm } from 'element-ui/types/form'
 import CommonEnteringStep2UploadImage from '@/module-entering/pages/entering/components/common-entering-step2-upload-image.vue'
@@ -54,21 +54,7 @@ export default class extends Vue {
   @Prop()
   private teacherData!: ITeacherList
 
-  // constructor() {
-  //   super()
-  //   this.teacherData = {
-  //     teacherName: '',
-  //     position: '',
-  //     introduction: ''
-  //   }
-  // }
-
   public restForm() {
-    // this.teacherData = {
-    //   teacherName: '',
-    //   position: '',
-    //   introduction: ''
-    // }
     let form: ElForm = this.$refs['form'] as ElForm
     form.resetFields()
   }
@@ -83,10 +69,8 @@ export default class extends Vue {
         trigger: 'blur'
       }
     ]
-    // introduction: [
-    //   { required: true, message: '请输入教师简介', trigger: 'change' }
-    // ]
   }
+
   public validateForm(): Promise<boolean> {
     return new Promise(resolve => {
       let form: ElForm = this.$refs['form'] as ElForm
@@ -98,6 +82,7 @@ export default class extends Vue {
     this.syncDialogVisible = false
     this.restForm()
   }
+
   async handleSubmit() {
     if (await this.validateForm()) {
       if(this.teacherData.photograph){

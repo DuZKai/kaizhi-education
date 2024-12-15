@@ -1,6 +1,8 @@
 # BUG修复记录
 
-## 打包为可运行的 JAR/WAR 文件
+## 后端
+
+### 打包为可运行的 JAR/WAR 文件
 
 加入如下meaven配置
 
@@ -26,7 +28,7 @@
 
 
 
-## openfeign调用时令牌不会同时传递问题
+### openfeign调用时令牌不会同时传递问题
 
 使用一个拦截器得到令牌
 
@@ -94,3 +96,29 @@ public interface MediaServiceClient {
 ```
 
 注意，这样操作适用于可以得到上下文前提下，在代码中由于使用xxl-job，所以没办法得到上下文，所以还是会传递一个匿名用户的字符串给另一个微服务，只能手动传递公司ID，使得不需要令牌也可以校验。
+
+
+
+
+
+## 前端
+
+### 在dialog组件中加入upload使得图片第一次不回显，只有点击别的才能回显
+
+其实正确问题描述是：关于element组件库dialog弹窗首次渲染不加载dom
+
+遇到这个问题是因为需要在dialog弹出图片，图片是动态赋值的，赋值过程都没问题，显示也正常。但是刷新后第一次打开图片是显示不出来的。查阅了一下原来是因为dialog首次不加载dom的原因导致，在vue3中不推荐使用nextTick方法，没有效果。最后解决方案是：
+
+```vue
+private handleEdit(data: ITeacherList) {
+  this.isDialogVisible = true
+  // 先清空表单，再赋值，才使得图片显示
+  let form = this.$refs.dialog as SaveTeacherDialog
+  setTimeout(() => {
+    if(form){
+      form.restForm()
+    }
+    this.teacherData = {...data}
+  }, 200)
+}
+```
