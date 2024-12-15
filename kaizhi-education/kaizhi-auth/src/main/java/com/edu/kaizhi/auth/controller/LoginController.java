@@ -8,8 +8,12 @@ import com.edu.kaizhi.ucenter.service.VerifyService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static com.edu.kaizhi.base.constant.RedisConfig.*;
 
 /**
  * 测试controller
@@ -55,6 +59,11 @@ public class LoginController {
 
     @ApiOperation(value = "注册", tags = "注册")
     @PostMapping("/register")
+
+    @Caching(evict = {
+            @CacheEvict(cacheNames = ManNum, key = "'count'"),
+            @CacheEvict(cacheNames = WomanNum, key = "'count'"),
+            @CacheEvict(cacheNames = AllNum, key = "'count'")})
     public void register(@RequestBody RegisterDto registerDto) {
         verifyService.register(registerDto);
     }

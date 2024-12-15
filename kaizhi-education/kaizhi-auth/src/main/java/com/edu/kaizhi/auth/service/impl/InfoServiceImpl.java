@@ -27,7 +27,7 @@ public class InfoServiceImpl implements InfoService {
     private static final String EXPIRE_TIME = "23:59:59";
 
     // 用户访问的唯一标识符
-    private static final String UV_KEY = "site:uv";
+    private static final String UV_KEY = "info:uv::count";
 
     // 增加一个新的 UV
     public void addUV(String userId) {

@@ -2,6 +2,7 @@ package com.edu.kaizhi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
+@EnableCaching // 开启缓存注解
 @EnableFeignClients(basePackages={"com.edu.kaizhi.*.feignclient"})
 public class AuthApplication {
     @Bean
@@ -26,7 +28,4 @@ public class AuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);
     }
-
-
-
 }
