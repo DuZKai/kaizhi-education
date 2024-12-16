@@ -27,7 +27,7 @@ public class CourseSearchController {
 
     @ApiOperation("课程搜索列表")
     @GetMapping("/list")
-    @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
+    // @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
     public SearchPageResultDto<CourseIndex> list(PageParams pageParams, SearchCourseParamDto searchCourseParamDto) {
         return courseSearchService.queryCoursePubIndex(pageParams, searchCourseParamDto);
     }

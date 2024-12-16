@@ -42,7 +42,7 @@ public class CourseIndexController {
         return result;
 
     }
-    
+
     @ApiOperation("删除课程信息")
     @DeleteMapping("/course/{courseId}")
     @CacheEvict(cacheNames = SearchList, allEntries = true)

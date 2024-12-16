@@ -14,6 +14,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -28,6 +29,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -81,10 +83,10 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         }
         //过滤
         if (StringUtils.isNotEmpty(courseSearchParam.getMt())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_MT_NAME, courseSearchParam.getMt()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_MT_NAME_KEYWORD, courseSearchParam.getMt()));
         }
         if (StringUtils.isNotEmpty(courseSearchParam.getSt())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_ST_NAME, courseSearchParam.getSt()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_ST_NAME_KEYWORD, courseSearchParam.getSt()));
         }
         if (StringUtils.isNotEmpty(courseSearchParam.getGrade())) {
             boolQueryBuilder.filter(QueryBuilders.termQuery(FIELD_GRADE, courseSearchParam.getGrade()));
@@ -99,6 +101,17 @@ public class CourseSearchServiceImpl implements CourseSearchService {
         //布尔查询
         searchSourceBuilder.query(boolQueryBuilder);
 
+        // 按照价格排序
+        if (StringUtils.isNotEmpty(courseSearchParam.getSortType())) {
+            if ("1".equals(courseSearchParam.getSortType())) {
+                // 价格升序
+                searchSourceBuilder.sort(FIELD_PRICE, SortOrder.ASC);
+            } else if ("2".equals(courseSearchParam.getSortType())) {
+                // 价格降序
+                searchSourceBuilder.sort(FIELD_PRICE, SortOrder.DESC);
+            }
+        }
+
         // 在原有查询的基础上应用 Function Score Query
         FunctionScoreQueryBuilder functionScoreQuery = QueryBuilders.functionScoreQuery(
                 boolQueryBuilder, // 原有的bool查询
@@ -107,12 +120,17 @@ public class CourseSearchServiceImpl implements CourseSearchService {
                                 // 过滤条件：只考虑 FIELD_IS_AD 为 800002 的文档
                                 QueryBuilders.termQuery(FIELD_IS_AD, ADVERTISING_COURSE),
                                 // 算分函数：给符合条件的文档增加权重
-                                // ScoreFunctionBuilders.weightFactorFunction(10)
-                                // 使用随机权重生成器
-                                ScoreFunctionBuilders.randomFunction() // 生成一个随机分数
-                                        .seed(System.currentTimeMillis()) // 使用当前时间戳作为种子，确保随机性
-                                        .setWeight(ID_BASE_WEIGHT) // 设置一个基础权重
-                                        .setField(FIELD_ID) // 设置一个随机字段，确保每次查询都是随机的
+                                ScoreFunctionBuilders.weightFactorFunction(ID_BASE_WEIGHT)
+                                // // 使用随机权重生成器
+                                // ScoreFunctionBuilders.randomFunction() // 生成一个随机分数
+                                //         .seed(System.currentTimeMillis()) // 使用当前时间戳作为种子，确保随机性
+                                //         .setWeight(ID_BASE_WEIGHT) // 设置一个基础权重
+                                //         .setField(FIELD_ID) // 设置一个随机字段，确保每次查询都是随机的
+                                // 算分函数：基于 `price` 字段增加权重
+                                // ScoreFunctionBuilders.fieldValueFactorFunction(FIELD_PRICE)
+                                //         .modifier(FieldValueFactorFunction.Modifier.LOG1P) // 使用对数函数来调整加权方式
+                                //         .factor(ID_BASE_WEIGHT) // 设置加权因子
+                                //         .missing(0) // 如果价格字段为空，则默认为0
                         )
                 }
         );

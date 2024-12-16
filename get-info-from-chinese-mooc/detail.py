@@ -119,18 +119,22 @@ def get_base_sql(index, company_random_code, body_soup, original):
     describe = " ".join(original[1:-1]).replace("'", " ")
     random_all = 14
     random_list = [10, 8, 8, 9, 7, 9, 19, 6, 11, 5, 10, 6, 9, 10]
+    grade_code = random.choice(['204001', '204002', '204003'])
     big_category = random.randint(1, random_all)
     small_category = random.randint(1, random_list[big_category - 1])
     big_category_str = '1-' + str(big_category)
     small_category_str = big_category_str + '-' + str(small_category)
 
     base_sql = "INSERT INTO `course_base` VALUES (" + str(
-        index) + ", '" + company_random_code + "', NULL, '" + name + "', '" + people + "', '一流课程', '" + big_category_str + "', '" + small_category_str + "', '204001', '200002', '" + describe + "', '', '2024-12-03 17:22:19', '2024-12-03 17:22:19', NULL, NULL, '202002', '203001');"
+        index) + ", '" + company_random_code + "', NULL, '" + name + "', '" + people + "', '一流课程', '" + big_category_str + "', '" + small_category_str + "', '" + grade_code + "', '200002', '" + describe + "', '', '2024-12-03 17:22:19', '2024-12-03 17:22:19', NULL, NULL, '202002', '203001');"
     return base_sql
 
 
 def get_market_sql(index):
-    ad_random_code = random.choice(['800001', '800002'])
+    ad_code = ['800001', '800002']
+    ad_weights = [90, 10]
+    ad_random_code =  random.choices(ad_code, weights=ad_weights, k=1)
+
     original_price = random.randint(20, 200)
     now_price = random.randint(1, 20)
     price_random_code = random.choice(['201000', '201001'])

@@ -25,4 +25,7 @@ public class SearchCourseParamDto {
 
   //难度等级
   private String grade;
+
+  // 是否按照价格排序，1按价格升序，2按价格降序
+  private String sortType;
 }
