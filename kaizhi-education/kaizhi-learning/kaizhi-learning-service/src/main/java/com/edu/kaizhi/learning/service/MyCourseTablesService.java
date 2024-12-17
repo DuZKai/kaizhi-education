@@ -15,7 +15,7 @@ public interface MyCourseTablesService {
      * 添加选课
      * @param userId 用户id
      * @param courseId 课程id
-     * @return com.edu.kaizhi.learning.model.dto.XcChooseCourseDto
+     * @return com.edu.kaizhi.learning.model.dto.ChooseCourseDto
      */
     public ChooseCourseDto addChooseCourse(String userId, Long courseId);
 
@@ -34,8 +34,6 @@ public interface MyCourseTablesService {
      * 我的课程表
      * @param params
      * @return com.edu.kaizhi.base.model.PageResult<com.edu.kaizhi.learning.model.po.CourseTables>
-     * @author Mr.M
-     * @date 2022/10/27 9:24
      */
     public PageResult<CourseTables> myCouresTabls(MyCourseTableParams params);
 

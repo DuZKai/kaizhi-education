@@ -76,8 +76,8 @@ UpdateTableStatistics=Yes
 UpdateColumnStatistics=Yes
 
 [FolderOptions\Physical Objects\Database Generation]
-GenScriptName=xc_content.sql
-GenScriptName0=xc_content.sql
+GenScriptName=kaizhi_content.sql
+GenScriptName0=kaizhi_content.sql
 GenScriptName1=crebas.sql
 GenScriptName2=crebas
 GenScriptName3=
