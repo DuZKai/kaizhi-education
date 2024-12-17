@@ -26,6 +26,7 @@
             <el-form :inline="true" :model="searchParams" class="el-form-filter">
                 <el-form-item label="分类" class="el-form-filter-inline">
                     <el-cascader
+                            v-if="courseCategory.length > 0"
                             v-model="searchParams.category"
                             :options="courseCategory"
                             :props="{ checkStrictly: true }"
@@ -218,12 +219,6 @@
         $(this).siblings().first().find('.box').addClass('hov').parent().siblings().find('.box').removeClass('hov')
     })
 </script>
-<style>
-    .eslight {
-        color: red;
-    }
-
-</style>
 <script>
     /*查询课程列表*/
     const requestCourseList = (pageNo, pageSize, searchParams) => {
@@ -255,7 +250,8 @@
             courseCategory: [],
             mtList: [],
             stList: [],
-            priceSortList: [{
+            priceSortList: [
+                {
                 value: '',
                 label: '默认排序'
             }, {
@@ -265,7 +261,8 @@
                 value: '2',
                 label: '价格降序'
             }],
-            gradeList: [{
+            gradeList: [
+                {
                 value: '',
                 label: '全部难度'
             }, {
@@ -319,8 +316,14 @@
                     stName = "";
                 }
                 else{
+                    if(this.searchParams.category.length === 1){
+                        mtName = this.searchParams.category[0];
+                        stName = "";
+                    }
+                    else if(this.searchParams.category.length === 2){
                     mtName = this.searchParams.category[0];
                     stName = this.searchParams.category[1];
+                    }
                 }
                 var sentSearchParams = {
                     keywords: '',
@@ -393,6 +396,9 @@
 
 </script>
 <style>
+    .eslight {
+        color: red;
+    }
     .el-cascader-menu {
         width: 250px;
     }
@@ -411,5 +417,13 @@
     /*    border: none !important;*/
     /*    box-shadow: none !important;*/
     /*}*/
+
+    input[aria-hidden="true"] {
+        display: none !important;
+    }
+
+    .el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+        box-shadow: none;
+    }
 </style>
 </body>
