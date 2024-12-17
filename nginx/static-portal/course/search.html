@@ -278,12 +278,38 @@
         },
         methods: {
             truncatedCourseName(name) {
-                const maxLength = 12;  // 限制最大字符数
+                const maxLength = 10;  // 限制最大字符数
+                console.log(name)
+
+
+                // 定义一个正则表达式，匹配所有 HTML 标签
+                const htmlTagRegex = /<[^>]+>/g;
+
+                // 用于存储去掉 HTML 标签后的纯文本内容
+                const strippedName = name.replace(htmlTagRegex, '');
 
                 // 如果字符串长度超过最大限制，截取并加上省略号
                 let count = 0;
+                let result = ''; // 最终结果（包含 HTML 标签）
+                let textIndex = 0; // 去掉 HTML 标签的字符位置
                 for (let i = 0; i < name.length; i++) {
                     const char = name.charAt(i);
+
+
+                    // 如果遇到 HTML 标签，直接添加到结果并跳过统计
+                    if (char === '<') {
+                        const tagEnd = name.indexOf('>', i); // 找到标签结束的位置
+                        if (tagEnd > -1) {
+                            result += name.substring(i, tagEnd + 1); // 添加整个标签到结果
+                            i = tagEnd; // 跳过标签内容
+                            continue;
+                        }
+                    }
+
+                    // 统计去掉 HTML 标签后的字符
+                    const textChar = strippedName.charAt(textIndex);
+                    textIndex++;
+
                     // 判断字符是否是中文
                     if (/[\u4e00-\u9fa5]/.test(char)) {
                         count += 2;
@@ -293,13 +319,17 @@
                         count += 1;
                     }
 
+                    // 添加字符到结果
+                    result += char;
+
                     // 判断是否达到字符限制
                     if (count > maxLength) {
-                        return name.substring(0, i) + '...';
+                        result += '...'; // 添加省略号
+                        break;
                     }
                 }
 
-                return name;  // 如果未超过最大限制，返回原始字符串
+                return result;  // 如果未超过最大限制，返回原始字符串
             },
 
 
@@ -326,7 +356,7 @@
                     }
                 }
                 var sentSearchParams = {
-                    keywords: '',
+                    keywords: this.searchParams.keywords,
                     mt: mtName,
                     st: stName,
                     grade: this.searchParams.grade,
