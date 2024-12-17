@@ -8,5 +8,5 @@ public class RedisConfig {
     public static final String AllNum = "info:all";
 
     public static final String SearchList = "search:list";
-
+    public static final String CategoryList = "content:course-category";
 }

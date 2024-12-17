@@ -20,166 +20,179 @@
 
 <!-- 页面头部 -->
 <!--#include virtual="/include/header.html"-->
-<div id="searcharea">
-    <div class="learing-list">
-        <div class="list-box">
-            <el-form :inline="true" :model="searchParams" class="el-form-filter">
-                <el-form-item label="分类" class="el-form-filter-inline">
-                    <el-cascader
-                            v-if="courseCategory.length > 0"
-                            v-model="searchParams.category"
-                            :options="courseCategory"
-                            :props="{ checkStrictly: true }"
-                            @change="searchPage"
-                            clearable>
-                    </el-cascader>
-                </el-form-item>
-                <el-form-item label="难度等级" class="el-form-filter-inline">
-                    <el-select v-model="searchParams.grade" clearable placeholder="全部难度" @change="searchPage">
-                        <el-option
-                                v-for="item in gradeList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="排序" class="el-form-filter-inline">
-                    <el-select v-model="searchParams.sortType" clearable placeholder="默认排序" @change="searchPage">
-                        <el-option
-                                v-for="item in priceSortList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
+<div>
+    <div id="searcharea">
+        <div v-if="isLoading" >
+            <el-skeleton :rows="25" animated style="padding-top: 20px"/>
         </div>
-    </div>
+        <div v-else>
+            <div class="learing-list">
+                <div class="list-box">
+                    <el-form :inline="true" :model="searchParams" class="el-form-filter">
+                        <el-form-item label="分类" class="el-form-filter-inline">
+                            <el-cascader
+                                    v-if="courseCategory.length > 0"
+                                    v-model="searchParams.category"
+                                    :options="courseCategory"
+                                    :props="{ checkStrictly: true }"
+                                    @change="searchPage"
+                                    clearable>
+                            </el-cascader>
+                        </el-form-item>
+                        <el-form-item label="难度等级" class="el-form-filter-inline">
+                            <el-select v-model="searchParams.grade" clearable placeholder="全部难度"
+                                       @change="searchPage">
+                                <el-option
+                                        v-for="item in gradeList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="排序" class="el-form-filter-inline">
+                            <el-select v-model="searchParams.sortType" clearable placeholder="默认排序"
+                                       @change="searchPage">
+                                <el-option
+                                        v-for="item in priceSortList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9 list-row-left">
-                <div class="list-cont-left">
-                    <!--
-                <div class="tit">
-                    <ul class="nav nav-tabs ">
-                        <li class="active"><a href="#">推荐</a></li>
-                        <li><a href="#">最新</a></li>
-                        <li><a href="#">热评</a></li>
-                        <div class="page navbar-right">
-                            <a href="#" class="prev">
-                                < </a>
-                                    <span class="">1/28</span>
-                                    <a href="#" class="next"> ></a>
-                        </div>
-                    </ul>
-                </div>-->
-                    <div class="tab-content">
-                        <div class="content-list">
-
-                            <div class="recom-item" v-for="course in courseList">
-                                <a :href="'/course/'+course.id+'.html'" target="_blank">
-                                    <p>
-                                        <img :src="file_server+course.pic" width="100%" alt=""></img>
-                                        <!--<span class="lab">HOT</span>-->
-                                    </p>
-                                    <ul>
-                                        <li>
-                                            <span v-if="course.grade=='204001'">初级</span>
-                                            <span v-else-if="course.grade=='204002'">中级</span>
-                                            <span v-else>高级</span>
-                                            <span v-html="truncatedCourseName(course.name)"></span>
-                                        </li>
-                                        <li style="width:100%">
-                                            <span v-if="course.charge=='201000'">免费</span>
-                                            <span v-else>¥{{course.price}}</span>
-                                            <em> · </em> 1125人在学
-                                            <span v-if="course.isAd=='800002'"
-                                                  style="color: gray; font-size: 8px; font-style: italic; float:right;"
-                                            >广告</span>
-                                        </li>
-                                    </ul>
-                                </a>
-                            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9 list-row-left">
+                        <div class="list-cont-left">
                             <!--
-                        <div class="recom-item">
-                            <a href="#">
-                                <p><img src="../img/widget-demo2.png" width="100%" alt=""><span class="lab">HOT</span></p>
-                                <ul>
-                                    <li>Think PHP 5.0 博客系统实战项目演练 </li>
-                                    <li><span>高级</span> <em> · </em> 1125人在学习</li>
-                                </ul>
-                            </a>
+                        <div class="tit">
+                            <ul class="nav nav-tabs ">
+                                <li class="active"><a href="#">推荐</a></li>
+                                <li><a href="#">最新</a></li>
+                                <li><a href="#">热评</a></li>
+                                <div class="page navbar-right">
+                                    <a href="#" class="prev">
+                                        < </a>
+                                            <span class="">1/28</span>
+                                            <a href="#" class="next"> ></a>
+                                </div>
+                            </ul>
                         </div>-->
+                            <div class="tab-content">
+                                <div class="content-list">
 
-
-                        </div>
-                        <div class="clearfix">
-
-                        </div>
-                    </div>
-
-                    <div class="clearfix">
-                        <el-pagination background layout="prev, pager, next" @current-change="handleCurrentChange"
-                                       :current-page="pageNo" :page-size="pageSize" :total="total">
-                        </el-pagination>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 list-row-rit">
-                <div class="list-cont-right">
-                    <div class="right-box">
-                        <div class="tit">精品TOP榜</div>
-                        <div class="contList">
-                            <div class="contList-item">
-                                <div class="box hov">
-                                    <div class="info">
-                                        <p>Think PHP 5.0 博客系统实战项目演练</p>
-                                        <li><span>高级</span> <em> · </em> 1125人在学习</li>
+                                    <div class="recom-item" v-for="course in courseList">
+                                        <a :href="'/course/'+course.id+'.html'" target="_blank">
+                                            <p>
+                                                <img :src="file_server+course.pic" width="100%" alt=""></img>
+                                                <!--<span class="lab">HOT</span>-->
+                                            </p>
+                                            <ul>
+                                                <li>
+                                                    <span v-if="course.grade=='204001'">初级</span>
+                                                    <span v-else-if="course.grade=='204002'">中级</span>
+                                                    <span v-else>高级</span>
+                                                    <span v-html="truncatedCourseName(course.name)"></span>
+                                                </li>
+                                                <li style="width:100%">
+                                                    <span v-if="course.charge=='201000'">免费</span>
+                                                    <span v-else>¥{{course.price}}</span>
+                                                    <em> · </em> 1125人在学
+                                                    <span v-if="course.isAd=='800002'"
+                                                          style="color: gray; font-size: 8px; font-style: italic; float:right;"
+                                                    >广告</span>
+                                                </li>
+                                            </ul>
+                                        </a>
                                     </div>
-                                    <div class="infoImg">
-                                        <div><img src="../img/widget-topBg.png" width="100%" height="110" alt="">
-                                        </div>
-                                        <div class="desc">
-                                            通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
-                                        </div>
-                                    </div>
+                                    <!--
+                                <div class="recom-item">
+                                    <a href="#">
+                                        <p><img src="../img/widget-demo2.png" width="100%" alt=""><span class="lab">HOT</span></p>
+                                        <ul>
+                                            <li>Think PHP 5.0 博客系统实战项目演练 </li>
+                                            <li><span>高级</span> <em> · </em> 1125人在学习</li>
+                                        </ul>
+                                    </a>
+                                </div>-->
+
+
+                                </div>
+                                <div class="clearfix">
+
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="tit">猜你喜欢</div>
-                        <div class="contList">
-                            <div class="contList-item">
-                                <div class="box hov">
-                                    <div class="info">
-                                        <p>Think PHP 5.0 博客系统实战项目演练</p>
-                                        <li><span>高级</span> <em> · </em> 1125人在学习</li>
-                                    </div>
-                                    <div class="infoImg">
-                                        <div><img src="../img/widget-btnbg.png" width="100%" height="110" alt="">
-                                        </div>
-                                        <div class="desc">
-                                            通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="clearfix">
+                                <el-pagination background layout="prev, pager, next"
+                                               @current-change="handleCurrentChange"
+                                               :current-page="pageNo" :page-size="pageSize" :total="total">
+                                </el-pagination>
                             </div>
-
-                            <div class="contList-item">
-                                <div class="box">
-                                    <div class="info">
-                                        <p>Think PHP 5.0 博客系统实战项目演练</p>
-                                        <li><span>高级</span> <em> · </em> 1125人在学习</li>
-                                    </div>
-                                    <div class="infoImg">
-                                        <div><img src="../img/widget-btnbg.png" width="100%" height="110" alt="">
+                        </div>
+                    </div>
+                    <div class="col-md-3 list-row-rit">
+                        <div class="list-cont-right">
+                            <div class="right-box">
+                                <div class="tit">精品TOP榜</div>
+                                <div class="contList">
+                                    <div class="contList-item">
+                                        <div class="box hov">
+                                            <div class="info">
+                                                <p>Think PHP 5.0 博客系统实战项目演练</p>
+                                                <li><span>高级</span> <em> · </em> 1125人在学习</li>
+                                            </div>
+                                            <div class="infoImg">
+                                                <div><img src="../img/widget-topBg.png" width="100%" height="110"
+                                                          alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="desc">
-                                            通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
+                                    </div>
+
+                                </div>
+
+                                <div class="tit">猜你喜欢</div>
+                                <div class="contList">
+                                    <div class="contList-item">
+                                        <div class="box hov">
+                                            <div class="info">
+                                                <p>Think PHP 5.0 博客系统实战项目演练</p>
+                                                <li><span>高级</span> <em> · </em> 1125人在学习</li>
+                                            </div>
+                                            <div class="infoImg">
+                                                <div><img src="../img/widget-btnbg.png" width="100%" height="110"
+                                                          alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="contList-item">
+                                        <div class="box">
+                                            <div class="info">
+                                                <p>Think PHP 5.0 博客系统实战项目演练</p>
+                                                <li><span>高级</span> <em> · </em> 1125人在学习</li>
+                                            </div>
+                                            <div class="infoImg">
+                                                <div><img src="../img/widget-btnbg.png" width="100%" height="110"
+                                                          alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    通过对ThinkPHP框架基础，带领大家由浅入深轻松掌握ThinkPHP的理论基础，更加全面的掌握ThinkPHP框架运行机制……
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -190,8 +203,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 <!--底部版权-->
 <!--#include virtual="/include/footer.html"-->
@@ -238,7 +249,7 @@
             pageSize: 16,
             total: 0,
             file_server: 'http://file.kaizhi.edu.cn',
-
+            isLoading: true,
             searchParams: {
                 keywords: '',
                 category: '',
@@ -252,35 +263,33 @@
             stList: [],
             priceSortList: [
                 {
-                value: '',
-                label: '默认排序'
-            }, {
-                value: '1',
-                label: '价格升序'
-            }, {
-                value: '2',
-                label: '价格降序'
-            }],
+                    value: '',
+                    label: '默认排序'
+                }, {
+                    value: '1',
+                    label: '价格升序'
+                }, {
+                    value: '2',
+                    label: '价格降序'
+                }],
             gradeList: [
                 {
-                value: '',
-                label: '全部难度'
-            }, {
-                value: '204001',
-                label: '初级'
-            }, {
-                value: '204002',
-                label: '中级'
-            }, {
-                value: '204003',
-                label: '高级'
-            }]
+                    value: '',
+                    label: '全部难度'
+                }, {
+                    value: '204001',
+                    label: '初级'
+                }, {
+                    value: '204002',
+                    label: '中级'
+                }, {
+                    value: '204003',
+                    label: '高级'
+                }]
         },
         methods: {
             truncatedCourseName(name) {
                 const maxLength = 10;  // 限制最大字符数
-                console.log(name)
-
 
                 // 定义一个正则表达式，匹配所有 HTML 标签
                 const htmlTagRegex = /<[^>]+>/g;
@@ -341,18 +350,16 @@
             async searchPage() {
                 console.log(this.searchParams);
                 var mtName, stName;
-                if(this.searchParams.category === ""){
+                if (this.searchParams.category === "") {
                     mtName = "";
                     stName = "";
-                }
-                else{
-                    if(this.searchParams.category.length === 1){
+                } else {
+                    if (this.searchParams.category.length === 1) {
                         mtName = this.searchParams.category[0];
                         stName = "";
-                    }
-                    else if(this.searchParams.category.length === 2){
-                    mtName = this.searchParams.category[0];
-                    stName = this.searchParams.category[1];
+                    } else if (this.searchParams.category.length === 2) {
+                        mtName = this.searchParams.category[0];
+                        stName = this.searchParams.category[1];
                     }
                 }
                 var sentSearchParams = {
@@ -400,7 +407,7 @@
                 });
             },
 
-            async getCategoryList(){
+            async getCategoryList() {
                 const res = await requestCategoryList();
                 console.log(res);
                 let transformedCategory = this.transformToOptions(res);
@@ -416,8 +423,14 @@
                 this.searchParams.keywords = keywords
                 document.getElementById("keywords-text").value = keywords;
             }
-            await this.searchPage()
-            await this.getCategoryList()
+            try {
+                await this.searchPage();
+                await this.getCategoryList();
+                this.isLoading = false;
+            } catch (error) {
+                console.error('Error:', error); // 可选：记录错误信息
+                this.$message.error('搜索失败，请稍后重试');
+            }
         },
         mounted() {
 
@@ -429,17 +442,21 @@
     .eslight {
         color: red;
     }
+
     .el-cascader-menu {
         width: 250px;
     }
-    .el-select{
+
+    .el-select {
         width: 120px;
     }
-    .el-form-filter{
+
+    .el-form-filter {
         margin-top: 20px;
-        padding-left: 40px;
+        padding-left: 20px;
     }
-    .el-form-filter-inline{
+
+    .el-form-filter-inline {
         padding-right: 20px;
     }
 

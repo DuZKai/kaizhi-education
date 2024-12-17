@@ -185,3 +185,9 @@ private handleEdit(data: ITeacherList) {
   }, 200)
 }
 ```
+
+
+
+### 使用Element级联选择器选择任意一级一直不起作用
+
+找到element对应js和css文件，更新为最新版本文件，同时更新tff和woff使得图标生效

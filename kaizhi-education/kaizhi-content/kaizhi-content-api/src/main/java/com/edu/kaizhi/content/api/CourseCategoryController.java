@@ -10,12 +10,16 @@ import com.edu.kaizhi.content.service.CourseCategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static com.edu.kaizhi.base.constant.RedisConfig.CategoryList;
+import static com.edu.kaizhi.base.constant.RedisConfig.ManNum;
 
 
 /**
@@ -29,6 +33,7 @@ public class CourseCategoryController {
 
     @ApiOperation("课程分类查询")
     @GetMapping("/course-category/tree-nodes")
+    // @Cacheable(cacheNames = CategoryList, key = "'tree-nodes'")
     public List<CourseCategoryTreeDto> queryTreeNodes() {
         // TODO: 后续可能不只是1作为根节点
         return courseCategoryService.queryTreeNodes("1");
