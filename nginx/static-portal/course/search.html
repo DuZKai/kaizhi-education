@@ -23,38 +23,37 @@
 <div id="searcharea">
     <div class="learing-list">
         <div class="list-box">
-            <ul>
-                <li>分类：</li>
-                <el-cascader
-                        v-model="category"
-                        :options="courseCategory"
-                        :props="{ checkStrictly: true }"
-                        @change="searchPage"
-                        clearable>
-                </el-cascader>
-            </ul>
-            <ul>
-                <li>难度等级：</li>
-                <el-select v-model="grade" clearable placeholder="全部难度" @change="searchPage">
-                    <el-option
-                            v-for="item in gradeList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </ul>
-            <ul>
-                <li>排序：</li>
-                <el-select v-model="sortType" clearable placeholder="默认排序" @change="searchPage">
-                    <el-option
-                            v-for="item in priceSortList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </ul>
+            <el-form :inline="true" :model="searchParams" class="el-form-filter">
+                <el-form-item label="分类" class="el-form-filter-inline">
+                    <el-cascader
+                            v-model="searchParams.category"
+                            :options="courseCategory"
+                            :props="{ checkStrictly: true }"
+                            @change="searchPage"
+                            clearable>
+                    </el-cascader>
+                </el-form-item>
+                <el-form-item label="难度等级" class="el-form-filter-inline">
+                    <el-select v-model="searchParams.grade" clearable placeholder="全部难度" @change="searchPage">
+                        <el-option
+                                v-for="item in gradeList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="排序" class="el-form-filter-inline">
+                    <el-select v-model="searchParams.sortType" clearable placeholder="默认排序" @change="searchPage">
+                        <el-option
+                                v-for="item in priceSortList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 
@@ -244,16 +243,18 @@
             pageSize: 16,
             total: 0,
             file_server: 'http://file.kaizhi.edu.cn',
-            courseCategory: [],
-            category: '',
-            mtList: [],
-            stList: [],
-            sortType: '',
-            grade: '',
+
             searchParams: {
                 keywords: '',
+                category: '',
+                grade: '',
+                sortType: '',
             },
+
             courseList: [],
+            courseCategory: [],
+            mtList: [],
+            stList: [],
             priceSortList: [{
                 value: '',
                 label: '默认排序'
@@ -311,13 +312,22 @@
             },
 
             async searchPage() {
-                console.log(this.category);
+                console.log(this.searchParams);
+                var mtName, stName;
+                if(this.searchParams.category === ""){
+                    mtName = "";
+                    stName = "";
+                }
+                else{
+                    mtName = this.searchParams.category[0];
+                    stName = this.searchParams.category[1];
+                }
                 var sentSearchParams = {
                     keywords: '',
-                    mt: this.category[0],
-                    st: this.category[1],
-                    grade: this.grade,
-                    sortType: this.sortType
+                    mt: mtName,
+                    st: stName,
+                    grade: this.searchParams.grade,
+                    sortType: this.searchParams.sortType
                 }
 
                 const res = await requestCourseList(this.pageNo, this.pageSize, sentSearchParams);
@@ -386,5 +396,20 @@
     .el-cascader-menu {
         width: 250px;
     }
+    .el-select{
+        width: 120px;
+    }
+    .el-form-filter{
+        margin-top: 20px;
+        padding-left: 40px;
+    }
+    .el-form-filter-inline{
+        padding-right: 20px;
+    }
+
+    /*.el-form-filter-inline .el-input__inner {*/
+    /*    border: none !important;*/
+    /*    box-shadow: none !important;*/
+    /*}*/
 </style>
 </body>
