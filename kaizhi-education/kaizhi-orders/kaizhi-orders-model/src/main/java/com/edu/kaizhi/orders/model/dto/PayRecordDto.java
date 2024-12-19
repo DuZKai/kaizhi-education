@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- * @version 1.0
- * @description 支付记录dto
- * @date 2022/10/4 11:30
+ * 支付记录dto
  */
 @Data
 @ToString

@@ -75,7 +75,4 @@ public class PayRecord implements Serializable {
      * 用户id
      */
     private String userId;
-
-
-
 }

@@ -16,7 +16,7 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
 
 
     //资源服务标识
-    public static final String RESOURCE_ID = "kaizhi";
+    public static final String RESOURCE_ID = "kaizhi-education";
 
     @Autowired
     TokenStore tokenStore;

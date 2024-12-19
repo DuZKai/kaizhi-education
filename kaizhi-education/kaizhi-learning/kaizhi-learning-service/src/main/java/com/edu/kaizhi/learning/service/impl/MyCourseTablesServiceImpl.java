@@ -194,18 +194,17 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
     public CourseTablesDto getLearningStatus(String userId, Long courseId){
         //查询选课记录
         CourseTablesDto courseTablesDto = new CourseTablesDto();
-        ChooseCourse chooseCourse = chooseCourseMapper.selectOne(new LambdaQueryWrapper<ChooseCourse>().
-                eq(ChooseCourse::getUserId, userId).eq(ChooseCourse::getCourseId, courseId));
+        CourseTables courseTables = getCourseTables(userId, courseId);
         // 选课记录不存在
-        if (chooseCourse == null) {
+        if (courseTables == null) {
             courseTablesDto.setLearnStatus("702002");
             return courseTablesDto;
         }
         // 选课记录存在，判断选课状态，是否过期
-        if (LocalDateTime.now().isAfter(chooseCourse.getValidtimeEnd())) {
+        if (LocalDateTime.now().isAfter(courseTables.getValidtimeEnd())) {
             // 选课过期
             courseTablesDto.setLearnStatus("702003");
-            BeanUtils.copyProperties(chooseCourse, courseTablesDto);
+            BeanUtils.copyProperties(courseTables, courseTablesDto);
             return courseTablesDto;
         }
         courseTablesDto.setLearnStatus("702001");
