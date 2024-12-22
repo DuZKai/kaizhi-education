@@ -37,4 +37,10 @@ public interface MyCourseTablesService {
      */
     public PageResult<CourseTables> myCouresTabls(MyCourseTableParams params);
 
+    /**
+     * 保存选课状态
+     * @param chooseCourseId
+     * @return boolean
+     */
+    public boolean saveChooseCourseStatus(String chooseCourseId);
 }

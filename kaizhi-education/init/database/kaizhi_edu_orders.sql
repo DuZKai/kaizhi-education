@@ -67,7 +67,7 @@ CREATE TABLE `mq_message_history` (
 
 LOCK TABLES `mq_message_history` WRITE;
 /*!40000 ALTER TABLE `mq_message_history` DISABLE KEYS */;
-INSERT INTO `mq_message_history` (`id`, `message_type`, `business_key1`, `business_key2`, `business_key3`, `execute_num`, `state`, `returnfailure_date`, `returnsuccess_date`, `returnfailure_msg`, `execute_date`, `stage_state1`, `stage_state2`, `stage_state3`, `stage_state4`) VALUES (1,'payresult_notify','16','60201',NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0'),(15,'payresult_notify','11',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0'),(16,'payresult_notify','15','60201',NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0');
+INSERT INTO `mq_message_history` (`id`, `message_type`, `business_key1`, `business_key2`, `business_key3`, `execute_num`, `state`, `returnfailure_date`, `returnsuccess_date`, `returnfailure_msg`, `execute_date`, `stage_state1`, `stage_state2`, `stage_state3`, `stage_state4`) VALUES (1,'payresult_notify','16','602001',NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0'),(15,'payresult_notify','11',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0'),(16,'payresult_notify','15','602001',NULL,0,NULL,NULL,NULL,NULL,NULL,'0','0','0','0');
 /*!40000 ALTER TABLE `mq_message_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ CREATE TABLE `kaizhi_orders` (
 
 LOCK TABLES `kaizhi_orders` WRITE;
 /*!40000 ALTER TABLE `kaizhi_orders` DISABLE KEYS */;
-INSERT INTO `kaizhi_orders` (`id`, `total_price`, `create_date`, `status`, `user_id`, `order_type`, `order_name`, `order_descrip`, `order_detail`, `out_business_id`) VALUES (1577177773194113024,1.00,'2022-10-04 14:04:18','600002','50','60201','测试课程01','购买课程:测试课程01','[{\"goodsId\":2,\"goodsType\":\"60201\",\"goodsName\":\"测试课程01\",\"goodsPrice\":1}]','10'),(1577258681653280768,1.00,'2022-10-04 19:25:48','600002','52','60201','Nacos微服务开发实战','购买课程:Nacos微服务开发实战','[{\"goodsId\":117,\"goodsType\":\"60201\",\"goodsName\":\"Nacos微服务开发实战\",\"goodsPrice\":1}]','11'),(1585094781512269824,11.00,'2022-10-26 10:23:40','600002','51','60201','java零基础入门','购买课程:java零基础入门','[{\"goodsId\":18,\"goodsType\":\"60201\",\"goodsName\":\"java零基础入门\",\"goodsPrice\":11}]','15'),(1623527995495899136,1.00,'2023-02-09 11:43:32','600002','52','60201','Spring Cloud 开发实战','购买课程:Spring Cloud 开发实战','[{\"goodsId\":121,\"goodsType\":\"60201\",\"goodsName\":\"Spring Cloud 开发实战\",\"goodsPrice\":1}]','16');
+INSERT INTO `kaizhi_orders` (`id`, `total_price`, `create_date`, `status`, `user_id`, `order_type`, `order_name`, `order_descrip`, `order_detail`, `out_business_id`) VALUES (1577177773194113024,1.00,'2022-10-04 14:04:18','600002','50','602001','测试课程01','购买课程:测试课程01','[{\"goodsId\":2,\"goodsType\":\"602001\",\"goodsName\":\"测试课程01\",\"goodsPrice\":1}]','10'),(1577258681653280768,1.00,'2022-10-04 19:25:48','600002','52','602001','Nacos微服务开发实战','购买课程:Nacos微服务开发实战','[{\"goodsId\":117,\"goodsType\":\"602001\",\"goodsName\":\"Nacos微服务开发实战\",\"goodsPrice\":1}]','11'),(1585094781512269824,11.00,'2022-10-26 10:23:40','600002','51','602001','java零基础入门','购买课程:java零基础入门','[{\"goodsId\":18,\"goodsType\":\"602001\",\"goodsName\":\"java零基础入门\",\"goodsPrice\":11}]','15'),(1623527995495899136,1.00,'2023-02-09 11:43:32','600002','52','602001','Spring Cloud 开发实战','购买课程:Spring Cloud 开发实战','[{\"goodsId\":121,\"goodsType\":\"602001\",\"goodsName\":\"Spring Cloud 开发实战\",\"goodsPrice\":1}]','16');
 /*!40000 ALTER TABLE `kaizhi_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -129,7 +129,7 @@ CREATE TABLE `kaizhi_orders_goods` (
 
 LOCK TABLES `kaizhi_orders_goods` WRITE;
 /*!40000 ALTER TABLE `kaizhi_orders_goods` DISABLE KEYS */;
-INSERT INTO `kaizhi_orders_goods` (`id`, `order_id`, `goods_id`, `goods_type`, `goods_name`, `goods_price`, `goods_detail`) VALUES (2,1577177773194113024,'2','60201','测试课程01',1.00,NULL),(3,1577258681653280768,'117','60201','Nacos微服务开发实战',1.00,NULL),(4,1585094781512269824,'18','60201','java零基础入门',11.00,NULL),(5,1623527995495899136,'121','60201','Spring Cloud 开发实战',1.00,NULL);
+INSERT INTO `kaizhi_orders_goods` (`id`, `order_id`, `goods_id`, `goods_type`, `goods_name`, `goods_price`, `goods_detail`) VALUES (2,1577177773194113024,'2','602001','测试课程01',1.00,NULL),(3,1577258681653280768,'117','602001','Nacos微服务开发实战',1.00,NULL),(4,1585094781512269824,'18','602001','java零基础入门',11.00,NULL),(5,1623527995495899136,'121','602001','Spring Cloud 开发实战',1.00,NULL);
 /*!40000 ALTER TABLE `kaizhi_orders_goods` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -337,7 +337,7 @@
             querypayresult() {
                 let activeUser = getActiveUser();
                 if (activeUser) {
-                    querypayresult(this.payNo).then((res) => {
+                    querypayresultfromdb(this.payNo).then((res) => {
                         if (res.status) {
                             if (res.status === '601002') {//支付成功
                                 this.$message.success('支付成功，可以去学习啦');
@@ -390,6 +390,9 @@
                     //     this.qrcode=res.qrcode
                     // }
                     if (res) {
+                        console.log(res)
+                        this.payNo = res.payNo
+                        // this.qrcode=res.qrcode
                         this.$confirm('是否已经完成支付?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -399,6 +402,7 @@
                                 type: 'success',
                                 message: '支付完成!'
                             });
+                            this.querypayresult();
                         }).catch(() => {
                             this.$message({
                                 type: 'info',

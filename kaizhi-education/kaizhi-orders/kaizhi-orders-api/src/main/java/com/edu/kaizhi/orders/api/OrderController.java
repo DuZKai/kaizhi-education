@@ -13,9 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -38,6 +42,31 @@ public class OrderController {
             CustomizeException.cast("用户未登录");
         }
         return orderService.createOrder(user.getId(), addOrderDto);
+    }
+
+    @ApiOperation("扫码下单")
+    @GetMapping("/requestpay")
+    public void requestpay(String payNo, HttpServletResponse httpResponse) throws IOException {
+        // 扫码下单
+        PayRecord payRecord = orderService.getPayRecordByPayno(payNo);
+        if (payRecord == null) {
+            CustomizeException.cast("支付记录不存在");
+        }
+        //支付状态
+        String status = payRecord.getStatus();
+        if("601002".equals(status)){
+            CustomizeException.cast("订单已支付，请勿重复支付。");
+        }
+        // /请求支付宝下单接口,发起http请求
+    }
+
+    @ApiOperation("查询支付结果")
+    @GetMapping("/payresult")
+    @ResponseBody
+    public PayRecordDto payresult(String payNo) throws IOException {
+        // 查询支付结果
+        //调用支付宝接口查询
+        return orderService.queryPayResult(payNo);
     }
 
 }

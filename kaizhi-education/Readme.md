@@ -29,6 +29,12 @@
 
 
 
+新增：
+
+rabbitMQ使用
+
+
+
 ## 实现个性化功能
 
 ### 大功能
@@ -174,6 +180,7 @@ nginx.exe -s reload
 ## 虚拟机
 
 - 使用VMnet8的NAT模式，子网IP需要设置为192.168.101.0，子网掩码设置为255.255.255.0
+- 密码：centos
 - 启动docker
 
     ```shell
@@ -241,7 +248,7 @@ docker restart nacos
 
 - 需要在代码中数据库地址修改为正确地址
 
--  数据库账号密码： username: root; password: mysql
+-  http://192.168.101.65:3306 数据库账号密码： username: root; password: mysql
 
 
 
@@ -259,7 +266,7 @@ docker restart nacos
 - 创建mediafiles、viedo的bucket并设置成public
 - 将minio内文件将压缩包作为文件夹上传
 
-账号密码均为minioadmin。
+http://192.168.101.65:9001/login 账号密码均为minioadmin。
 
 
 
@@ -268,6 +275,7 @@ docker restart nacos
 - 下载位置：https://github.com/xuxueli/xxl-job
 
 - 进入doc/db执行tables_xxl_job.sql新建数据库
+- http://192.168.101.65:8088/
 - 账号:admin 密码：123456
 - 需要按照.\kaizhi-education\kaizhi-media\kaizhi-media-service\src\main\java\com\edu\kaizhi\media\service\jobhandler\VideoTask.java对应加入任务到执行器media-process-service
 
@@ -275,6 +283,7 @@ docker restart nacos
 
 ### Elasticsearch和kibana
 
+- http://192.168.101.65:5601/
 - [链接](https://blog.csdn.net/ThinkWon/article/details/122808762)安装Elasticsearch和kibana
 - 如果已经有这两个镜像，报错:Kibana server is not ready yet，可以分别尝试如下办法并分配8G虚拟机内存和稍等片刻
 
@@ -293,7 +302,13 @@ docker restart elasticsearch
 
 ### Redis
 
-- 密码redis
+- 192.168.101.65:6379 密码redis
+
+
+
+### RabbitMQ
+
+- http://192.168.101.65:15672/   账号密码都是guest
 
 
 
@@ -378,7 +393,6 @@ docker restart elasticsearch
 - 用户权限分配
 - 将用户身份工具类SecurityUtil放到单独一个服务可能更好
 - 用户登录注册前端信息显示，并且可以加入后端注册以及修改密码后自动跳转到主页
-- 支付部分
 - 部署部分
 - 给视频加入弹幕
 - 给课程加入排行榜

@@ -24,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.COURSE_SELECTION_PENDING_PAYMENT;
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.COURSE_SELECTION_SUCCESS;
+
 /**
  * 选课相关接口实现
  */
@@ -231,4 +234,33 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     }
 
+    public boolean saveChooseCourseStatus(String chooseCourseId){
+        ChooseCourse chooseCourse = chooseCourseMapper.selectById(chooseCourseId);
+        if (chooseCourse == null) {
+            log.debug("选课记录不存在");
+            return false;
+        }
+
+        // 选课状态
+        String status = chooseCourse.getStatus();
+        // 选课状态不是待支付
+        if (!COURSE_SELECTION_PENDING_PAYMENT.equals(status)) {
+            log.debug("选课状态不是待支付");
+            return false;
+        }
+
+        chooseCourse.setStatus(COURSE_SELECTION_SUCCESS);//选课成功
+        if (chooseCourseMapper.updateById(chooseCourse) <= 0) {
+            log.debug("更新选课记录失败");
+            CustomizeException.cast("更新选课记录失败");
+        }
+
+        //添加到我的课程表
+        CourseTables courseTables = addCourseTabls(chooseCourse);
+        if (courseTables == null) {
+            log.debug("添加课程表失败");
+            return false;
+        }
+        return true;
+    }
 }
