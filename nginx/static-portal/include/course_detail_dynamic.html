@@ -344,6 +344,7 @@
                             } else {
                                 this.$message.error('请扫码支付，支付完成请不要重复支付。');
                             }
+                            $('.popup-box').hide();
                         }
                     }).catch(error => {
                         if (error && error.response.data.errMessage) {
@@ -351,7 +352,6 @@
                         } else {
                             this.$message.error('出错了')
                         }
-
                     })
                 } else {
                     //弹出登录框架
@@ -409,6 +409,7 @@
                                 message: '已取消支付'
                             });
                         });
+                        $('.popup-box').hide();
                     }
                 }).catch(error => {
                     if (error && error.response.data.errMessage) {

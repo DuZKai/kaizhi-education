@@ -382,6 +382,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             System.out.println("Redis中布隆过滤器未删除");
         }
         System.out.println("布隆过滤器初始化...");
+        saveBloomFilter();
+    }
+
+    private void saveBloomFilter(){
         // 从数据库中获取所有的 courseId 列表
         List<Long> courseIdList = coursePublishMapper.selectAllId();
         for (Long courseId : courseIdList) {
@@ -402,7 +406,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         Boolean exists = stringRedisTemplate.hasKey(BLOOM_FILTER_KEY);
         if (exists == null || !exists) {
             System.out.println("布隆过滤器不存在，重新初始化");
-            initBloomFilter();
+            saveBloomFilter();
         }
         // 使用布隆过滤器判断 courseId 是否存在
         boolean includeFlag = bloomfilterService.includeByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);

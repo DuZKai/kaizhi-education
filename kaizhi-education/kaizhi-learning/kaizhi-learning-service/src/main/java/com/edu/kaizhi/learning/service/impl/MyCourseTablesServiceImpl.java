@@ -24,8 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.edu.kaizhi.base.constant.SystemStatusConstant.COURSE_SELECTION_PENDING_PAYMENT;
-import static com.edu.kaizhi.base.constant.SystemStatusConstant.COURSE_SELECTION_SUCCESS;
+import static com.edu.kaizhi.base.constant.SystemStatusConstant.*;
 
 /**
  * 选课相关接口实现
@@ -88,7 +87,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
                 eq(ChooseCourse::getUserId, userId).
                 eq(ChooseCourse::getCourseId, courseId).
                 eq(ChooseCourse::getOrderType, "700001"). // 免费课程
-                        eq(ChooseCourse::getStatus, "701001");// 选课成功
+                eq(ChooseCourse::getStatus, "701001");// 选课成功
         List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(queryWrapper);
         if (chooseCourses != null && !chooseCourses.isEmpty()) {
             return chooseCourses.get(0);
@@ -123,19 +122,30 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         LambdaQueryWrapper<ChooseCourse> queryWrapper = new LambdaQueryWrapper<ChooseCourse>().
                 eq(ChooseCourse::getUserId, userId).
                 eq(ChooseCourse::getCourseId, courseId).
-                eq(ChooseCourse::getOrderType, "700002"). // 收费课程
-                        eq(ChooseCourse::getStatus, "701002");// 待支付
-        List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(queryWrapper);
+                eq(ChooseCourse::getOrderType, PAID_COURSE); // 收费课程
+        // 已支付
+        LambdaQueryWrapper<ChooseCourse> payQueryWrapper = queryWrapper.clone();
+        payQueryWrapper.eq(ChooseCourse::getStatus, COURSE_SELECTION_SUCCESS);// 已支付
+        List<ChooseCourse> payChooseCourses = chooseCourseMapper.selectList(payQueryWrapper);
+        if (payChooseCourses != null && !payChooseCourses.isEmpty()) {
+            return payChooseCourses.get(0);
+        }
+
+        // 待支付
+        LambdaQueryWrapper<ChooseCourse> noPayQueryWrapper = queryWrapper.clone();
+        noPayQueryWrapper.eq(ChooseCourse::getStatus, COURSE_SELECTION_PENDING_PAYMENT);// 待支付
+        List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(noPayQueryWrapper);
         if (chooseCourses != null && !chooseCourses.isEmpty()) {
             return chooseCourses.get(0);
         }
+
         //添加选课记录
         ChooseCourse chooseCourse = new ChooseCourse();
         chooseCourse.setCourseId(coursePublish.getId());
         chooseCourse.setCourseName(coursePublish.getName());
         chooseCourse.setUserId(userId);
         chooseCourse.setCompanyId(coursePublish.getCompanyId());
-        chooseCourse.setOrderType("700002");//收费课程
+        chooseCourse.setOrderType(PAID_COURSE);//收费课程
         chooseCourse.setCreateDate(LocalDateTime.now());
         chooseCourse.setCoursePrice(coursePublish.getPrice());
         chooseCourse.setValidDays(365);
