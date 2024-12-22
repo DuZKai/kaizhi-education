@@ -330,6 +330,8 @@ docker restart elasticsearch
 
 ## Tips
 
+- 在使用时，message-sdk模块需要先编译安装才能被content、order、learning模块编译完成
+
 - 每次重启后需要执行如下命令
 
   - 本地
