@@ -398,6 +398,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     // 使用Redisson实现分布式锁
     public CoursePublish getCoursePublishCache(Long courseId) {
         String redisKey = "course:" + courseId;
+        // Redis是否存在布隆过滤器(防止太久未使用被自动删除)
+        Boolean exists = stringRedisTemplate.hasKey(BLOOM_FILTER_KEY);
+        if (exists == null || !exists) {
+            System.out.println("布隆过滤器不存在，重新初始化");
+            initBloomFilter();
+        }
         // 使用布隆过滤器判断 courseId 是否存在
         boolean includeFlag = bloomfilterService.includeByBloomFilter(modelBloomFilterHelper, BLOOM_FILTER_KEY, courseId);
         if (!includeFlag) {
