@@ -72,7 +72,7 @@ public class MediaFilesController {
             else if (Objects.equals(user.getUtype(), "101002")) {
                 companyId = Long.parseLong(user.getCompanyId());
             } else {
-                CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+                CustomizeException.cast("用户身份不合法, 学生等人不允许上传文件");
             }
         }
         String originalFilename = filedata.getOriginalFilename();
@@ -118,7 +118,7 @@ public class MediaFilesController {
         else if (Objects.equals(user.getUtype(), "101002")) {
             companyId = Long.parseLong(user.getCompanyId());
         } else {
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            CustomizeException.cast("用户身份不合法, 学生等人不允许删除文件");
         }
 
         String FilePath = "course/" + courseId + ".html";

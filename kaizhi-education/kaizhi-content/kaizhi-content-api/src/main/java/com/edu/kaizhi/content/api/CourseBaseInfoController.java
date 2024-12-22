@@ -66,7 +66,7 @@ public class CourseBaseInfoController {
             companyId = Long.parseLong(user.getCompanyId());
         }
         else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            CustomizeException.cast("用户身份不合法, 学生等人不允许新增课程");
         }
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
     }
@@ -95,7 +95,7 @@ public class CourseBaseInfoController {
             companyId = Long.parseLong(user.getCompanyId());
         }
         else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            CustomizeException.cast("用户身份不合法, 学生等人不允许修改课程信息");
         }
         String name = user.getName();
         return courseBaseInfoService.updateCourseBase(companyId, name, editCourseDto);
@@ -118,7 +118,7 @@ public class CourseBaseInfoController {
             companyId = Long.parseLong(user.getCompanyId());
         }
         else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            CustomizeException.cast("用户身份不合法, 学生等人不允许删除课程");
         }
         courseBaseInfoService.delectCourse(companyId, courseId);
 

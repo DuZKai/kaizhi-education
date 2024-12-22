@@ -71,7 +71,7 @@ public class BigFilesController {
             companyId = Long.parseLong(user.getCompanyId());
         }
         else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
+            CustomizeException.cast("用户身份不合法, 学生等人不允许合并文件");
         }
 
         // 文件信息
