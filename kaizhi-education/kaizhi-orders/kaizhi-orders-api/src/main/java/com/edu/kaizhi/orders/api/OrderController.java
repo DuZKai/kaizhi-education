@@ -2,21 +2,20 @@ package com.edu.kaizhi.orders.api;
 
 
 import com.edu.kaizhi.base.exception.CustomizeException;
+import com.edu.kaizhi.orders.annotation.RequiresUser;
 import com.edu.kaizhi.orders.model.dto.AddOrderDto;
 import com.edu.kaizhi.orders.model.dto.PayRecordDto;
 import com.edu.kaizhi.orders.model.po.PayRecord;
 import com.edu.kaizhi.orders.service.OrderService;
-import com.edu.kaizhi.orders.util.SecurityUtil;
+import com.edu.kaizhi.orders.util.UserContext;
+import com.edu.kaizhi.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,12 +34,10 @@ public class OrderController {
 
     @ApiOperation("生成支付二维码")
     @PostMapping("/generatepaycode")
+    @RequiresUser
     @ResponseBody
     public PayRecord generatePayCode(@RequestBody AddOrderDto addOrderDto) {
-        SecurityUtil.User user = SecurityUtil.getUser();
-        if (user == null) {
-            CustomizeException.cast("用户未登录");
-        }
+        SecurityUtil.User user = UserContext.getUser();
         return orderService.createOrder(user.getId(), addOrderDto);
     }
 
@@ -62,10 +59,10 @@ public class OrderController {
 
     @ApiOperation("查询支付结果")
     @GetMapping("/payresult")
+    @RequiresUser
     @ResponseBody
     public PayRecordDto payresult(String payNo) throws IOException {
-        // 查询支付结果
-        //调用支付宝接口查询
+        // 调用支付宝接口查询支付结果
         return orderService.queryPayResult(payNo);
     }
 

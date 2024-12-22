@@ -388,7 +388,7 @@ docker restart elasticsearch
 - 清洗虚拟机Nacos不同配置Group
 - 常量移除到对应constant文件，路径后续统一抽取到父路径下（token-config的秘钥可以统一配置）
 - 机构传太多视频信息可以加入收费功能
-- rabbitMQ消息队列代替sdk包?
+- rabbitMQ消息队列代替content的消息传递？
 - 课程修改后，需要将师资、大纲等也修改课程发布状态，但是修改师资和大纲又修改课程信息，耦合度有点高，其实最好做法应该单独一张表记录是否发布、审核等字段
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - 用户权限太多查询数据库，放入redis

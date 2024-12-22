@@ -1,0 +1,16 @@
+### 生成支付码
+POST {{order_host}}/orders/generatepaycode
+Content-Type: application/json
+
+{
+  "orderDescrip": "购买课程:软件工程",
+  "orderDetail": "[{\"goodsId\":\"10\",\"goodsType\":\"602001\",\"goodsName\":\"软件工程\",\"goodsPrice\":15}]",
+  "orderName": "软件工程",
+  "orderType": "602001",
+  "outBusinessId": "31",
+  "totalPrice": 15
+}
+
+
+### 支付结果查询
+GET {{order_host}}/orders/payresult?payNo=1870856487110295552
