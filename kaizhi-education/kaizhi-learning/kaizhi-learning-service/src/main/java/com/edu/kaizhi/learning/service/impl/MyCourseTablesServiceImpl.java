@@ -1,5 +1,6 @@
 package com.edu.kaizhi.learning.service.impl;
 
+import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.kaizhi.base.exception.CustomizeException;
@@ -123,19 +124,19 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
                 eq(ChooseCourse::getUserId, userId).
                 eq(ChooseCourse::getCourseId, courseId).
                 eq(ChooseCourse::getOrderType, PAID_COURSE); // 收费课程
-        // 已支付
-        LambdaQueryWrapper<ChooseCourse> payQueryWrapper = queryWrapper.clone();
-        payQueryWrapper.eq(ChooseCourse::getStatus, COURSE_SELECTION_SUCCESS);// 已支付
-        List<ChooseCourse> payChooseCourses = chooseCourseMapper.selectList(payQueryWrapper);
-        if (payChooseCourses != null && !payChooseCourses.isEmpty()) {
-            return payChooseCourses.get(0);
-        }
 
-        // 待支付
-        LambdaQueryWrapper<ChooseCourse> noPayQueryWrapper = queryWrapper.clone();
-        noPayQueryWrapper.eq(ChooseCourse::getStatus, COURSE_SELECTION_PENDING_PAYMENT);// 待支付
-        List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(noPayQueryWrapper);
-        if (chooseCourses != null && !chooseCourses.isEmpty()) {
+        // 获取收费课程记录
+        List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(queryWrapper);
+
+        if (CollectionUtils.isNotEmpty(chooseCourses)) {
+            // 分别判断支付状态
+            // 优先判断是否有已支付的记录
+            for (ChooseCourse course : chooseCourses) {
+                if (COURSE_SELECTION_SUCCESS.equals(course.getStatus())) {
+                    return course; // 已支付
+                }
+            }
+            // 有待支付的记录
             return chooseCourses.get(0);
         }
 
