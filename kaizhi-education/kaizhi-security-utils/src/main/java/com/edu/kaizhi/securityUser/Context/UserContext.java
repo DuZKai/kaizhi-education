@@ -17,7 +17,7 @@ public class UserContext {
     public static User getUser() {
         User user = userThreadLocal.get();
         if (user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
+            CustomizeException.cast("用户未登录，未获取到用户信息", 401);
         }
         return user;
     }
@@ -37,7 +37,7 @@ public class UserContext {
         } else if (Objects.equals(user.getUtype(), "101002")) {
             companyId = Long.parseLong(user.getCompanyId());
         } else {
-            CustomizeException.cast("用户身份不合法，不允许继续往下执行操作");
+            CustomizeException.cast("用户身份不合法，不允许继续往下执行操作", 403);
         }
         return companyId;
     }
@@ -46,6 +46,6 @@ public class UserContext {
     public static void isPermission() {
         User user = getUser();
         if (Objects.equals(user.getUtype(), "101001"))
-            CustomizeException.cast("用户身份不合法，不允许继续往下执行操作");
+            CustomizeException.cast("用户身份不合法，不允许继续往下执行操作", 403);
     }
 }

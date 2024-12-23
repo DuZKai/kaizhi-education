@@ -19,7 +19,7 @@ public class UserAspect {
     public void beforeMethod() {
         User user = SecurityUtil.getUser();
         if (user == null) {
-            CustomizeException.cast("用户未登录");
+            CustomizeException.cast("用户未登录", 401);
         }
         // 将当前用户存储到 ThreadLocal 中
         UserContext.setUser(user);

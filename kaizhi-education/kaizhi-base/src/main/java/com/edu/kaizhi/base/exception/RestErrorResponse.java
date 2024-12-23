@@ -12,10 +12,18 @@ import java.io.Serializable;
 @Getter
 public class RestErrorResponse implements Serializable {
     private String errMessage;
+    private Integer errorCode;
 
     public RestErrorResponse() {}
 
     public RestErrorResponse(String errMessage) {
         this.errMessage = errMessage;
+        this.errorCode = 500;
     }
+
+    public RestErrorResponse(String errMessage, Integer errorCode) {
+        this.errMessage = errMessage;
+        this.errorCode = errorCode;
+    }
+
 }
