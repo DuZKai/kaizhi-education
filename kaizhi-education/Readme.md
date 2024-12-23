@@ -47,6 +47,7 @@ rabbitMQ使用
 - 搜索功能方法改进，新增广告状态课程，当用户查询已有课程，会根据isAd字段，使用ElasticSearch对广告课程增加固定权重，并且放入缓存
 - 课程预览界面的师资信息加入，获取师资列表遍历展示
 - 网站使用Redis的HyperLogLog进行UV统计，并使用@Cacheable注解保存到Redis
+- 将用户身份工具类SecurityUtil放到单独一个服务，并且使用AOP切面使获取当前用户信息更便捷
 
 
 
@@ -393,7 +394,6 @@ docker restart elasticsearch
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
 - 用户权限太多查询数据库，放入redis
 - 用户权限分配
-- 将用户身份工具类SecurityUtil放到单独一个服务可能更好
 - 用户登录注册前端信息显示，并且可以加入后端注册以及修改密码后自动跳转到主页
 - 部署部分
 - 给视频加入弹幕

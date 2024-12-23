@@ -64,10 +64,11 @@ public interface MediaFileService {
     /**
      * 根据id删除媒资文件
      *
+     * @param companyId 机构id
      * @param mediaId 媒资文件id
      * @return void
      */
-    public void deleteFileById(String mediaId);
+    public void deleteFileById(Long companyId, String mediaId);
 
     /**
      * 添加媒资文件到数据库

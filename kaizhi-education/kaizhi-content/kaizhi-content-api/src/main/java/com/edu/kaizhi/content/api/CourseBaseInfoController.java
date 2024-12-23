@@ -4,10 +4,12 @@ import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
-import com.edu.kaizhi.content.service.CoursePublishService;
-import com.edu.kaizhi.content.util.SecurityUtil;
 import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
+import com.edu.kaizhi.securityUser.Context.UserContext;
+import com.edu.kaizhi.securityUser.annotation.RequiresUser;
+import com.edu.kaizhi.securityUser.dto.User;
+import com.edu.kaizhi.securityUser.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,44 +32,18 @@ public class CourseBaseInfoController {
     @ApiOperation("课程分页查询信息列表")
     // @PreAuthorize("hasAuthority('kaizhi_teachmanager_course_list')") // 指定权限标识符
     @PostMapping("/course/list")
+    @RequiresUser
     public PageResult<CourseListDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParams) {
-        //取出用户身份
-        SecurityUtil.User user = SecurityUtil.getUser();
-        //机构id
-        if(user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
-        }
-        Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
-            companyId = -1L;
-        else if (Objects.equals(user.getUtype(), "101002")) {
-            companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许查询");
-        }
+        Long companyId = UserContext.getCompanyId();
         return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParams);
     }
 
 
     @ApiOperation("新增课程")
     @PostMapping("/course")
+    @RequiresUser
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated(ValidationGroups.Insert.class) AddCourseDto addCourseDto) {
-        //取出用户身份
-        SecurityUtil.User user = SecurityUtil.getUser();
-        //机构id
-        if(user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
-        }
-        Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
-            companyId = -1L;
-        else if (Objects.equals(user.getUtype(), "101002")) {
-            companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许新增课程");
-        }
+        Long companyId = UserContext.getCompanyId();
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
     }
 
@@ -81,45 +57,18 @@ public class CourseBaseInfoController {
 
     @ApiOperation("修改课程")
     @PutMapping("/course")
+    @RequiresUser
     public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated(ValidationGroups.Update.class) EditCourseDto editCourseDto) {
-        //取出用户身份
-        SecurityUtil.User user = SecurityUtil.getUser();
-        //机构id
-        if(user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
-        }
-        Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
-            companyId = -1L;
-        else if (Objects.equals(user.getUtype(), "101002")) {
-            companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许修改课程信息");
-        }
-        String name = user.getName();
-        return courseBaseInfoService.updateCourseBase(companyId, name, editCourseDto);
+        Long companyId = UserContext.getCompanyId();
+        User user = UserContext.getUser();
+        return courseBaseInfoService.updateCourseBase(companyId, user.getName(), editCourseDto);
     }
 
     @ApiOperation("删除课程")
     @DeleteMapping("/course/{courseId}")
+    @RequiresUser
     public void deleteCourse(@PathVariable Long courseId) {
-
-        //取出用户身份
-        SecurityUtil.User user = SecurityUtil.getUser();
-        //机构id
-        if(user == null) {
-            CustomizeException.cast("用户未登录，未获取到用户信息");
-        }
-        Long companyId = 1232141425L;
-        if(Objects.equals(user.getUtype(), "101003"))
-            companyId = -1L;
-        else if (Objects.equals(user.getUtype(), "101002")) {
-            companyId = Long.parseLong(user.getCompanyId());
-        }
-        else{
-            CustomizeException.cast("用户身份不合法, 学生等人不允许删除课程");
-        }
+        Long companyId = UserContext.getCompanyId();
         courseBaseInfoService.delectCourse(companyId, courseId);
 
     }

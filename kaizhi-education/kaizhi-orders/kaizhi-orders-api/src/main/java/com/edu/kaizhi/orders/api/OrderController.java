@@ -1,19 +1,18 @@
 package com.edu.kaizhi.orders.api;
 
 
+import com.edu.kaizhi.securityUser.Context.UserContext;
+import com.edu.kaizhi.securityUser.annotation.RequiresUser;
 import com.edu.kaizhi.base.exception.CustomizeException;
-import com.edu.kaizhi.orders.annotation.RequiresUser;
+import com.edu.kaizhi.securityUser.dto.User;
 import com.edu.kaizhi.orders.model.dto.AddOrderDto;
 import com.edu.kaizhi.orders.model.dto.PayRecordDto;
 import com.edu.kaizhi.orders.model.po.PayRecord;
 import com.edu.kaizhi.orders.service.OrderService;
-import com.edu.kaizhi.orders.util.UserContext;
-import com.edu.kaizhi.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class OrderController {
     @RequiresUser
     @ResponseBody
     public PayRecord generatePayCode(@RequestBody AddOrderDto addOrderDto) {
-        SecurityUtil.User user = UserContext.getUser();
+        User user = UserContext.getUser();
         return orderService.createOrder(user.getId(), addOrderDto);
     }
 

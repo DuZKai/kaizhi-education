@@ -1,13 +1,10 @@
 package com.edu.kaizhi.learning.api;
 
-import com.edu.kaizhi.base.exception.CustomizeException;
-import com.edu.kaizhi.base.model.PageResult;
+import com.edu.kaizhi.securityUser.Context.UserContext;
+import com.edu.kaizhi.securityUser.annotation.RequiresUser;
 import com.edu.kaizhi.base.model.RestResponse;
-import com.edu.kaizhi.learning.model.dto.MyCourseTableParams;
-import com.edu.kaizhi.learning.model.po.CourseTables;
+import com.edu.kaizhi.securityUser.dto.User;
 import com.edu.kaizhi.learning.service.LearningService;
-import com.edu.kaizhi.learning.service.MyCourseTablesService;
-import com.edu.kaizhi.learning.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +24,14 @@ public class MyLearningController {
     LearningService learningService;
 
     @ApiOperation("获取视频")
+    @RequiresUser
     @GetMapping("/open/learn/getvideo/{courseId}/{mediaFileId}/{mediaId}")
     public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId, @PathVariable("mediaFileId") Long mediaFileId, @PathVariable("mediaId") String mediaId) {
         //登录用户
-        SecurityUtil.User user = SecurityUtil.getUser();
-        String userId = null;
-        if(user != null){
-            userId = user.getId();
-        }
+        User user = UserContext.getUser();
 
         //获取视频
-        return learningService.getVideo(userId, courseId, mediaFileId, mediaId);
+        return learningService.getVideo(user.getId(), courseId, mediaFileId, mediaId);
 
     }
 

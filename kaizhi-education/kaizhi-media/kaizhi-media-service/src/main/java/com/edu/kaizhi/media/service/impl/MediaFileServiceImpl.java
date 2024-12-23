@@ -212,10 +212,15 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mimeType;
     }
 
-    public void deleteFileById(String mediaId){
+    public void deleteFileById(Long companyId, String mediaId){
+
         String filePath = "";
         try {
             MediaFiles fileById = getFileById(mediaId);
+            if(companyId != -1 && !Objects.equals(companyId, fileById.getCompanyId())){
+                CustomizeException.cast("无权限删除");
+            }
+
             filePath = fileById.getFilePath();
 
             DeleteObject deleteObject = new DeleteObject(filePath);
