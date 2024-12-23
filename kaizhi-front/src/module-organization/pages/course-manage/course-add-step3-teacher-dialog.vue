@@ -64,7 +64,7 @@ import {mixins} from 'vue-class-component'
 import {getTeachersList, submitCourseTeacher} from '@/api/courses'
 import Pagination from "@/components/pagination/index.vue";
 import MixinTools from '@/utils/mixins.vue'
-import {ITeacherList} from "@/entity/teacher";
+import {ITeacherDTO, ITeacherList} from "@/entity/teacher";
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
 
 @Component({
@@ -80,11 +80,8 @@ export default class extends mixins(MixinTools) {
   @Prop({ type: Number })
   courseBaseId!: number
 
-  @Prop({ type: Object })
-  teacherData!: ITeacherList
-
   // 查询
-  private listData: ITeacherList[] = [] // 数据体
+  private listData: ITeacherList = {} // 数据体
   private listLoading: boolean = false // 是否载入中
 
   // api params
@@ -101,6 +98,7 @@ export default class extends mixins(MixinTools) {
   private async getList() {
     this.listLoading = true
     this.listData = await getTeachersList(this.listQuery, this.listQueryData)
+    this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
 
@@ -110,7 +108,7 @@ export default class extends mixins(MixinTools) {
   }
 
   // 添加
-  private async handleAdd(data: ITeacherList) {
+  private async handleAdd(data: ITeacherDTO) {
     try {
       const courseTeacherList= {
         courseId: this.courseBaseId,

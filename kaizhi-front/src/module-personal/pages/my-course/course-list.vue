@@ -121,6 +121,7 @@ export default class MyCourse extends Vue {
   private async getList() {
     this.listLoading = true
     this.listData = await getMyCoursePageList(this.listQuery)
+    this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
 

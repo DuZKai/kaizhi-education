@@ -4,7 +4,7 @@ import { ICoursePageList } from '@/entity/course-page-list'
 import { ICourseCategory, ICourseBaseInfo } from '@/entity/course-add-base'
 import { ICourseOutlineTreeNode } from '@/entity/course-add-outline'
 import { ICourseTeacherList } from '@/entity/course-add-teacher'
-import { ITeacherList } from '@/entity/teacher'
+import {ITeacherDTO, ITeacherList} from '@/entity/teacher'
 import { ICoursePubDTO } from '@/entity/course-publish'
 import {IMediaPageList} from "@/entity/media-page-list";
 
@@ -158,7 +158,7 @@ export async function workUnAssociation(
 ////////////////////////////////////////////////
 
 // 获取课程教师
-export async function getTeachers(
+export async function getCourseTeachers(
   courseBaseId: number
 ): Promise<ICourseTeacherList[]> {
   const { data } = await createAPI(
@@ -175,7 +175,7 @@ export async function getTeachers(
 export async function getTeachersList(
     params: any = undefined,
     body: any = undefined
-): Promise<ICourseTeacherList[]> {
+): Promise<ITeacherList> {
   const { data } = await createAPI('/content/teacher/list', 'post', params, body)
   for(let key in data.items){
     if(data.items[key].photograph){
@@ -201,8 +201,8 @@ export async function submitCourseTeacher(
 
 // 保存教师
 export async function submitTeacher(
-    body: ITeacherList
-): Promise<ITeacherList> {
+    body: ITeacherDTO
+): Promise<ITeacherDTO> {
   const { data } = await createAPI(
       '/content/teacher',
       'post',

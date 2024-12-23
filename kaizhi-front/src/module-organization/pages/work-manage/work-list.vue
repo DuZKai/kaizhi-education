@@ -107,6 +107,7 @@ export default class WorkList extends Vue {
   private async getWorkPageList() {
     this.listLoading = true
     this.listResult = await getWorkPageList(this.listQuery)
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

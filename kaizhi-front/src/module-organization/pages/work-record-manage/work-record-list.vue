@@ -98,6 +98,7 @@ export default class WorkRecordList extends Vue {
       this.listQuery,
       this.listQueryData
     )
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

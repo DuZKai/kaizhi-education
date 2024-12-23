@@ -103,6 +103,7 @@ export default class extends mixins(MixinTools) {
   private async getList() {
     this.listLoading = true
     this.listData = await memberPageList(this.listQuery)
+    this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
 

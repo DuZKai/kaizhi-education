@@ -163,6 +163,7 @@ export default class MediaList extends Vue {
   private async getMediaPageList() {
     this.listLoading = true
     this.listResult = await getMediaPageList(this.listQuery, this.listQueryData)
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

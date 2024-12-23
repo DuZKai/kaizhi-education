@@ -173,7 +173,7 @@ export default class extends Vue {
         this.baseInfoData.pic = this.baseInfoData.pic.replace(`${process.env.VUE_APP_SERVER_PICSERVER_URL}`, '')
         const result: ICourseBaseInfo = await submitBaseInfo(this.baseInfoData)
         if (result.id !== undefined) {
-          this.syncCourseBaseId = result.id
+          this.syncCourseBaseId = Number(result.id)
           resolve()
         }
       } else {

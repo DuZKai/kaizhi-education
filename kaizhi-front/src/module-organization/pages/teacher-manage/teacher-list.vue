@@ -75,7 +75,7 @@ import {
 } from '@/api/courses' // api interface 课程
 import MixinTools from '@/utils/mixins.vue'
 import SaveTeacherDialog from './components/teacher-add.vue'
-import {ITeacherList} from "@/entity/teacher";
+import {ITeacherDTO, ITeacherList} from "@/entity/teacher";
 
 @Component({
   name: 'TeacherList',
@@ -86,7 +86,7 @@ import {ITeacherList} from "@/entity/teacher";
 })
 export default class extends mixins(MixinTools) {
   // 查询
-  private listData: ITeacherList[] = [] // 数据体
+  private listData: ITeacherList = {} // 数据体
   private listLoading: boolean = false // 是否载入中
   private isDialogVisible: boolean = false
 
@@ -101,7 +101,7 @@ export default class extends mixins(MixinTools) {
     teacherName: ''
   }
 
-  private teacherData: ITeacherList = {
+  private teacherData: ITeacherDTO = {
     teacherName: '',
     position: '',
     introduction: '',
@@ -112,6 +112,7 @@ export default class extends mixins(MixinTools) {
   private async getList() {
     this.listLoading = true
     this.listData = await getTeachersList(this.listQuery, this.listQueryData)
+    this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
 
@@ -131,7 +132,7 @@ export default class extends mixins(MixinTools) {
     this.isDialogVisible = true
   }
 
-  private handleEdit(data: ITeacherList) {
+  private handleEdit(data: ITeacherDTO) {
     this.isDialogVisible = true
     // 先清空表单，再赋值，才使得图片显示
     let form = this.$refs.dialog as SaveTeacherDialog
@@ -145,7 +146,7 @@ export default class extends mixins(MixinTools) {
   }
 
   // 删除
-  private async handleDelete(data: ITeacherList) {
+  private async handleDelete(data: ITeacherDTO) {
     try {
       await this.showDeleteConfirm()
       await deleteTeacher(data.id)

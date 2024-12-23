@@ -171,6 +171,7 @@ export default class CourseCommentList extends Vue {
       })
     }
     this.listResult = listResult
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

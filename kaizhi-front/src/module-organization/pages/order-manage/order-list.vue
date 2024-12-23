@@ -173,6 +173,7 @@ export default class OrderList extends Vue {
   private async getOrderPageList() {
     this.listLoading = true
     this.listResult = await getOrderPageList(this.listQuery, this.listQueryData)
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

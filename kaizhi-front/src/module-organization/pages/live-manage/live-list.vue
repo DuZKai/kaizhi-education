@@ -94,6 +94,7 @@ export default class LiveList extends Vue {
   private async getLivePageList() {
     this.listLoading = true
     this.listResult = await getLivePageList(this.listQuery, this.listQueryData)
+    this.listResult.counts = Number(this.listResult.counts)
     this.listLoading = false
   }
 

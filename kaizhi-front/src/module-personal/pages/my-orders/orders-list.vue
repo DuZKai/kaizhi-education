@@ -170,6 +170,7 @@ export default class extends mixins(MixinTools) {
     this.listLoading = true
     this.listPostBody.status = state
     this.listData = await getMyOrdersPageList(this.listQuery, this.listPostBody)
+    this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
 
