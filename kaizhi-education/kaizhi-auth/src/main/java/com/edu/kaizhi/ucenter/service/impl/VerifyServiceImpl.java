@@ -46,11 +46,12 @@ public class VerifyServiceImpl implements VerifyService {
 
     @Override
     public void findPassword(FindPswDto findPswDto) {
-        String email = findPswDto.getEmail();
-        String checkcode = findPswDto.getCheckcode();
-        if (!verify(email, checkcode)) {
-            CustomizeException.cast("验证码输入错误");
-        }
+        // TODO:暂时屏蔽校验验证码
+        // String email = findPswDto.getEmail();
+        // String checkcode = findPswDto.getCheckcode();
+        // if (!verify(email, checkcode)) {
+        //     CustomizeException.cast("验证码输入错误");
+        // }
         String password = findPswDto.getPassword();
         String confirmpwd = findPswDto.getConfirmpwd();
         if (!password.equals(confirmpwd)) {
@@ -69,12 +70,13 @@ public class VerifyServiceImpl implements VerifyService {
     @Transactional
     public void register(RegisterDto registerDto) {
         String uuid = UUID.randomUUID().toString();
-        String email = registerDto.getEmail();
-        String checkcode = registerDto.getCheckcode();
-        Boolean verify = verify(email, checkcode);
-        if (!verify) {
-            CustomizeException.cast("验证码输入错误");
-        }
+        // TODO:暂时屏蔽校验验证码
+        // String email = registerDto.getEmail();
+        // String checkcode = registerDto.getCheckcode();
+        // Boolean verify = verify(email, checkcode);
+        // if (!verify) {
+        //     CustomizeException.cast("验证码输入错误");
+        // }
         String password = registerDto.getPassword();
         String confirmpwd = registerDto.getConfirmpwd();
         if (!password.equals(confirmpwd)) {

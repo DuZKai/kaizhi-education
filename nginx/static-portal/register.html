@@ -176,6 +176,9 @@
                     }
 
                 }).catch(error => {
+                    console.log("出错了")
+                    this.$message.error('请稍后重试')
+
                     if (error && error.response.data.errMessage) {
                         this.$message.error(error.response.data.errMessage)
                     } else {
@@ -202,6 +205,7 @@
             registerSubmit() {
                 registerfun(this.formdata).then(res => {
                     this.$message.success('注册成功请登录')
+                    window.location = "http://www.kaizhi.edu.cn/sign.html?returnUrl="+ Base64.encode("http://www.kaizhi.edu.cn/")
                 }).catch(error => {
 
                 })

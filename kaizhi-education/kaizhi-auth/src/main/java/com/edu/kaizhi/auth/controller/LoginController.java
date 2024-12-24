@@ -59,7 +59,6 @@ public class LoginController {
 
     @ApiOperation(value = "注册", tags = "注册")
     @PostMapping("/register")
-
     @Caching(evict = {
             @CacheEvict(cacheNames = ManNum, key = "'count'"),
             @CacheEvict(cacheNames = WomanNum, key = "'count'"),
