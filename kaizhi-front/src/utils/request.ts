@@ -66,7 +66,11 @@ service.interceptors.response.use(
       type: 'error',
       duration: 5 * 1000
     })
-    if(error.response.status=="401" && error.response.data.errMessage=='没有认证'){
+
+    // if(error.response.status=="401" && error.response.data.errMessage=='没有认证'){
+    //   window.location.href='http://www.kaizhi.edu.cn/sign.html'
+    // }
+    if(error.response.status=="401"){
       window.location.href='http://www.kaizhi.edu.cn/sign.html'
     }
     return Promise.reject(error)
