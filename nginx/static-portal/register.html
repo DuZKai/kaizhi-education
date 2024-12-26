@@ -103,6 +103,7 @@
                                    v-model="formdata.confirmpwd">
                             <span class="verif-span"></span>
                         </div>
+                    </div>
                 </li>
                 <li class="mag-left">
                     <div class="checkbox">
@@ -205,7 +206,7 @@
             registerSubmit() {
                 registerfun(this.formdata).then(res => {
                     this.$message.success('注册成功请登录')
-                    window.location = "http://www.kaizhi.edu.cn/sign.html?returnUrl="+ Base64.encode("http://www.kaizhi.edu.cn/")
+                    window.location = "http://www.kaizhi.edu.cn/sign.html?returnUrl=" + Base64.encode("http://www.kaizhi.edu.cn/")
                 }).catch(error => {
 
                 })

@@ -17,10 +17,12 @@ import Portal from '@/module-portal'
 import Organization from '@/module-organization'
 import Personal from '@/module-personal'
 import Entering from './module-entering'
+import RankingIndex from './module-index'
 Portal.install(router)
 Organization.install(router)
 Personal.install(router)
 Entering.install(router)
+RankingIndex.install(router)
 
 // 过滤器
 Object.keys(filters).forEach(key => {

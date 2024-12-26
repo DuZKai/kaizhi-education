@@ -45,7 +45,7 @@
     }
     // 背景
     .el-tabs__nav-scroll {
-      background-color: #2cb4ff;
+      background-color: #00a4ff;
       padding-left: 60px;
       padding-top: 6px;
     }

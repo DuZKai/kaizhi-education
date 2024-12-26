@@ -280,6 +280,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         BeanUtils.copyProperties(coursePublishPre, coursePublish);
         coursePublish.setStatus("203002");
         coursePublish.setCreateDate(LocalDateTime.now());
+        coursePublish.setOnlineDate(LocalDateTime.now());
+        coursePublish.setOfflineDate(null);
 
         // 先查询课程发布，如果有则更新，没有则添加
         CoursePublish coursePublishUpdate = coursePublishMapper.selectById(courseId);
