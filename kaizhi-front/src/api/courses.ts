@@ -14,6 +14,15 @@ export async function category(): Promise<ICourseCategory[]> {
   return data
 }
 
+// 需要修改课程列表
+export async function needModifyList(
+    params: any = undefined,
+    body: any = undefined
+): Promise<ICoursePageList> {
+  const { data } = await createAPI('/content/course/need-modify-list', 'post', params, body)
+  return data
+}
+
 // 课程列表
 export async function list(
   params: any = undefined,

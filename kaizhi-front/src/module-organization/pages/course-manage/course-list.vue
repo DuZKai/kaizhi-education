@@ -18,6 +18,7 @@
           placeholder="课程名称"
           suffix-icon="el-icon-search"
           v-model="listQueryData.courseName"
+          style="width: 218px"
       />
       <el-select v-model="listQueryData.auditStatus" clearable placeholder="请选择">
         <el-option
@@ -35,6 +36,17 @@
             :value="item.code"
         ></el-option>
       </el-select>
+      <el-switch
+          class="switch-container"
+          v-model="showCourseAll"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          :width="40"
+          @change="handleChangeList"
+          active-text="显示所有课程"
+          inactive-text="显示还需修改课程">
+      </el-switch>
+
     </div>
 
     <!-- 数据列表 -->
@@ -48,6 +60,7 @@
     >
       <el-table-column prop="name" label="课程名称" width="250"></el-table-column>
       <el-table-column prop="subsectionNum" label="任务数" align="center" width="100"></el-table-column>
+      <el-table-column prop="teacherNum" label="教师数" align="center" width="100"></el-table-column>
       <el-table-column label="创建时间" align="center" width="100">
         <template slot-scope="scope">
           <div>{{ scope.row.createDate | dateTimeFormat }}</div>
@@ -161,25 +174,20 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
+import {Component, Watch} from 'vue-property-decorator'
 import {mixins} from 'vue-class-component'
 import Pagination from '@/components/pagination/index.vue'
 import CourseAddTypeDialog from './course-addtype-dialog.vue'
 import {IKVData} from '@/api/types' // 通用 interface
 import {
-  AUDIT_STATUS, COURSE_AD_TYPE_STATUS,
+  AUDIT_STATUS,
+  COURSE_AD_TYPE_STATUS,
   COURSE_CHARGE_TYPE_STATUS,
   COUSE_PUBLIC_STATUS,
   COUSE_TYPE_STATUS
 } from '@/api/constants' // 通用常量定义
-import {
-  list,
-  commitCourse,
-  publishCourse,
-  offlineCourse,
-  removeCourse
-} from '@/api/courses' // api interface 课程
-import {ICoursePageList, ICourseBaseDTO} from '@/entity/course-page-list'
+import {commitCourse, list, needModifyList, offlineCourse, publishCourse, removeCourse} from '@/api/courses' // api interface 课程
+import {ICourseBaseDTO, ICoursePageList} from '@/entity/course-page-list'
 import MixinTools from '@/utils/mixins.vue'
 
 @Component({
@@ -247,10 +255,15 @@ export default class extends mixins(MixinTools) {
     auditStatus: ''
   }
 
+  private showCourseAll: boolean = true
+
   // 业务函数
   private async getList() {
     this.listLoading = true
-    this.listData = await list(this.listQuery, this.listQueryData)
+    if(this.showCourseAll)
+      this.listData = await list(this.listQuery, this.listQueryData)
+    else
+      this.listData = await needModifyList(this.listQuery, this.listQueryData)
     this.listData.counts = Number(this.listData.counts)
     this.listLoading = false
   }
@@ -272,6 +285,10 @@ export default class extends mixins(MixinTools) {
       //   '_blank'
       // )
     }
+  }
+
+  private handleChangeList() {
+    this.getList()
   }
 
   private handleEdit(index: number, row: ICourseBaseDTO) {
@@ -401,10 +418,16 @@ export default class extends mixins(MixinTools) {
   margin-top: 16px;
 
   div {
-    width: 218px;
     margin-right: 10px;
   }
 }
+
+.switch-container {
+  float: right;
+  margin-top: 10px;
+  zoom: 1.2;
+}
+
 
 .dataList {
   margin-top: 16px;

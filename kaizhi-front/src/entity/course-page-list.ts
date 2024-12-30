@@ -122,6 +122,10 @@ export interface ICourseBaseDTO {
    * 适用人群
    */
   users: string
+  /**
+   * 教师数
+   * */
+  teacherNum?: number
 }
 
 /**
