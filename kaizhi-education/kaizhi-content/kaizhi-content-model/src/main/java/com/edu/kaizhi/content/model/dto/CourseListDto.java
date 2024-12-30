@@ -66,4 +66,8 @@ public class CourseListDto {
      */
     private int subsectionNum;
 
+    /**
+     * 课程教师人数
+     */
+    private int teacherNum;
 }

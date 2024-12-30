@@ -15,9 +15,11 @@ public interface CourseBaseInfoService {
      * @param companyId 机构ID
      * @param pageParams 分页参数
      * @param queryCourseParamsDto 查询条件
+     * @param completed 是否查询完整的课程信息
      * @return PageResult<CourseBase> 查询课程信息列表
      */
-    PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams,
+                                                  QueryCourseParamsDto queryCourseParamsDto, Boolean completed);
 
     /**
      * 新增课程

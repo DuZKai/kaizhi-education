@@ -8,6 +8,7 @@ import com.edu.kaizhi.content.mapper.*;
 import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.model.po.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -47,7 +48,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     private CoursePublishMapper coursePublishMapper;
 
     // 课程分页查询
-    public PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseListDto> queryCourseBaseList(Long companyId, PageParams pageParams,
+                                                         QueryCourseParamsDto queryCourseParamsDto,
+                                                         Boolean completed) {
 
         Long pageNo = pageParams.getPageNo();
         Long pageSize = pageParams.getPageSize();
@@ -55,7 +58,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         LambdaQueryWrapper<CourseBase> queryWrapperBase = new LambdaQueryWrapper<>();
 
         // 根据培训机构ID拼接查询条件
-        if(companyId != -1L)
+        if (companyId != -1L)
             queryWrapperBase.eq(CourseBase::getCompanyId, companyId);
 
         //拼接查询条件
@@ -71,25 +74,39 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
         List<CourseListDto> items = new ArrayList<>();
         for (CourseBase courseBase : pageResultBase) {
+            boolean completedInfo = true;
             CourseListDto courseListDto = new CourseListDto();
             BeanUtils.copyProperties(courseBase, courseListDto);
             Long id = courseBase.getId();
             //查询课程营销信息
             CourseMarket courseMarket = courseMarketMapper.selectById(id);
-            // 不存在营销信息说明信息不完整，不加入
+            // 不存在营销信息说明信息不完整
             if (courseMarket == null)
-                continue;
+                completedInfo = false;
 
-            BeanUtils.copyProperties(courseMarket, courseListDto);
+            if (courseMarket != null)
+                BeanUtils.copyProperties(courseMarket, courseListDto);
 
+            // 查询课程计划数
             LambdaQueryWrapper<Teachplan> queryWrapperTeachPlan = new LambdaQueryWrapper<>();
             queryWrapperTeachPlan.eq(Teachplan::getCourseId, id);
             int subsectionNum = teachplanMapper.selectCount(queryWrapperTeachPlan);
-            if(subsectionNum == 0)
-                continue;
+            if (subsectionNum == 0)
+                completedInfo = false;
 
             courseListDto.setSubsectionNum(subsectionNum);
-            items.add(courseListDto);
+
+            // 查询课程教师人数
+            LambdaQueryWrapper<CourseTeacher> teacherLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            teacherLambdaQueryWrapper.eq(CourseTeacher::getCourseId, id);
+            int teacherNum = courseTeacherMapper.selectCount(teacherLambdaQueryWrapper);
+            if (teacherNum == 0)
+                completedInfo = false;
+
+            courseListDto.setTeacherNum(teacherNum);
+            // 只有同正同负才加入
+            if(completedInfo == completed)
+                items.add(courseListDto);
         }
         //总记录数
         long total = items.size();
@@ -124,7 +141,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //设置发布状态
         courseBaseNew.setStatus(UNPUBLISHED);
         //机构id
-        if(companyId == -1L)
+        if (companyId == -1L)
             companyId = 1232141425L;
         courseBaseNew.setCompanyId(companyId);
         //添加时间
@@ -147,8 +164,6 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //查询课程基本信息及营销信息并返回
         return getCourseBaseInfo(courseId);
     }
-
-
 
     //保存课程营销信息
     private int saveCourseMarket(CourseMarket courseMarketNew) {

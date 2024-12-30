@@ -35,7 +35,16 @@ public class CourseBaseInfoController {
     @RequiresUser
     public PageResult<CourseListDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParams) {
         Long companyId = UserContext.getCompanyId();
-        return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParams);
+        return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParams, true);
+    }
+
+
+    @ApiOperation("需要修改课程分页查询信息列表")
+    @PostMapping("/course/need-modify-list")
+    @RequiresUser
+    public PageResult<CourseListDto> needModifyList(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParams) {
+        Long companyId = UserContext.getCompanyId();
+        return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParams, false);
     }
 
 
