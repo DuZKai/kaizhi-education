@@ -10,6 +10,8 @@ import com.edu.kaizhi.media.model.po.MediaFiles;
 import com.edu.kaizhi.media.service.MediaFileService;
 import com.edu.kaizhi.securityUser.Context.UserContext;
 import com.edu.kaizhi.securityUser.annotation.RequiresUser;
+import com.edu.kaizhi.securityUser.dto.User;
+import com.edu.kaizhi.securityUser.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +43,18 @@ public class MediaFilesController {
     }
 
     @ApiOperation("上传文件")
-    @RequiresUser
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value = "objectName", required = false) String objectName,
                                       @RequestParam(value = "companyId", required = false) Long companyId) throws IOException {
         if (companyId == null) {
+            // 不可以直接使用注解，XXL调用会导致无法获取到用户信息
+            User user = SecurityUtil.getUser();
+            if (user == null) {
+                CustomizeException.cast("用户未登录", 401);
+            }
+            // 将当前用户存储到 ThreadLocal 中
+            UserContext.setUser(user);
             companyId = UserContext.getCompanyId();
         }
         String originalFilename = filedata.getOriginalFilename();

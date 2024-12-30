@@ -300,6 +300,8 @@ docker restart kibana
 docker restart elasticsearch
 ```
 
+生成ElasticSearch搜索课程可以查看./ES创建索引.md，也可以执行XXL-JOB（因为sql的mq_message表中有课程记录）
+
 
 
 ### Redis

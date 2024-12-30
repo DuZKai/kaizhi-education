@@ -21,6 +21,7 @@ pip install beautifulsoup4
 pip install requests
 pip install urllib3
 pip install fake_useragent
+pip install faker
 ```
 
 按照顺序执行：courseInfo.py -> detail.py -> user_generate.py
