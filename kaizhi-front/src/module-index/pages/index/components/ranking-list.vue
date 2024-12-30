@@ -57,7 +57,7 @@ export default class extends Vue {
 <style lang="scss" scoped>
 
 .course-hot-class {
-  width: 370px;
+  width: 387px;
   border-radius: 8px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -70,7 +70,7 @@ export default class extends Vue {
 
 .one-course-card {
   margin-bottom: 8px;
-  width: 370px;
+  width: 387px;
   display: -ms-flexbox;
   display: flex;
   padding-left: 14px;
@@ -133,7 +133,7 @@ export default class extends Vue {
 }
 
 .one-course-card-main {
-  width: 370px;
+  width: 387px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
