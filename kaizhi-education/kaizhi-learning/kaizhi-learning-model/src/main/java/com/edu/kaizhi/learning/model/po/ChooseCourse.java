@@ -54,7 +54,15 @@ public class ChooseCourse implements Serializable {
      */
     private Integer validDays;
 
+    /**
+     * 课程价格
+     */
     private Float coursePrice;
+
+    /**
+     * 课程图片
+     */
+    private String coursePic;
 
     /**
      * 选课状态

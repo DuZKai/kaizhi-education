@@ -35,7 +35,6 @@
             :topFlag="hotCourse.topFlag"
             :boldName="hotCourse.boldName"
             :courseItem="hotCourse.courseItem"/>
-
         <RankingList
             :cardName="newCourse.cardName"
             :topFlag="newCourse.topFlag"
@@ -57,6 +56,8 @@ import {Component, Vue} from 'vue-property-decorator'
 import RankingList from './components/ranking-list.vue'
 import OneCourseCard from './components/one-course-card.vue'
 import Pagination from "@/components/pagination/index.vue";
+import {hotTop50} from "@/api/rank";
+import {ICourseInfo} from "@/entity/rank-page-link";
 
 @Component({
   components: {
@@ -65,74 +66,13 @@ import Pagination from "@/components/pagination/index.vue";
     OneCourseCard
   }
 })
+
 export default class RankingListIndex extends Vue {
   hotCourse = {
     cardName: "热门排行",
     topFlag: true,
     boldName: "POPULAR COURSES",
-    courseItem: [
-      {
-        id: 1,
-        name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 2,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 3,
-        name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 4,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 5,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 6,
-        name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 7,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 8,
-        name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 9,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      {
-        id: 10,
-        name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-      },
-      // 这里可以添加更多课程项
-    ]
+    courseItem:  [] as ICourseInfo[]
   };
 
   newCourse = {
@@ -141,64 +81,64 @@ export default class RankingListIndex extends Vue {
     boldName: "NEW COURSES",
     courseItem: [
       {
-        id: 1,
+        courseId: 1,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 2,
+        courseId: 2,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 3,
+        courseId: 3,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 4,
+        courseId: 4,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 5,
+        courseId: 5,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 6,
+        courseId: 6,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 7,
+        courseId: 7,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 8,
+        courseId: 8,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 9,
+        courseId: 9,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 10,
+        courseId: 10,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       // 这里可以添加更多课程项
     ]
@@ -210,192 +150,162 @@ export default class RankingListIndex extends Vue {
     boldName: "FIVE-STAR",
     courseItem: [
       {
-        id: 1,
+        courseId: 1,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 2,
+        courseId: 2,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 3,
+        courseId: 3,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 4,
+        courseId: 4,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 5,
+        courseId: 5,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 6,
+        courseId: 6,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 7,
+        courseId: 7,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 8,
+        courseId: 8,
         name: '大学物理不挂科-1小时学完振动与波动学',
-        people: '281794',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '281794',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 9,
+        courseId: 9,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        id: 10,
+        courseId: 10,
         name: '数据科学与机器学习入门',
-        people: '1200',
-        imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        userCount: '1200',
+        image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       // 这里可以添加更多课程项
     ]
   }
 
-  searchCourse = [{
-    id: 1,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseOrg: '猴博士',
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: true,
-    coursePrice: 0,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  },{
-    id: 2,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseOrg: '猴博士',
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: false,
-    coursePrice: 39,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  },{
-    id: 3,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseOrg: '猴博士',
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: false,
-    coursePrice: 39,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  },{
-    id: 4,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseOrg: '猴博士',
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: false,
-    coursePrice: 39,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  },{
-    id: 5,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseOrg: '猴博士',
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: false,
-    coursePrice: 39,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  },{
-    id: 6,
-    courseName: '大学物理不挂科-1小时学完振动与波动学',
-    coursePeople: 281794,
-    courseTeacher: '猴博士爱讲课',
-    courseTag: '大学先修课',
-    courseFree: false,
-    coursePrice: 39,
-    courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-  }
+  searchCourse = [
+    {
+      id: 1,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseOrg: '猴博士',
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: true,
+      coursePrice: 0,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }, {
+      id: 2,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseOrg: '猴博士',
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: false,
+      coursePrice: 39,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }, {
+      id: 3,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseOrg: '猴博士',
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: false,
+      coursePrice: 39,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }, {
+      id: 4,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseOrg: '猴博士',
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: false,
+      coursePrice: 39,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }, {
+      id: 5,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseOrg: '猴博士',
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: false,
+      coursePrice: 39,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }, {
+      id: 6,
+      courseName: '大学物理不挂科-1小时学完振动与波动学',
+      coursePeople: 281794,
+      courseTeacher: '猴博士爱讲课',
+      courseTag: '大学先修课',
+      courseFree: false,
+      coursePrice: 39,
+      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+    }
   ]
-  // /**
-  //  * 生命周期钩子
-  //  */
-  // created() {
-  //   this.init()
-  // }
-  //
-  // /**
-  //  * 初始化
-  //  */
-  // private init() {
-  //   const hotCourse = {
-  //     cardName: "热门排行",
-  //     topFlag: true,
-  //     boldName: "POPULAR COURSES",
-  //     courseItem: [
-  //       {
-  //         id: 1,
-  //         name: '大学物理不挂科-1小时学完振动与波动学',
-  //         people: '281794',
-  //         imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-  //       },
-  //       {
-  //         id: 2,
-  //         name: '数据科学与机器学习入门',
-  //         people: '1200',
-  //         imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-  //       },
-  //       {
-  //         id: 3,
-  //         name: '大学物理不挂科-1小时学完振动与波动学',
-  //         people: '281794',
-  //         imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-  //       },
-  //       {
-  //         id: 4,
-  //         name: '数据科学与机器学习入门',
-  //         people: '1200',
-  //         imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-  //       },
-  //       {
-  //         id: 5,
-  //         name: '数据科学与机器学习入门',
-  //         people: '1200',
-  //         imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
-  //       },
-  //       // 这里可以添加更多课程项
-  //     ]
-  //   };
-  // }
+
+
+  /**
+   * 生命周期钩子
+   */
+  created() {
+    this.init()
+  }
+
+  /**
+   * 初始化
+   */
+  private async init() {
+    this.hotCourse.courseItem = await hotTop50();
+    this.hotCourse.courseItem.forEach(item => {
+      item.image = `${process.env.VUE_APP_SERVER_PICSERVER_URL}` + item.image
+    })
+  }
 
 }
 </script>
 
 <style lang="scss" scoped>
-.index-page{
+.index-page {
   background-color: #f4f5f7;
   margin-top: 16px;
   width: 1200px;
 
   min-height: 550px;
 }
+
 .one-module {
   min-height: 395px;
   margin-top: 10px;

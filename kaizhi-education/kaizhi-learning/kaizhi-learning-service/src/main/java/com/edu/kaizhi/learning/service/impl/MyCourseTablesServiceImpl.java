@@ -104,6 +104,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         chooseCourse.setCoursePrice(coursePublish.getPrice());
         chooseCourse.setValidDays(365);//免费课程默认365
         chooseCourse.setStatus("701001");//选课成功
+        chooseCourse.setCoursePic(coursePublish.getPic());
         chooseCourse.setValidtimeStart(LocalDateTime.now());
         chooseCourse.setValidtimeEnd(LocalDateTime.now().plusDays(365));
         chooseCourse.setCoursePrice(0f);//免费课程价格为0
@@ -150,6 +151,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         chooseCourse.setCreateDate(LocalDateTime.now());
         chooseCourse.setCoursePrice(coursePublish.getPrice());
         chooseCourse.setValidDays(365);
+        chooseCourse.setCoursePic(coursePublish.getPic());
         chooseCourse.setStatus("701002");//待支付
         chooseCourse.setValidtimeStart(LocalDateTime.now());
         chooseCourse.setValidtimeEnd(LocalDateTime.now().plusDays(365));
@@ -225,7 +227,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         return courseTablesDto;
     }
 
-    public PageResult<CourseTables> myCouresTabls( MyCourseTableParams params){
+    public PageResult<CourseTables> myCourseTables( MyCourseTableParams params){
         //页码
         long pageNo = params.getPage();
         //每页记录数,固定为4

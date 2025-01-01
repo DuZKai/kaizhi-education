@@ -35,7 +35,7 @@ public interface MyCourseTablesService {
      * @param params
      * @return com.edu.kaizhi.base.model.PageResult<com.edu.kaizhi.learning.model.po.CourseTables>
      */
-    public PageResult<CourseTables> myCouresTabls(MyCourseTableParams params);
+    public PageResult<CourseTables> myCourseTables(MyCourseTableParams params);
 
     /**
      * 保存选课状态

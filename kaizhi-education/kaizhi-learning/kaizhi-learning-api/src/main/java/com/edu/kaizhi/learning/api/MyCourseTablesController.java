@@ -61,7 +61,7 @@ public class MyCourseTablesController {
         //设置当前的登录用户
         params.setUserId(user.getId());
 
-        return myCourseTablesService.myCouresTabls(params);
+        return myCourseTablesService.myCourseTables(params);
 
     }
 

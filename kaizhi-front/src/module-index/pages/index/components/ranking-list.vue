@@ -15,12 +15,12 @@
         <el-carousel-item v-for="item in chunk(courseItem, 5)" :key="item[0].id">
           <div class="one-course-card-container">
             <div class="one-course-card" v-for="course in item" :key="course.id">
-              <span class="one-course-number">{{ course.id }}</span>
-              <img :src="course.imageUrl" alt="course image" />
+              <span class="one-course-number">{{ course.index }}</span>
+              <img :src="course.image" alt="course image" />
               <div class="one-course-desc">
                 <p class="one-course-name">{{ course.name }}</p>
                 <p class="one-course-blank"></p>
-                <p class="one-course-people">{{ course.people }}人参加</p>
+                <p class="one-course-people">{{ course.userCount }}人参加</p>
               </div>
             </div>
           </div>
@@ -151,8 +151,8 @@ export default class extends Vue {
 }
 
 .one-course-card img {
-  width: 112px;
-  height: auto;
+  width: 135px;
+  height: 76px;
 }
 
 .one-course-number {
@@ -196,7 +196,7 @@ export default class extends Vue {
   color: #999;
   line-height: 17px;
   position: absolute;
-  left: 160px;
+  left: 185px;
   bottom: 0;
 }
 

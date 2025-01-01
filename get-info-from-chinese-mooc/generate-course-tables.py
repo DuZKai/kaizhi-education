@@ -16,6 +16,7 @@ def generate_choose_course_sqls(course_info):
       `user_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户id',
       `company_id` bigint NOT NULL COMMENT '机构id',
       `order_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '选课类型',
+      `course_pic` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '课程图片',
       `create_date` datetime NOT NULL COMMENT '添加时间',
       `course_price` float(10,2) NOT NULL COMMENT '课程价格',
       `valid_days` int NOT NULL COMMENT '课程有效期(天)',
@@ -36,6 +37,7 @@ def generate_choose_course_sqls(course_info):
       `company_id` bigint NOT NULL COMMENT '机构id',
       `course_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程名称',
       `course_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '课程类型',
+      `course_pic` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '课程图片',
       `create_date` datetime NOT NULL COMMENT '添加时间',
       `validtime_start` datetime DEFAULT NULL COMMENT '开始服务时间',
       `validtime_end` datetime NOT NULL COMMENT '到期时间',
@@ -50,19 +52,19 @@ def generate_choose_course_sqls(course_info):
     course_table_sqls.append(course_table_sql)
 
     choose_course_sql_template = """
-    INSERT INTO `choose_course` (`id`, `course_id`, `course_name`, `user_id`, `company_id`, `order_type`, `create_date`, `course_price`, `valid_days`, `status`, `validtime_start`, `validtime_end`, `remarks`)
-    VALUES ({id}, {course_id}, '{course_name}', '{user_id}', 1232141425, '{order_type}', '{create_date}', {course_price}, 365, '701001', '{validtime_start}', '{validtime_end}', '{remarks}');
+    INSERT INTO `choose_course` (`id`, `course_id`, `course_name`, `user_id`, `company_id`, `order_type`, `course_pic`, `create_date`, `course_price`, `valid_days`, `status`, `validtime_start`, `validtime_end`, `remarks`)
+    VALUES ({id}, {course_id}, '{course_name}', '{user_id}', 1232141425, '{order_type}', '{course_pic}', '{create_date}', {course_price}, 365, '701001', '{validtime_start}', '{validtime_end}', '{remarks}');
     """
     course_table_sql_template = """
-    INSERT INTO `course_tables` (`id`, `choose_course_id`, `user_id`, `course_id`, `company_id`, `course_name`, `course_type`, `create_date`, `validtime_start`, `validtime_end`, `update_date`, `remarks`) 
-    VALUES ({id}, {choose_course_id}, '{user_id}', {course_id}, 1232141425, '{course_name}', '{course_type}', '{create_date}', '{validtime_start}', '{validtime_end}', '{update_date}', '{remarks}');
+    INSERT INTO `course_tables` (`id`, `choose_course_id`, `user_id`, `course_id`, `company_id`, `course_name`, `course_type`, `course_pic`, `create_date`, `validtime_start`, `validtime_end`, `update_date`, `remarks`) 
+    VALUES ({id}, {choose_course_id}, '{user_id}', {course_id}, 1232141425, '{course_name}', '{course_type}', '{course_pic}', '{create_date}', '{validtime_start}', '{validtime_end}', '{update_date}', '{remarks}');
     """
 
     id = 1
     for index, info in enumerate(course_info):
         user_set = {}
 
-        course_price = info[18]
+        course_price = info[20]
         if course_price == 0 or course_price == "0":
             order_type = "700001"
         else:
@@ -82,12 +84,17 @@ def generate_choose_course_sqls(course_info):
             # 加一年
             validtime_end = (datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d %H:%M:%S')
 
+            course_id = info[0]
+            course_name = info[3]
+            course_pic = info[11]
+
             choose_course_sql = choose_course_sql_template.format(
                 id=id,
-                course_id=info[0],
-                course_name=info[2],
+                course_id=course_id,
+                course_name=course_name,
                 user_id=user_id,
                 order_type=order_type,
+                course_pic=course_pic,
                 create_date=create_date,
                 course_price=course_price,
                 validtime_start=validtime_start,
@@ -98,9 +105,10 @@ def generate_choose_course_sqls(course_info):
                 id=id,
                 choose_course_id=id,
                 user_id=user_id,
-                course_id=info[0],
-                course_name=info[2],
+                course_id=course_id,
+                course_name=course_name,
                 course_type=order_type,
+                course_pic=course_pic,
                 create_date=create_date,
                 validtime_start=validtime_start,
                 validtime_end=validtime_end,
@@ -121,19 +129,22 @@ if __name__ == "__main__":
     with open("now_course.txt", 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
-            detail = line.strip().split("\"")
-            detail = [x for x in detail if x != "" and x != " "]
+            # 去除前后冒号
+            detail = line.strip().split(",")
+            # detail = [x for x in detail if x != "" and x != " "]
             course_info.append(detail)
 
     # 将第一列作为id值，相同id列表合并为一行
     course_dict = {}
     for info in course_info:
+        for index, item in enumerate(info):
+            info[index] = item.strip('"')
         if info[0] not in course_dict:
             course_dict[info[0]] = []
         course_dict[info[0]].extend(info)
 
     course_info = [v for k, v in course_dict.items()]
-
+    # 需要注意这里是不是course_info都是相同长度，长度不同会报错
     choose_course_sqls, course_table_sqls = generate_choose_course_sqls(course_info)
 
     folder = 'sql'
