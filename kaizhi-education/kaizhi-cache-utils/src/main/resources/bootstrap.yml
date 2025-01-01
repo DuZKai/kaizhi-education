@@ -1,0 +1,16 @@
+#微服务配置
+spring:
+  cloud:
+    nacos:
+      config: # 配置文件相关信息
+        namespace: kaizhi_edu
+        file-extension: yaml
+        group: kaizhi-education
+        # 找到共享的配置文件
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true
+          - data-id: redis-${spring.profiles.active}.yaml
+            group: kaizhi-education-common
+            refresh: true

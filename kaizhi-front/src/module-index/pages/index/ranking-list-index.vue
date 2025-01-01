@@ -81,61 +81,61 @@ export default class RankingListIndex extends Vue {
     boldName: "NEW COURSES",
     courseItem: [
       {
-        courseId: 1,
+        index: 1,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 2,
+        index: 2,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 3,
+        index: 3,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 4,
+        index: 4,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 5,
+        index: 5,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 6,
+        index: 6,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 7,
+        index: 7,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 8,
+        index: 8,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 9,
+        index: 9,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 10,
+        index: 10,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
@@ -150,61 +150,61 @@ export default class RankingListIndex extends Vue {
     boldName: "FIVE-STAR",
     courseItem: [
       {
-        courseId: 1,
+        index: 1,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 2,
+        index: 2,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 3,
+        index: 3,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 4,
+        index: 4,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 5,
+        index: 5,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 6,
+        index: 6,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 7,
+        index: 7,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 8,
+        index: 8,
         name: '大学物理不挂科-1小时学完振动与波动学',
         userCount: '281794',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 9,
+        index: 9,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
       },
       {
-        courseId: 10,
+        index: 10,
         name: '数据科学与机器学习入门',
         userCount: '1200',
         image: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'

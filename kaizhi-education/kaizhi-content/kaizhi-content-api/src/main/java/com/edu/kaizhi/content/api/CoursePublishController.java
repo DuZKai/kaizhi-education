@@ -27,6 +27,7 @@ import java.util.Objects;
 /**
  * 课程预览，发布
  */
+@Api(value = "课程发布接口",tags = "课程发布接口")
 @Controller
 public class CoursePublishController {
     @Autowired

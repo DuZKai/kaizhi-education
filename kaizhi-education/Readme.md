@@ -40,8 +40,9 @@ rabbitMQ使用
 ### 大功能
 
 - 使用Chromedriver和Beautifulsoup4下载学堂真实课程数据
+- 热门课程排行榜加入，并加入缓存，每日零点通过定时任务Scheduled更新排行榜
 - 教师管理页面，添加教师功能改进，使得一个教师可以教多门课程
-- 使用openfeign解决令牌中继问题
+- 使用FeignRequestInterceptor拦截器实现使用openfeign时中继令牌功能
 - 加入Guava带有Redis过期时间的布隆过滤器，拦截课程发布表的白名单查询，且每次程序重新运行将现有布隆过滤器更新
 - 加入互斥锁解决缓存击穿问题，并且加入Redis序列化
 - 搜索功能方法改进，新增广告状态课程，当用户查询已有课程，会根据isAd字段，使用ElasticSearch对广告课程增加固定权重，并且放入缓存
@@ -332,6 +333,22 @@ docker restart elasticsearch
 
 
 
+## 服务注册地址
+
+| 服务名    | 端口  |
+| --------- | ----- |
+| content   | 63040 |
+| system    | 63110 |
+| auth      | 8160  |
+| checkcode | 63075 |
+| gateway   | 63010 |
+| learning  | 63020 |
+| media     | 63050 |
+| orders    | 63030 |
+| search    | 63080 |
+
+
+
 ## Tips
 
 - 在使用时，message-sdk模块需要先编译安装才能被content、order、learning模块编译完成
@@ -405,6 +422,7 @@ docker restart elasticsearch
 - 在修改前后需要让缓存失效
 - 课程发布时课程搜索索引同步可以使用Canal去实现
 - Redis秒杀课程、发布笔记、好友关注、用户签到
+- 优化swagger到knife4j，找到为什么别的服务无法注册到swagger
 - AOP缓存优化？每次得到值后放入内容，在进入方法前判断是否内存有值
 - 限制老师和学生进入后台界面
 

@@ -9,4 +9,5 @@ public class RedisConfig {
 
     public static final String SearchList = "search:list";
     public static final String CategoryList = "content:course-category";
+    public static final String HotList = "rank:hot";
 }
