@@ -13,7 +13,7 @@
       <div class="all-class-show">
 
         <OneCourseCard
-            v-for="item in searchCourse"
+            v-for="item in searchCourse.courseItem"
             :key="item.id"
             :courseName="item.courseName"
             :coursePeople="item.coursePeople"
@@ -24,7 +24,16 @@
             :coursePrice="item.coursePrice"
             :courseImageUrl="item.courseImageUrl"
         />
-        <!--        <OneCourseCard></OneCourseCard>-->
+      </div>
+      <div class="dataList-pagination">
+        <Pagination
+            :class="'all-course-page-style'"
+            v-show="searchCourse.counts > 0"
+            :total="searchCourse.counts"
+            :page.sync="listQuery.pageNo"
+            :limit.sync="listQuery.pageSize"
+            @pagination="getSearchList"
+        />
       </div>
     </div>
     <div class="one-module">
@@ -58,8 +67,11 @@ import OneCourseCard from './components/one-course-card.vue'
 import Pagination from "@/components/pagination/index.vue";
 import {hotTop50} from "@/api/rank";
 import {ICourseInfo} from "@/entity/rank-page-link";
+import {mixins} from "vue-class-component";
+import MixinTools from "@/utils/mixins.vue";
 
 @Component({
+  name: 'RankingListIndex',
   components: {
     Pagination,
     RankingList,
@@ -67,15 +79,15 @@ import {ICourseInfo} from "@/entity/rank-page-link";
   }
 })
 
-export default class RankingListIndex extends Vue {
-  hotCourse = {
+export default class extends mixins(MixinTools) {
+  private hotCourse = {
     cardName: "热门排行",
     topFlag: true,
     boldName: "POPULAR COURSES",
-    courseItem:  [] as ICourseInfo[]
+    courseItem: [] as ICourseInfo[]
   };
 
-  newCourse = {
+  private newCourse = {
     cardName: "新课排行",
     topFlag: false,
     boldName: "NEW COURSES",
@@ -144,7 +156,7 @@ export default class RankingListIndex extends Vue {
     ]
   }
 
-  fiveStarCourse = {
+  private fiveStarCourse = {
     cardName: "五星评价",
     topFlag: true,
     boldName: "FIVE-STAR",
@@ -213,85 +225,96 @@ export default class RankingListIndex extends Vue {
     ]
   }
 
-  searchCourse = [
-    {
-      id: 1,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseOrg: '猴博士',
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: true,
-      coursePrice: 0,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }, {
-      id: 2,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseOrg: '猴博士',
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: false,
-      coursePrice: 39,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }, {
-      id: 3,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseOrg: '猴博士',
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: false,
-      coursePrice: 39,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }, {
-      id: 4,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseOrg: '猴博士',
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: false,
-      coursePrice: 39,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }, {
-      id: 5,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseOrg: '猴博士',
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: false,
-      coursePrice: 39,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }, {
-      id: 6,
-      courseName: '大学物理不挂科-1小时学完振动与波动学',
-      coursePeople: 281794,
-      courseTeacher: '猴博士爱讲课',
-      courseTag: '大学先修课',
-      courseFree: false,
-      coursePrice: 39,
-      courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-    }
-  ]
+  private searchCourse = {
+    counts: 6,
+    courseItem: [
+      {
+        id: 1,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseOrg: '猴博士',
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: true,
+        coursePrice: 0,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }, {
+        id: 2,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseOrg: '猴博士',
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: false,
+        coursePrice: 39,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }, {
+        id: 3,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseOrg: '猴博士',
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: false,
+        coursePrice: 39,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }, {
+        id: 4,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseOrg: '猴博士',
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: false,
+        coursePrice: 39,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }, {
+        id: 5,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseOrg: '猴博士',
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: false,
+        coursePrice: 39,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }, {
+        id: 6,
+        courseName: '大学物理不挂科-1小时学完振动与波动学',
+        coursePeople: 281794,
+        courseTeacher: '猴博士爱讲课',
+        courseTag: '大学先修课',
+        courseFree: false,
+        coursePrice: 39,
+        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
+      }
+    ]
+  }
 
+  private listQuery = {
+    pageNo: 1,
+    pageSize: 10
+  }
 
   /**
    * 生命周期钩子
    */
   created() {
-    this.init()
+    this.getHotTop50()
   }
 
   /**
    * 初始化
    */
-  private async init() {
+  private async getHotTop50() {
     this.hotCourse.courseItem = await hotTop50();
     this.hotCourse.courseItem.forEach(item => {
       item.image = `${process.env.VUE_APP_SERVER_PICSERVER_URL}` + item.image
     })
+  }
+
+  private getSearchList(){
+    console.log('getSearchList')
   }
 
 }
@@ -362,11 +385,25 @@ export default class RankingListIndex extends Vue {
   min-height: 200px;
   overflow: hidden;
   padding-top: 24px;
-  margin-bottom: 32px;
+  //margin-bottom: 32px;
 }
 
 .ranking-list-all {
   display: flex;
   justify-content: space-between;
+}
+
+.dataList-pagination {
+  text-align: center;
+  width: 100%;
+}
+
+.all-course-page-style{
+  background: #fff;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: none;
 }
 </style>

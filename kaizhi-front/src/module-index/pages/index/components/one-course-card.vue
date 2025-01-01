@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import Pagination from "@/components/pagination/index.vue";
 
 @Component({
   name: "OneCourseCard"
