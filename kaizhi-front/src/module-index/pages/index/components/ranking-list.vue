@@ -12,17 +12,17 @@
     </div>
     <div class="one-course-card-main">
       <el-carousel height="430px" :autoplay="false" :loop="false">
-        <el-carousel-item v-for="item in chunk(courseItem, 5)" :key="item[0].id">
+        <el-carousel-item v-for="item in chunk(courseItem, 5)" :key="item[0].courseId">
           <div class="one-course-card-container">
-            <div class="one-course-card" v-for="course in item" :key="course.id">
+            <a :href=get_href_url(course.courseId) target="_blank" class="one-course-card" v-for="course in item" :key="course.courseId">
               <span class="one-course-number">{{ course.index }}</span>
-              <img :src="course.image" alt="course image" />
+              <img :src="course.image" alt="course image"/>
               <div class="one-course-desc">
                 <p class="one-course-name">{{ course.name }}</p>
                 <p class="one-course-blank"></p>
                 <p class="one-course-people">{{ course.userCount }}人参加</p>
               </div>
-            </div>
+            </a>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -31,27 +31,42 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 
 @Component({
   name: "RankingList"
 })
 export default class extends Vue {
-  @Prop({ required: true }) private cardName!: string;
-  @Prop({ default: true }) private topFlag!: boolean;
-  @Prop({ required: true }) private boldName!: string;
-  @Prop({ default: () =>
-          [{ id: 1, name: '大学物理不挂科-1小时学完振动与波动学', people: '281794', imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png' },
-           { id: 2, name: '数据科学与机器学习入门', people: '1200', imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png' }
-          ]
+  @Prop({required: true}) private cardName!: string;
+  @Prop({default: true}) private topFlag!: boolean;
+  @Prop({required: true}) private boldName!: string;
+  @Prop({
+    default: () =>
+        [{
+          id: 1,
+          name: '大学物理不挂科-1小时学完振动与波动学',
+          people: '281794',
+          imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+        },
+          {
+            id: 2,
+            name: '数据科学与机器学习入门',
+            people: '1200',
+            imageUrl: 'https://mooc-image.nosdn.127.net/d135fb7f32ce42049f94eb79627505b3.png'
+          }
+        ]
   }) private courseItem!: { id: number, name: string, people: string, imageUrl: string }[];
 
   chunk(arr: any[], size: number) {
     return arr.reduce((acc, _, i) => (i % size ? acc[acc.length - 1].push(_) : acc.push([_])) && acc, []);
   }
+
+  get_href_url(id: number) {
+    return `${process.env.VUE_APP_CLIENT_PORTAL_URL}/course/` + id + '.html';
+
+  }
 }
 </script>
-
 
 
 <style lang="scss" scoped>
@@ -77,6 +92,9 @@ export default class extends Vue {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: relative;
+  text-decoration:none; // 去掉下划线
+  color: white; // 颜色变白
+  outline:none; // 去点击后虚线框
 }
 
 .one-course-card-top-name {
