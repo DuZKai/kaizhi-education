@@ -45,19 +45,28 @@
 
       </div>
       <div class="all-class-show">
-
-        <OneCourseCard
-            v-for="item in searchCourse.courseItem"
-            :key="item.id"
-            :courseName="item.name"
-            :coursePeople="item.coursePeople"
-            :companyName="item.companyName"
-            :courseTeacher="item.courseTeacher"
-            :courseTag="item.tags"
-            :coursePrice="item.price"
-            :pic="item.pic"
-            :isAd="item.isAd"
-        />
+        <a :href=get_href_url(item.id) target="_blank" class="one-course-card-a" v-for="item in searchCourse.courseItem" :key="item.id">
+          <OneCourseCard
+              :courseName="item.name"
+              :coursePeople="item.coursePeople"
+              :companyName="item.companyName"
+              :courseTeacher="item.courseTeacher"
+              :courseTag="item.tags"
+              :coursePrice="item.price"
+              :pic="item.pic"
+              :isAd="item.isAd"
+          />
+        </a>
+<!--        <OneCourseCard-->
+<!--            :courseName="item.name"-->
+<!--            :coursePeople="item.coursePeople"-->
+<!--            :companyName="item.companyName"-->
+<!--            :courseTeacher="item.courseTeacher"-->
+<!--            :courseTag="item.tags"-->
+<!--            :coursePrice="item.price"-->
+<!--            :pic="item.pic"-->
+<!--            :isAd="item.isAd"-->
+<!--        />-->
       </div>
       <div class="dataList-pagination">
         <Pagination
@@ -385,6 +394,9 @@ export default class extends mixins(MixinTools) {
 
   }
 
+  private get_href_url(id: number) {
+    return `${process.env.VUE_APP_CLIENT_PORTAL_URL}/course/` + id + '.html';
+  }
 
 }
 </script>
@@ -493,5 +505,11 @@ export default class extends mixins(MixinTools) {
   align-items: center; /* 水平居中 */
   justify-content: center; /* 垂直居中 */
   padding-top: 10px;
+}
+
+.one-course-card-a{
+  text-decoration:none; // 去掉下划线
+  color: white; // 颜色变白
+  outline:none; // 去点击后虚线框
 }
 </style>
