@@ -35,4 +35,16 @@
             userCount DESC
             LIMIT 50;
     </select>
+
+    <select id="selectCoursesUserCount" resultType="com.edu.kaizhi.learning.model.dto.CoursePeopleInfoDto">
+        SELECT
+            course_id,
+            COUNT(user_id) AS userCount
+        FROM
+            course_tables
+        GROUP BY
+            course_id
+    </select>
+
+
 </mapper>

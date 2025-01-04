@@ -13,6 +13,9 @@ public class SearchServiceConstant {
     public static final String ST_AGGREGATION = "stAgg";
     public static final String FIELD_PRICE = "price";
 
+    public static final String FIELD_MT_KEYWORD = "mt.keyword";
+    public static final String FIELD_ST_KEYWORD = "st.keyword";
+
     public static final String FIELD_MT_NAME_KEYWORD = "mtName.keyword";
     public static final String FIELD_ST_NAME_KEYWORD = "stName.keyword";
 

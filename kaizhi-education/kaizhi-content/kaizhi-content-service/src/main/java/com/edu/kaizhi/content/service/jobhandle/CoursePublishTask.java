@@ -1,10 +1,13 @@
 package com.edu.kaizhi.content.service.jobhandle;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.content.feignclient.CourseIndex;
 import com.edu.kaizhi.content.feignclient.SearchServiceClient;
 import com.edu.kaizhi.content.mapper.CoursePublishMapper;
 import com.edu.kaizhi.content.model.po.CoursePublish;
+import com.edu.kaizhi.content.model.po.Teacher;
 import com.edu.kaizhi.content.service.CoursePublishService;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MessageProcessAbstract;
@@ -17,11 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 课程发布任务类
@@ -145,6 +146,23 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //拷贝至课程索引对象
         CourseIndex courseIndex = new CourseIndex();
         BeanUtils.copyProperties(coursePublish, courseIndex);
+
+        String teachersStr = coursePublish.getTeachers();
+
+        List<Teacher> teachers = null;
+        try {
+            teachers = JSON.parseObject(teachersStr, new TypeReference<List<Teacher>>() {});
+        } catch (Exception e) {
+            CustomizeException.cast("教师信息解析失败");
+        }
+
+        List<String> teacherNames = teachers.stream()
+                .map(Teacher::getTeacherName)
+                .collect(Collectors.toList());
+
+        String teacherNamesStr = JSON.toJSONString(teacherNames);
+        courseIndex.setTeacherNames(teacherNamesStr);
+
         //远程调用搜索服务api添加课程信息到索引
         Boolean add = searchServiceClient.add(courseIndex);
         if (!add) {

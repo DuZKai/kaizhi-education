@@ -56,3 +56,6 @@ Content-Type: application/json
 ### 搜索课程
 GET {{gateway_host}}/search/course/list?pageNo=1&keywords=spring
 Content-Type: application/json
+
+### 搜索课程标签
+GET {{gateway_host}}/search/course/tag

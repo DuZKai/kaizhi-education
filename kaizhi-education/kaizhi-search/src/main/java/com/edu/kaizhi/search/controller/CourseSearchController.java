@@ -4,6 +4,7 @@ import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.search.dto.SearchCourseParamDto;
 import com.edu.kaizhi.search.dto.SearchPageResultDto;
+import com.edu.kaizhi.search.dto.SearchTagDto;
 import com.edu.kaizhi.search.po.CourseIndex;
 import com.edu.kaizhi.search.service.CourseSearchService;
 import io.swagger.annotations.Api;
@@ -11,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.edu.kaizhi.base.constant.RedisConfig.SearchList;
 
@@ -30,5 +33,17 @@ public class CourseSearchController {
     @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
     public SearchPageResultDto<CourseIndex> list(PageParams pageParams, SearchCourseParamDto searchCourseParamDto) {
         return courseSearchService.queryCoursePubIndex(pageParams, searchCourseParamDto);
+    }
+
+    @ApiOperation("课程分类")
+    @GetMapping("/tag")
+    public List<SearchTagDto> tag() {
+        return courseSearchService.queryCourseTag();
+    }
+
+    @ApiOperation("课程搜索新列表")
+    @GetMapping("/list-new")
+    public SearchPageResultDto<CourseIndex> listNew(PageParams pageParams, SearchCourseParamDto searchCourseParamDto) {
+        return courseSearchService.queryCoursePubNewIndex(pageParams, searchCourseParamDto);
     }
 }

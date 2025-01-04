@@ -134,6 +134,10 @@ public class CourseIndex implements Serializable {
      */
     private Integer validDays;
 
+    /**
+     * 教师名字信息，json格式
+     */
+    private String teacherNames;
 
     /**
      * 是否广告

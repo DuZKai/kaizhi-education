@@ -2,20 +2,21 @@
   <div>
     <div class="course-card">
       <div class="course-card-pic">
-        <img class="course-card-pic-img" :src="courseImageUrl" alt="课程封面图片">
+        <img class="course-card-pic-img" :src="pic" alt="课程封面图片">
       </div>
 
-      <div class="course-card-left-top-tag">{{courseTag}}</div>
+      <div class="course-card-left-top-tag" v-if="courseTag">{{courseTag}}</div>
+      <div class="course-card-right-top-tag" v-if="isAd == '800001'">广告</div>
 
       <div class="course-card-main-desc">
         <div class="course-card-main-info">
           <div class="course-card-main-name">{{ courseName }}</div>
-          <div class="course-card-main-organization" v-if="courseOrg">{{ courseOrg }}</div>
+          <div class="course-card-main-organization" v-if="companyName">{{ companyName }}</div>
           <div class="course-card-main-teacher">{{ courseTeacher }}</div>
           <div class="course-card-main-add-people ">{{ coursePeople }}人参加</div>
         </div>
         <div class="course-card-price">
-          <div v-if="courseFree" style="color: #00CC7E;">免费</div>
+          <div v-if="coursePrice == 0" style="color: #00CC7E;">免费</div>
           <div v-else style="color: #FF7A3E;">¥{{ coursePrice }}</div>
         </div>
       </div>
@@ -33,14 +34,14 @@ import Pagination from "@/components/pagination/index.vue";
 })
 export default class extends Vue {
   @Prop({ required: true }) private courseName!: string;
-  @Prop({ required: true }) private courseOrg!: string;
+  @Prop({ required: true }) private companyName!: string;
   @Prop({ required: true }) private courseTeacher!: string;
-  @Prop({ required: true }) private courseImageUrl!: string;
+  @Prop({ required: true }) private pic!: string;
 
-  @Prop({ default: true }) private courseFree!: boolean;
   @Prop({ default: 0 }) private coursePrice!: number;
   @Prop({ default: '' }) private courseTag!: string;
   @Prop({ default: 0 }) private coursePeople!: number;
+  @Prop({ default: "800001" }) private isAd!: string;
 
   // private courseName = '大学物理不挂科-1小时学完振动与波动学';
   // private coursePeople = 281794;
@@ -49,7 +50,7 @@ export default class extends Vue {
   // private courseTag = '大学先修课';
   // private courseFree = false;
   // private coursePrice = 39;
-  // private courseImageUrl = 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png';
+  // private pic = 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png';
 }
 </script>
 
@@ -110,6 +111,21 @@ export default class extends Vue {
   background: rgb(238, 176, 45);
 }
 
+.course-card-right-top-tag{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: PingFangSC-Regular, PingFangSC;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding: 0 6px;
+  color: #fff;
+  //border-top-right-radius: 8px;
+  //border-bottom-left-radius: 8px;
+}
+
 .course-card .course-card-pic {
   width: 100%;
   max-height: 126px;
@@ -141,7 +157,6 @@ export default class extends Vue {
 .course-card .course-card-main-name {
   max-height: 36px;
   font-size: 14px;
-  font-weight: 500;
   color: #333;
   font-weight: bold;
   line-height: 18px;

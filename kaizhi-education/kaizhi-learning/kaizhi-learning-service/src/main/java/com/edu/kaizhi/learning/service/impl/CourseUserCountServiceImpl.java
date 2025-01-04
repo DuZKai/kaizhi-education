@@ -2,8 +2,8 @@ package com.edu.kaizhi.learning.service.impl;
 
 import com.edu.kaizhi.learning.mapper.CourseTablesMapper;
 import com.edu.kaizhi.learning.model.dto.CourseHotInfoDto;
-import com.edu.kaizhi.learning.model.po.CourseTables;
-import com.edu.kaizhi.learning.service.CourseHotService;
+import com.edu.kaizhi.learning.model.dto.CoursePeopleInfoDto;
+import com.edu.kaizhi.learning.service.CourseUserCountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class CourseHotServiceImpl implements CourseHotService {
+public class CourseUserCountServiceImpl implements CourseUserCountService {
 
     @Autowired
     CourseTablesMapper courseTablesMapper;
@@ -28,5 +28,9 @@ public class CourseHotServiceImpl implements CourseHotService {
             courses.get(i).index = i + 1;
         }
         return courses;
+    }
+
+    public List<CoursePeopleInfoDto> queryUserCount(){
+        return courseTablesMapper.selectCoursesUserCount();
     }
 }

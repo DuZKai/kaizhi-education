@@ -1,28 +1,62 @@
 <template>
   <div class="index-page">
-    <div class="one-module">
+    <div class="one-module" v-if="searchCourse.counts != 0">
       <div class="course-top-name">
         <div class="course-top-name-other-class">
           <a class="common-course-title">计算机</a>
           <span class="choose-now">最新好课推荐</span>
-          <span class="">计算机基础</span>
-          <span class="">程序设计</span>
-          <span class="">考试/考研</span>
         </div>
+        <div class="search-range-right">
+          <el-form :inline="true" :model="searchParams">
+            <el-form-item label="分类">
+              <el-cascader
+                  v-if="courseCategory.length > 0"
+                  v-model="searchParams.category"
+                  :options="courseCategory"
+                  :props="{ checkStrictly: true }"
+                  @change="searchPage"
+                  clearable>
+              </el-cascader>
+            </el-form-item>
+            <el-form-item label="难度等级">
+              <el-select v-model="searchParams.grade" clearable placeholder="全部难度" @change="searchPage">
+                <el-option
+                    v-for="item in gradeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="排序" class="el-form-filter-inline">
+              <el-select v-model="searchParams.sortType" clearable placeholder="默认排序"
+                         @change="searchPage">
+                <el-option
+                    v-for="item in priceSortList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+
+
       </div>
       <div class="all-class-show">
 
         <OneCourseCard
             v-for="item in searchCourse.courseItem"
             :key="item.id"
-            :courseName="item.courseName"
+            :courseName="item.name"
             :coursePeople="item.coursePeople"
-            :courseOrg="item.courseOrg"
+            :companyName="item.companyName"
             :courseTeacher="item.courseTeacher"
-            :courseTag="item.courseTag"
-            :courseFree="item.courseFree"
-            :coursePrice="item.coursePrice"
-            :courseImageUrl="item.courseImageUrl"
+            :courseTag="item.tags"
+            :coursePrice="item.price"
+            :pic="item.pic"
+            :isAd="item.isAd"
         />
       </div>
       <div class="dataList-pagination">
@@ -32,7 +66,7 @@
             :total="searchCourse.counts"
             :page.sync="listQuery.pageNo"
             :limit.sync="listQuery.pageSize"
-            @pagination="getSearchList"
+            @pagination="searchPage"
         />
       </div>
     </div>
@@ -60,13 +94,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
+import {Component} from 'vue-property-decorator'
 // import { Route } from 'vue-router'
 import RankingList from './components/ranking-list.vue'
 import OneCourseCard from './components/one-course-card.vue'
 import Pagination from "@/components/pagination/index.vue";
-import {hotTop50} from "@/api/rank";
-import {ICourseInfo} from "@/entity/rank-page-link";
+import {getCategoryList, getCourseUserCount, hotTop50, searchCourseList} from "@/api/rank";
+import {ICourseSearchDTO, ICourseSearchPageList, IHotCourseInfo, ITag} from "@/entity/rank-page-link";
 import {mixins} from "vue-class-component";
 import MixinTools from "@/utils/mixins.vue";
 
@@ -80,11 +114,46 @@ import MixinTools from "@/utils/mixins.vue";
 })
 
 export default class extends mixins(MixinTools) {
+  private searchParams = {
+    keywords: '',
+    category: '',
+    grade: '',
+    sortType: '',
+  };
+
+  private courseCategory = [] as ITag[];
+  private priceSortList = [
+    {
+      value: '',
+      label: '默认排序'
+    }, {
+      value: '1',
+      label: '价格升序'
+    }, {
+      value: '2',
+      label: '价格降序'
+    }];
+  private gradeList = [
+    {
+      value: '',
+      label: '全部难度'
+    }, {
+      value: '204001',
+      label: '初级'
+    }, {
+      value: '204002',
+      label: '中级'
+    }, {
+      value: '204003',
+      label: '高级'
+    }]
+
+
   private hotCourse = {
     cardName: "热门排行",
     topFlag: true,
     boldName: "POPULAR COURSES",
-    courseItem: [] as ICourseInfo[]
+    courseItem: [] as IHotCourseInfo[]
   };
 
   private newCourse = {
@@ -225,70 +294,12 @@ export default class extends mixins(MixinTools) {
     ]
   }
 
-  private searchCourse = {
-    counts: 6,
-    courseItem: [
-      {
-        id: 1,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseOrg: '猴博士',
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: true,
-        coursePrice: 0,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }, {
-        id: 2,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseOrg: '猴博士',
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: false,
-        coursePrice: 39,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }, {
-        id: 3,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseOrg: '猴博士',
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: false,
-        coursePrice: 39,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }, {
-        id: 4,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseOrg: '猴博士',
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: false,
-        coursePrice: 39,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }, {
-        id: 5,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseOrg: '猴博士',
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: false,
-        coursePrice: 39,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }, {
-        id: 6,
-        courseName: '大学物理不挂科-1小时学完振动与波动学',
-        coursePeople: 281794,
-        courseTeacher: '猴博士爱讲课',
-        courseTag: '大学先修课',
-        courseFree: false,
-        coursePrice: 39,
-        courseImageUrl: 'https://mooc-image.nosdn.127.net/1bfba2f4f8374f8983ed3057b878daff.png'
-      }
-    ]
+  private searchCourse: {
+    counts: number;
+    courseItem: ICourseSearchDTO[];
+  } = {
+    counts: 0,
+    courseItem: []
   }
 
   private listQuery = {
@@ -300,7 +311,9 @@ export default class extends mixins(MixinTools) {
    * 生命周期钩子
    */
   created() {
+    this.getCategoryList()
     this.getHotTop50()
+    this.searchPage()
   }
 
   /**
@@ -313,9 +326,65 @@ export default class extends mixins(MixinTools) {
     })
   }
 
-  private getSearchList(){
-    console.log('getSearchList')
+  private async getCategoryList() {
+    this.courseCategory = await getCategoryList();
   }
+
+  private async searchPage() {
+    var mt, st;
+    if (this.searchParams.category === "") {
+      mt = "";
+      st = "";
+    } else {
+      if (this.searchParams.category.length === 1) {
+        mt = this.searchParams.category[0];
+        st = "";
+      } else if (this.searchParams.category.length === 2) {
+        mt = this.searchParams.category[0];
+        st = this.searchParams.category[1];
+      }
+    }
+    var sentSearchParams = {
+      keywords: this.searchParams.keywords,
+      mt: mt,
+      st: st,
+      grade: this.searchParams.grade,
+      sortType: this.searchParams.sortType
+    }
+
+    const res = await searchCourseList(this.listQuery.pageNo, this.listQuery.pageSize, sentSearchParams);
+    const userCounts = await getCourseUserCount();
+
+    this.searchCourse.courseItem = res.items as ICourseSearchDTO[];
+    this.searchCourse.counts = res.counts as number;
+    this.searchCourse.courseItem.forEach(item => {
+      item.pic = `${process.env.VUE_APP_SERVER_PICSERVER_URL}` + item.pic
+      const course = userCounts.find(course => course.courseId === item.id);
+      if (course) {
+        item.coursePeople = course.userCount;
+      } else {
+        item.coursePeople = 0;
+      }
+      if (item.teacherNames) {
+        try {
+          var teacherNamesList = JSON.parse(item.teacherNames);
+          if (teacherNamesList.length > 1) {
+            item.courseTeacher = teacherNamesList.join('，');
+          } else if (teacherNamesList.length === 1) {
+            item.courseTeacher = teacherNamesList[0];
+          }
+
+        } catch (error) {
+          console.error("无法解析 teacherNames 字符串", error);
+          item.courseTeacher = "";
+        }
+      } else {
+        item.courseTeacher = "";
+      }
+    })
+
+  }
+
 
 }
 </script>
@@ -398,12 +467,31 @@ export default class extends mixins(MixinTools) {
   width: 100%;
 }
 
-.all-course-page-style{
+.all-course-page-style {
   background: #fff;
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 0;
   padding-bottom: 0;
   background: none;
+}
+
+.list-box {
+  max-width: 1170px;
+  //margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.el-form-item {
+  margin-bottom: 0;
+}
+
+.search-range-right {
+  display: flex;
+  flex-direction: column; /* 设置主轴为垂直方向 */
+  align-items: center; /* 水平居中 */
+  justify-content: center; /* 垂直居中 */
+  padding-top: 10px;
 }
 </style>
