@@ -426,7 +426,8 @@ docker restart elasticsearch
 - 优化swagger到knife4j，找到为什么别的服务无法注册到swagger
 - AOP缓存优化？每次得到值后放入内容，在进入方法前判断是否内存有值
 - 限制老师和学生进入后台界面
-- 加入ZK,MongoDB
+- 迁移Html页面到vue
+- 加入ZK，MongoDB
 
 换皮：知识付费问答平台
 

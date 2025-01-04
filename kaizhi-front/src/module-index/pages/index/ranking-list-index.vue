@@ -87,6 +87,7 @@
             :topFlag="hotCourse.topFlag"
             :boldName="hotCourse.boldName"
             :courseItem="hotCourse.courseItem"/>
+
         <RankingList
             :cardName="newCourse.cardName"
             :topFlag="newCourse.topFlag"

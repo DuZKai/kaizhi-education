@@ -10,7 +10,7 @@
       </div>
       <span class="one-course-card-top-right-grey">{{ boldName }}</span>
     </div>
-    <div class="one-course-card-main">
+    <div class="one-course-card-main" v-if="courseItem.length > 0">
       <el-carousel height="430px" :autoplay="false" :loop="false">
         <el-carousel-item v-for="item in chunk(courseItem, 5)" :key="item[0].courseId">
           <div class="one-course-card-container">
@@ -26,6 +26,9 @@
           </div>
         </el-carousel-item>
       </el-carousel>
+    </div>
+    <div v-else>
+      <el-skeleton :rows="11" animated style="width: 90%; padding-left: 10%"/>
     </div>
   </div>
 </template>
