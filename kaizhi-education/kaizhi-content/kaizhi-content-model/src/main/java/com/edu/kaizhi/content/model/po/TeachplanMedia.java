@@ -1,13 +1,13 @@
 package com.edu.kaizhi.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-import lombok.Data;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -49,7 +49,6 @@ public class TeachplanMedia implements Serializable {
     @TableField("media_fileName")
     private String mediaFilename;
 
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
 
     /**
