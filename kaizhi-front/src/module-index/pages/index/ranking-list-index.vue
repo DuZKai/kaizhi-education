@@ -1,6 +1,6 @@
 <template>
   <div class="index-page">
-    <div class="one-module" v-if="searchCourse.counts != 0">
+    <div class="one-module">
       <div class="course-top-name">
         <div class="course-top-name-other-class">
           <a class="common-course-title">计算机</a>
@@ -8,6 +8,15 @@
         </div>
         <div class="search-range-right">
           <el-form :inline="true" :model="searchParams">
+            <el-form-item label="关键字">
+              <el-input
+                  placeholder="请输入搜索内容"
+                  v-model="searchParams.keywords"
+                  @change="searchPage"
+                  clearable
+              />
+            </el-form-item>
+
             <el-form-item label="分类">
               <el-cascader
                   v-if="courseCategory.length > 0"
@@ -28,7 +37,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="排序" class="el-form-filter-inline">
+            <el-form-item label="排序">
               <el-select v-model="searchParams.sortType" clearable placeholder="默认排序"
                          @change="searchPage">
                 <el-option
@@ -44,8 +53,9 @@
 
 
       </div>
-      <div class="all-class-show">
-        <a :href=get_href_url(item.id) target="_blank" class="one-course-card-a" v-for="item in searchCourse.courseItem" :key="item.id">
+      <div class="all-class-show" v-if="searchCourse.counts != 0">
+        <a :href=get_href_url(item.id) target="_blank" class="one-course-card-a" v-for="item in searchCourse.courseItem"
+           :key="item.id">
           <OneCourseCard
               :courseName="item.name"
               :coursePeople="item.coursePeople"
@@ -57,16 +67,6 @@
               :isAd="item.isAd"
           />
         </a>
-<!--        <OneCourseCard-->
-<!--            :courseName="item.name"-->
-<!--            :coursePeople="item.coursePeople"-->
-<!--            :companyName="item.companyName"-->
-<!--            :courseTeacher="item.courseTeacher"-->
-<!--            :courseTag="item.tags"-->
-<!--            :coursePrice="item.price"-->
-<!--            :pic="item.pic"-->
-<!--            :isAd="item.isAd"-->
-<!--        />-->
       </div>
       <div class="dataList-pagination">
         <Pagination
@@ -109,7 +109,7 @@ import RankingList from './components/ranking-list.vue'
 import OneCourseCard from './components/one-course-card.vue'
 import Pagination from "@/components/pagination/index.vue";
 import {getCategoryList, getCourseUserCount, hotTop50, searchCourseList} from "@/api/rank";
-import {ICourseSearchDTO, ICourseSearchPageList, IHotCourseInfo, ITag} from "@/entity/rank-page-link";
+import {ICourseSearchDTO, IHotCourseInfo, ITag} from "@/entity/rank-page-link";
 import {mixins} from "vue-class-component";
 import MixinTools from "@/utils/mixins.vue";
 
@@ -488,13 +488,6 @@ export default class extends mixins(MixinTools) {
   background: none;
 }
 
-.list-box {
-  max-width: 1170px;
-  //margin: 0 auto;
-  overflow: hidden;
-  position: relative;
-}
-
 .el-form-item {
   margin-bottom: 0;
 }
@@ -505,11 +498,16 @@ export default class extends mixins(MixinTools) {
   align-items: center; /* 水平居中 */
   justify-content: center; /* 垂直居中 */
   padding-top: 10px;
+  padding-right: 10px;
 }
 
-.one-course-card-a{
-  text-decoration:none; // 去掉下划线
+.one-course-card-a {
+  text-decoration: none; // 去掉下划线
   color: white; // 颜色变白
-  outline:none; // 去点击后虚线框
+  outline: none; // 去点击后虚线框
+}
+
+::v-deep .search-range-right .el-input {
+  width: 170px;
 }
 </style>

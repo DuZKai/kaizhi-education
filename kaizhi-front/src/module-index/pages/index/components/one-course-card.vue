@@ -10,7 +10,7 @@
 
       <div class="course-card-main-desc">
         <div class="course-card-main-info">
-          <div class="course-card-main-name">{{ courseName }}</div>
+          <div class="course-card-main-name" v-html="courseName"></div>
           <div class="course-card-main-organization" v-if="companyName">{{ companyName }}</div>
           <div class="course-card-main-teacher">{{ courseTeacher }}</div>
           <div class="course-card-main-add-people ">{{ coursePeople }}人参加</div>
@@ -86,12 +86,6 @@ export default class extends Vue {
 .course-card:hover {
   -webkit-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
-}
-
-.dW-cE {
-  min-height: 395px;
-  margin-top: 10px;
-  margin-bottom: 32px;
 }
 
 .course-card-left-top-tag {
@@ -214,4 +208,11 @@ export default class extends Vue {
   line-height: 20px;
   font-weight: 600;
 }
+</style>
+<style>
+/* ES搜索后所需样式 */
+.eslight {
+  color: red;
+}
+
 </style>
