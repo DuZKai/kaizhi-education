@@ -1,5 +1,6 @@
 package com.edu.kaizhi;
 
+import com.spring4all.swagger.EnableSwagger2Doc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -13,6 +14,7 @@ import static com.edu.kaizhi.base.utils.GetApplicationStartMsgUtil.printMsg;
 
 @SpringBootApplication
 @EnableCaching // 开启缓存注解
+@EnableSwagger2Doc
 @EnableFeignClients(basePackages={"com.edu.kaizhi.*.feignclient"})
 public class AuthApplication {
     @Bean

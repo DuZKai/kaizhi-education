@@ -41,6 +41,6 @@ export async function previewMedia(mediaId: number): Promise<IDownParamsDTO> {
 
 // 删除媒资信息
 export async function deleteMedia(id: number): Promise<boolean> {
-  const { data } = await createAPI(`/media/${id}`, 'delete')
+  const { data } = await createAPI(`/media/delete/${id}`, 'delete')
   return data
 }

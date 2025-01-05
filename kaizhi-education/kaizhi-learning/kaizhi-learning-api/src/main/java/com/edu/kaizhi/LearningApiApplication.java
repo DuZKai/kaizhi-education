@@ -1,5 +1,6 @@
 package com.edu.kaizhi;
 
+import com.spring4all.swagger.EnableSwagger2Doc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -11,6 +12,7 @@ import static com.edu.kaizhi.base.utils.GetApplicationStartMsgUtil.printMsg;
 
 @EnableFeignClients(basePackages={"com.edu.kaizhi.*.feignclient"})
 @SpringBootApplication
+@EnableSwagger2Doc
 @EnableCaching // 开启缓存注解
 @EnableScheduling // 开启定时任务
 public class LearningApiApplication {

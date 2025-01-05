@@ -79,8 +79,8 @@ public class MediaFilesController {
     }
 
     @ApiOperation("刪除媒资文件")
-    @DeleteMapping("/{mediaId}")
     @RequiresUser
+    @DeleteMapping(value = "/delete/{mediaId}")
     public void deleteMediaByMediaId(@PathVariable String mediaId) {
         Long companyId = UserContext.getCompanyId();
         mediaFileService.deleteFileById(companyId, mediaId);

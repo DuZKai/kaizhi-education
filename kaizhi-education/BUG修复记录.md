@@ -164,6 +164,32 @@ public class JacksonConfig {
 
 
 
+### media微服务swagger一直报错：Request method 'GET' not supported
+
+逐步开启controller查看swagger是否会失败，最终确认是MediaFilesController问题，再逐个打开函数查看，发现只要这个函数出现就会导致swagger无法运行
+
+```java
+@ApiOperation("刪除媒资文件")
+@RequiresUser
+@DeleteMapping("/{mediaId}")
+public void deleteMediaByMediaId(@PathVariable String mediaId) {
+    Long companyId = UserContext.getCompanyId();
+    mediaFileService.deleteFileById(companyId, mediaId);
+}
+```
+
+将路径改为
+
+```java
+@DeleteMapping(value = "/delete/{mediaId}")
+```
+
+这样就不会报错了，swagger正确显示
+
+
+
+
+
 ## 前端
 
 ### 在dialog组件中加入upload使得图片第一次不回显，只有点击别的才能回显

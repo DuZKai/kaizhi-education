@@ -9,6 +9,7 @@ import static com.edu.kaizhi.base.utils.GetApplicationStartMsgUtil.printMsg;
 
 @SpringBootApplication
 @EnableFeignClients
+
 public class GatewayApplication {
 
 	public static void main(String[] args) {
