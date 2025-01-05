@@ -7,10 +7,11 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${PATTERN}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
         </Console>
 
         <RollingFile name="ErrorAppender" fileName="${logdir}/error.log"
-            filePattern="${logdir}/$${date:yyyy-MM-dd}/error.%d{yyyy-MM-dd-HH}.log" append="true">
+                     filePattern="${logdir}/$${date:yyyy-MM-dd}/error.%d{yyyy-MM-dd-HH}.log" append="true">
             <PatternLayout pattern="${PATTERN}"/>
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
@@ -18,46 +19,46 @@
             </Policies>
         </RollingFile>
 
-        <RollingFile name="DebugAppender" fileName="${logdir}/info.log"
-            filePattern="${logdir}/$${date:yyyy-MM-dd}/info.%d{yyyy-MM-dd-HH}.log" append="true">
-            <PatternLayout pattern="${PATTERN}"/>
-            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-            </Policies>
-        </RollingFile>
-        
+        <!--<RollingFile name="DebugAppender" fileName="${logdir}/info.log"-->
+        <!--    filePattern="${logdir}/$${date:yyyy-MM-dd}/info.%d{yyyy-MM-dd-HH}.log" append="true">-->
+        <!--    <PatternLayout pattern="${PATTERN}"/>-->
+        <!--    <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>-->
+        <!--    <Policies>-->
+        <!--        <TimeBasedTriggeringPolicy interval="1" modulate="true" />-->
+        <!--    </Policies>-->
+        <!--</RollingFile>-->
+
         <!--异步appender-->
-         <Async name="AsyncAppender" includeLocation="true">
+        <Async name="AsyncAppender" includeLocation="true">
             <AppenderRef ref="ErrorAppender"/>
-            <AppenderRef ref="DebugAppender"/>
+            <!--<AppenderRef ref="DebugAppender"/>-->
         </Async>
     </Appenders>
-    
+
     <Loggers>
-         <!--过滤掉spring和mybatis的一些无用的debug信息-->
-        <logger name="org.springframework" level="INFO">
+        <!--过滤掉spring和mybatis的一些无用的debug信息-->
+        <logger name="org.springframework" level="WARN">
         </logger>
-        <logger name="org.mybatis" level="INFO">
+        <logger name="org.mybatis" level="WARN">
         </logger>
-        <logger name="cn.itcast.wanxinp2p.consumer.mapper" level="DEBUG">
+        <logger name="cn.itcast.wanxinp2p.consumer.mapper" level="WARN">
         </logger>
 
-        <logger name="springfox" level="INFO">
+        <logger name="springfox" level="WARN">
         </logger>
-		<logger name="org.apache.http" level="INFO">
+        <logger name="org.apache.http" level="WARN">
         </logger>
-        <logger name="com.netflix.discovery" level="INFO">
+        <logger name="com.netflix.discovery" level="WARN">
         </logger>
-        
-        <logger name="RocketmqCommon"  level="INFO" >
-		</logger>
-		
-		<logger name="RocketmqRemoting" level="INFO"  >
-		</logger>
-		
-		<logger name="RocketmqClient" level="WARN">
-		</logger>
+
+        <logger name="RocketmqCommon"  level="WARN" >
+        </logger>
+
+        <logger name="RocketmqRemoting" level="WARN"  >
+        </logger>
+
+        <logger name="RocketmqClient" level="WARN">
+        </logger>
 
         <logger name="org.dromara.hmily" level="WARN">
         </logger>
@@ -67,7 +68,7 @@
 
         <logger name="org.dromara.hmily.bonuspoint" level="WARN">
         </logger>
-		
+
         <!--OFF   0-->
         <!--FATAL   100-->
         <!--ERROR   200-->
@@ -79,7 +80,7 @@
         <Root level="INFO" includeLocation="true">
             <AppenderRef ref="AsyncAppender"/>
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="DebugAppender"/>
+            <!--<AppenderRef ref="DebugAppender"/>-->
         </Root>
     </Loggers>
 </Configuration>

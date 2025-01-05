@@ -1,7 +1,6 @@
 package com.edu.kaizhi.search.service;
 
 import com.edu.kaizhi.base.model.PageParams;
-import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.search.dto.SearchCourseParamDto;
 import com.edu.kaizhi.search.dto.SearchPageResultDto;
 import com.edu.kaizhi.search.dto.SearchTagDto;

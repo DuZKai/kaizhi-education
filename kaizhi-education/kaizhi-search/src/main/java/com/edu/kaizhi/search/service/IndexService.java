@@ -1,7 +1,5 @@
 package com.edu.kaizhi.search.service;
 
-import com.edu.kaizhi.search.po.CourseIndex;
-
 /**
  * 课程索引service
  */

@@ -2,7 +2,6 @@ package com.edu.kaizhi.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.edu.kaizhi.base.exception.CustomizeException;
-import com.edu.kaizhi.search.po.CourseIndex;
 import com.edu.kaizhi.search.service.IndexService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.DocWriteResponse;
@@ -16,7 +15,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
