@@ -1,6 +1,5 @@
 package com.edu.kaizhi.base.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
