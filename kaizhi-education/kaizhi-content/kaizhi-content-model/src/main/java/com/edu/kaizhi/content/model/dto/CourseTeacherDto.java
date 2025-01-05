@@ -1,15 +1,13 @@
 package com.edu.kaizhi.content.model.dto;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.edu.kaizhi.base.exception.ValidationGroups;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 添加课程dto

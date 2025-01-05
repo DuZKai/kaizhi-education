@@ -7,13 +7,10 @@ import com.edu.kaizhi.content.model.po.Teachplan;
 import com.edu.kaizhi.content.model.po.TeachplanMedia;
 import com.edu.kaizhi.content.service.TeachplanMediaService;
 import com.edu.kaizhi.content.service.TeachplanService;
-import com.edu.kaizhi.content.service.impl.TeachplanServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

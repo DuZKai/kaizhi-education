@@ -8,7 +8,6 @@ import com.edu.kaizhi.content.mapper.*;
 import com.edu.kaizhi.content.model.dto.*;
 import com.edu.kaizhi.content.model.po.*;
 import com.edu.kaizhi.content.service.CourseBaseInfoService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;

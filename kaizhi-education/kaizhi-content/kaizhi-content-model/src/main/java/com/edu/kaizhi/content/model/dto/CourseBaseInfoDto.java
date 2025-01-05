@@ -1,13 +1,8 @@
 package com.edu.kaizhi.content.model.dto;
 
-import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.content.model.po.CourseBase;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.validation.constraints.NotEmpty;
-import java.math.BigDecimal;
 
 /**
  * 课程基本信息dto

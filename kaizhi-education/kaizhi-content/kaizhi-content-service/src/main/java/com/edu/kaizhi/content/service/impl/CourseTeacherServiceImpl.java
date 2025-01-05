@@ -6,14 +6,10 @@ import com.edu.kaizhi.content.mapper.CourseTeacherMapper;
 import com.edu.kaizhi.content.model.dto.CourseTeacherDto;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.service.CourseTeacherService;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service

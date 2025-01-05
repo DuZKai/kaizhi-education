@@ -1,6 +1,5 @@
 package com.edu.kaizhi.content.api;
 
-import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.base.exception.ValidationGroups;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
@@ -9,15 +8,11 @@ import com.edu.kaizhi.content.service.CourseBaseInfoService;
 import com.edu.kaizhi.securityUser.Context.UserContext;
 import com.edu.kaizhi.securityUser.annotation.RequiresUser;
 import com.edu.kaizhi.securityUser.dto.User;
-import com.edu.kaizhi.securityUser.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 
 /**

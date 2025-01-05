@@ -9,14 +9,12 @@ import com.edu.kaizhi.content.mapper.CourseTeacherMapper;
 import com.edu.kaizhi.content.mapper.TeacherMapper;
 import com.edu.kaizhi.content.model.dto.QueryTeacherParamsDto;
 import com.edu.kaizhi.content.model.dto.TeacherDto;
-import com.edu.kaizhi.content.model.po.CourseBase;
 import com.edu.kaizhi.content.model.po.CourseTeacher;
 import com.edu.kaizhi.content.model.po.Teacher;
 import com.edu.kaizhi.content.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

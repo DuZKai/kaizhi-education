@@ -1,6 +1,5 @@
 package com.edu.kaizhi.content.model.dto;
 
-import com.edu.kaizhi.base.exception.ValidationGroups;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

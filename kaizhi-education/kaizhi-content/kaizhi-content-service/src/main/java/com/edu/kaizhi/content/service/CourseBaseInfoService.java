@@ -3,7 +3,6 @@ package com.edu.kaizhi.content.service;
 import com.edu.kaizhi.base.model.PageParams;
 import com.edu.kaizhi.base.model.PageResult;
 import com.edu.kaizhi.content.model.dto.*;
-import com.edu.kaizhi.content.model.po.CourseBase;
 
 /**
  * 课程信息管理接口

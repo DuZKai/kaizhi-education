@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import java.util.function.Supplier;
+
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * 通过加锁解决缓存雪崩问题

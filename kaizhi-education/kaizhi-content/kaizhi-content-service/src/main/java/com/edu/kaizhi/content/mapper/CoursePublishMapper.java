@@ -2,7 +2,6 @@ package com.edu.kaizhi.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.edu.kaizhi.content.model.po.CoursePublish;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.edu.kaizhi.content.service;
 
 import com.edu.kaizhi.content.model.dto.BindTeachplanMediaDto;
-import com.edu.kaizhi.content.model.dto.CourseCategoryTreeDto;
 import com.edu.kaizhi.content.model.dto.SaveTeachplanDto;
 import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.Teachplan;

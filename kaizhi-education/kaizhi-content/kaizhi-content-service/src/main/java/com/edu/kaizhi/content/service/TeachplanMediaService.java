@@ -1,6 +1,5 @@
 package com.edu.kaizhi.content.service;
 
-import com.edu.kaizhi.content.model.po.Teachplan;
 import com.edu.kaizhi.content.model.po.TeachplanMedia;
 
 public interface TeachplanMediaService {

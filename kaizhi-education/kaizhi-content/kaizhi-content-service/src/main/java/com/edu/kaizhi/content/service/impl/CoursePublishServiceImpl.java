@@ -18,7 +18,6 @@ import com.edu.kaizhi.content.model.po.*;
 import com.edu.kaizhi.content.service.*;
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import com.edu.kaizhi.messagesdk.service.MqMessageService;
-
 import com.google.common.hash.Funnels;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -34,8 +33,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;

@@ -1,6 +1,5 @@
 package com.edu.kaizhi.content.model.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.edu.kaizhi.content.model.po.CourseCategory;
 import lombok.Data;
 
