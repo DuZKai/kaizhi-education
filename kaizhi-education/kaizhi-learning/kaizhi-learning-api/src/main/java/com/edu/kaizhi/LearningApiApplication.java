@@ -1,10 +1,15 @@
 package com.edu.kaizhi;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import static com.edu.kaizhi.base.utils.GetApplicationStartMsgUtil.printMsg;
 
 @EnableFeignClients(basePackages={"com.edu.kaizhi.*.feignclient"})
 @SpringBootApplication
@@ -12,8 +17,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling // 开启定时任务
 public class LearningApiApplication {
 
+    private static final Logger log = LogManager.getLogger(LearningApiApplication.class);
     public static void main(String[] args) {
-        SpringApplication.run(LearningApiApplication.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(LearningApiApplication.class, args);
+        printMsg(applicationContext, log);
     }
 
 }

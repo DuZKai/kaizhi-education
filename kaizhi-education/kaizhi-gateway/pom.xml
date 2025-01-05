@@ -26,6 +26,11 @@
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.edu.kaizhi</groupId>
+			<artifactId>kaizhi-base</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!--网关-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
