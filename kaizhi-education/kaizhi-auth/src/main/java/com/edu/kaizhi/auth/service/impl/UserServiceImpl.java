@@ -2,8 +2,8 @@ package com.edu.kaizhi.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.edu.kaizhi.auth.service.InfoService;
 import com.edu.kaizhi.auth.service.AuthService;
+import com.edu.kaizhi.auth.service.InfoService;
 import com.edu.kaizhi.ucenter.mapper.MenuMapper;
 import com.edu.kaizhi.ucenter.mapper.UserMapper;
 import com.edu.kaizhi.ucenter.model.dto.AuthParamsDto;
