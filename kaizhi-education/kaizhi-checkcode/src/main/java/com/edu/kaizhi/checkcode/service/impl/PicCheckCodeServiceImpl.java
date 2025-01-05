@@ -1,11 +1,11 @@
 package com.edu.kaizhi.checkcode.service.impl;
 
-import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.edu.kaizhi.base.utils.EncryptUtil;
 import com.edu.kaizhi.checkcode.model.CheckCodeParamsDto;
 import com.edu.kaizhi.checkcode.model.CheckCodeResultDto;
 import com.edu.kaizhi.checkcode.service.AbstractCheckCodeService;
 import com.edu.kaizhi.checkcode.service.CheckCodeService;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Encoder;

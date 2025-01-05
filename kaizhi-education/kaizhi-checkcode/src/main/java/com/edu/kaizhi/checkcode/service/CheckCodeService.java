@@ -2,10 +2,6 @@ package com.edu.kaizhi.checkcode.service;
 
 import com.edu.kaizhi.checkcode.model.CheckCodeParamsDto;
 import com.edu.kaizhi.checkcode.model.CheckCodeResultDto;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * 验证码接口

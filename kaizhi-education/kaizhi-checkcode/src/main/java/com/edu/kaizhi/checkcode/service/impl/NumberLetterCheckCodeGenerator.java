@@ -1,6 +1,5 @@
 package com.edu.kaizhi.checkcode.service.impl;
 
-import com.edu.kaizhi.checkcode.model.CheckCodeParamsDto;
 import com.edu.kaizhi.checkcode.service.CheckCodeService;
 import org.springframework.stereotype.Component;
 

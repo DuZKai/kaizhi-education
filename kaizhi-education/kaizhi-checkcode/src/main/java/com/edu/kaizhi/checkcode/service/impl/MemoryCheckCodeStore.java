@@ -1,7 +1,6 @@
 package com.edu.kaizhi.checkcode.service.impl;
 
 import com.edu.kaizhi.checkcode.service.CheckCodeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

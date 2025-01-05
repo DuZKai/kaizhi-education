@@ -2,8 +2,6 @@ package com.edu.kaizhi.checkcode.model;
 
 import lombok.Data;
 
-import java.util.Map;
-
 /**
  * 验证码生成参数类
  */
