@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.edu.kaizhi.base.exception.CustomizeException;
 import com.edu.kaizhi.learning.config.PayNotifyConfig;
 import com.edu.kaizhi.learning.service.MyCourseTablesService;
-
 import com.edu.kaizhi.messagesdk.model.po.MqMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

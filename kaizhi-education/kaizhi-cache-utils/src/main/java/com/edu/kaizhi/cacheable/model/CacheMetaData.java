@@ -1,10 +1,7 @@
 package com.edu.kaizhi.cacheable.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +13,7 @@ public class CacheMetaData {
     private String[] cacheNames;
     private long expiredTimeSecond;
     private long preLoadTimeSecond;
+    private boolean dailyCache;
+    private boolean autoRefreshDailyCache;
+
 }

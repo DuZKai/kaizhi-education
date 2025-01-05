@@ -1,8 +1,6 @@
 package com.edu.kaizhi.learning.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.edu.kaizhi.base.model.RestResponse;
-import com.edu.kaizhi.content.model.dto.TeachplanDto;
 import com.edu.kaizhi.content.model.po.CoursePublish;
 import com.edu.kaizhi.content.model.po.Teachplan;
 import com.edu.kaizhi.content.model.po.TeachplanMedia;
@@ -15,9 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * 在线学习service接口

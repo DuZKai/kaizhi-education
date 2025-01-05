@@ -15,12 +15,11 @@ import com.edu.kaizhi.learning.model.dto.MyCourseTableParams;
 import com.edu.kaizhi.learning.model.po.ChooseCourse;
 import com.edu.kaizhi.learning.model.po.CourseTables;
 import com.edu.kaizhi.learning.service.MyCourseTablesService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.List;
