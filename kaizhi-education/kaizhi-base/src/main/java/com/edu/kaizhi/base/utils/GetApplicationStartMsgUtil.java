@@ -1,5 +1,6 @@
 package com.edu.kaizhi.base.utils;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -10,7 +11,8 @@ import java.net.UnknownHostException;
 import java.util.Optional;
 
 public class GetApplicationStartMsgUtil {
-    public static void printMsg(ApplicationContext applicationContext, Logger log) {
+    public static void printMsg(ApplicationContext applicationContext, Class<?> applicationClass) {
+        Logger log = LogManager.getLogger(applicationClass);
         try {
             String ip = InetAddress.getLocalHost().getHostAddress();
             Environment env = applicationContext.getEnvironment();

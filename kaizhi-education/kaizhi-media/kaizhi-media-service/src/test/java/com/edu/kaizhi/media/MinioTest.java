@@ -7,10 +7,12 @@ import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
