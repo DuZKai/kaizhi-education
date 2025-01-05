@@ -31,7 +31,7 @@
 
 新增：
 
-rabbitMQ使用
+rabbitMQ使用、拓展cacheable
 
 
 
@@ -40,7 +40,8 @@ rabbitMQ使用
 ### 大功能
 
 - 使用Chromedriver和Beautifulsoup4下载学堂真实课程数据
-- 热门课程排行榜加入，并加入缓存，每日零点通过定时任务Scheduled更新排行榜
+- 热门课程排行榜加入（每日零点通过定时任务Scheduled更新排行榜）
+- 将课程排行榜以及学习课程人数部分加入ExpirableCacheable拓展cacheable缓存，实现每日缓存，在每日零点前30分钟如果被访问则刷新缓存
 - 教师管理页面，添加教师功能改进，使得一个教师可以教多门课程
 - 使用FeignRequestInterceptor拦截器实现使用openfeign时中继令牌功能
 - 加入Guava带有Redis过期时间的布隆过滤器，拦截课程发布表的白名单查询，且每次程序重新运行将现有布隆过滤器更新

@@ -30,19 +30,21 @@ public class CourseSearchController {
 
     @ApiOperation("课程搜索列表")
     @GetMapping("/list")
-    @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
+    // @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
     public SearchPageResultDto<CourseIndex> list(PageParams pageParams, SearchCourseParamDto searchCourseParamDto) {
         return courseSearchService.queryCoursePubIndex(pageParams, searchCourseParamDto);
     }
 
     @ApiOperation("课程分类")
     @GetMapping("/tag")
+    @Cacheable(cacheNames = SearchList, key = "'tag'")
     public List<SearchTagDto> tag() {
         return courseSearchService.queryCourseTag();
     }
 
     @ApiOperation("课程搜索新列表")
     @GetMapping("/list-new")
+    @Cacheable(cacheNames = SearchList, key = "#pageParams.pageNo + '-' + #pageParams.pageSize + '-' + #searchCourseParamDto.hashCode()")
     public SearchPageResultDto<CourseIndex> listNew(PageParams pageParams, SearchCourseParamDto searchCourseParamDto) {
         return courseSearchService.queryCoursePubNewIndex(pageParams, searchCourseParamDto);
     }

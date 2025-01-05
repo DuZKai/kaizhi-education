@@ -21,7 +21,6 @@ import java.util.Map;
 * SmartInitializingSingleton：在所有单例 Bean 实例化后执行特定逻辑。
 * BeanFactoryAware：允许类访问 Spring 的 BeanFactory。
 * */
-// 将该类标记为 Spring 组件，以便自动检测和注册为 Spring Bean
 @Component
 @Slf4j
 public class CacheExpireTimeInit implements SmartInitializingSingleton, BeanFactoryAware {

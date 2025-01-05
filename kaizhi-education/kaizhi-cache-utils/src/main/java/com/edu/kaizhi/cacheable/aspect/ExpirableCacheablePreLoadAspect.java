@@ -78,6 +78,8 @@ public class ExpirableCacheablePreLoadAspect {
                         .key(key)
                         .expiredTimeSecond(expirableCacheable.expiredTimeSecond())
                         .preLoadTimeSecond(expirableCacheable.preLoadTimeSecond())
+                        .dailyCache(expirableCacheable.dailyCache())
+                        .autoRefreshDailyCache(expirableCacheable.autoRefreshDailyCache())
                         .build()
                 )
                 .build();

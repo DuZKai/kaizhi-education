@@ -51,7 +51,8 @@ public class CustomizedRedisCacheManager extends RedisCacheManager implements Be
      * @param cacheRedisTemplate RedisTemplate 实例
      * @return
      * */
-    public CustomizedRedisCacheManager(RedisCacheWriter cacheWriter, RedisCacheConfiguration defaultCacheConfiguration, Map<String, RedisCacheConfiguration> initialCacheConfigurations, RedisTemplate cacheRedisTemplate) {
+    public CustomizedRedisCacheManager(RedisCacheWriter cacheWriter, RedisCacheConfiguration defaultCacheConfiguration,
+                                       Map<String, RedisCacheConfiguration> initialCacheConfigurations, RedisTemplate cacheRedisTemplate) {
         // 调用父类的构造函数
         super(cacheWriter, defaultCacheConfiguration, initialCacheConfigurations);
         // 传入 Redis 缓存写入器、默认缓存配置、初始缓存配置等参数

@@ -2,7 +2,6 @@ package com.edu.kaizhi.cacheable.autoconfigure;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.edu.kaizhi.cacheable.constant.CacheConstant;
 import com.edu.kaizhi.cacheable.CustomizedRedisCacheManager;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -27,14 +26,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static com.edu.kaizhi.cacheable.constant.CacheConstant.REDISTEMPLATE_BEAN_NAME;
+import static com.edu.kaizhi.cacheable.constant.CacheConstant.*;
 
 
 // 使用 @Configuration 注解标记该类为配置类，表示该类包含 Spring 的 Bean 定义。
 @Configuration
 // 使用 @Import(SpringUtil.class) 注解导入 SpringUtil 类，以便在此配置中使用其 Bean。
 @Import(SpringUtil.class)
-// 使用 @ComponentScan(basePackages = "com.xiaokai.cacheable") 注解指定要扫描的包，以便 Spring 可以找到并注册该包下的组件。
+// 指定要扫描的包，以便 Spring 可以找到并注册该包下的组件。
 @ComponentScan(basePackages = "com.edu.kaizhi.cacheable")
 // 使用 @EnableCaching 注解启用 Spring 的缓存支持。
 @EnableCaching
@@ -63,10 +62,10 @@ public class CustomizedRedisAutoConfiguration {
     }
 
     // 将默认的缓存管理器改成我们自定义的缓存管理器
-    @Bean(CacheConstant.CUSTOM_CACHE_MANAGER)
+    @Bean(CUSTOM_CACHE_MANAGER)
     // 防止多个缓存管理器冲突，使用 @Primary 注解标记该 Bean 为首选 Bean。
     @Primary
-    public CustomizedRedisCacheManager cacheManager(RedisConnectionFactory connectionFactory, RedisTemplate cacheRedisTemplate) {
+    public CustomizedRedisCacheManager customizedCacheManager(RedisConnectionFactory connectionFactory, RedisTemplate cacheRedisTemplate) {
         // 创建一个非锁定的 Redis 缓存写入器。
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory);
         // 创建默认缓存配置：使用 RedisCacheConfiguration.defaultCacheConfig() 创建默认配置，并设置缓存条目的过期时间为30分钟
@@ -88,7 +87,7 @@ public class CustomizedRedisAutoConfiguration {
     }
 
     // 生成缓存键的简单生成器
-    @Bean(CacheConstant.CUSTOM_CACHE_KEY_GENERATOR)
+    @Bean(CUSTOM_CACHE_KEY_GENERATOR)
     public KeyGenerator keyGenerator() {
         return new SimpleKeyGenerator();
     }

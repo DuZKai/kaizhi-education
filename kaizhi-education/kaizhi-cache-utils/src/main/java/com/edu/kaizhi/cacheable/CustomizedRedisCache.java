@@ -1,6 +1,7 @@
 package com.edu.kaizhi.cacheable;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.edu.kaizhi.cacheable.model.CacheMetaData;
 import com.edu.kaizhi.cacheable.model.CachedInvocation;
 import com.edu.kaizhi.cacheable.utils.CacheHelper;
 import com.edu.kaizhi.cacheable.utils.ThreadPoolUtils;
@@ -13,6 +14,8 @@ import org.springframework.lang.Nullable;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static com.edu.kaizhi.cacheable.constant.CacheConstant.DAILY_CACHE_AUTO_REFRESH_PRELOAD_TIME;
 
 
 /**
@@ -37,15 +40,32 @@ public class CustomizedRedisCache extends RedisCache {
         // 获取当前缓存调用的元数据信息，通常包含缓存名称、缓存键、过期时间等信息
         CachedInvocation cachedInvocation = CacheHelper.getCacheManager().getCachedInvocation();
         // 获取预加载时间 preLoadTimeSecond，表示缓存到期之前多少秒需要进行缓存刷新
-        long preLoadTimeSecond = 0;
-        if(ObjectUtil.isNotEmpty(cachedInvocation))
-            preLoadTimeSecond = cachedInvocation.getMetaData().getPreLoadTimeSecond();
+        long preLoadTimeSecond = -1;
+        boolean isAutoRefreshDailyCache = false;
+        if (ObjectUtil.isNotEmpty(cachedInvocation)) {
+            CacheMetaData metaData = cachedInvocation.getMetaData();
+            preLoadTimeSecond = metaData.getPreLoadTimeSecond();
+            String name = this.getName();
+            String[] cacheNames = metaData.getCacheNames();
+            for (String cacheName : cacheNames) {
+                if (name.equals(cacheName) && metaData.isDailyCache()) {
+                    preLoadTimeSecond = -1;
+                    if (metaData.isAutoRefreshDailyCache()) {
+                        preLoadTimeSecond = DAILY_CACHE_AUTO_REFRESH_PRELOAD_TIME;
+                        isAutoRefreshDailyCache = true;
+                    }
+                    break;
+                }
+            }
+
+        }
+        final Boolean dailyRefreshCache = isAutoRefreshDailyCache;
         if (ObjectUtil.isNotEmpty(valueWrapper) && preLoadTimeSecond > 0) {
             // 生成 Redis 中实际使用的缓存键，通常由缓存名称和 key 组合生成
             String cacheKey = createCacheKey(key);
             // 从缓存管理器中获取 RedisTemplate，用于与 Redis 进行交互
             RedisTemplate cacheRedisTemplate = CacheHelper.getCacheManager().getCacheRedisTemplate();
-            // 获取缓存项的剩余存活时间（TTL，Time-To-Live），单位为秒
+            // 获取缓存项的剩余存活时间TTL，单位为秒
             Long ttl = cacheRedisTemplate.getExpire(cacheKey, TimeUnit.SECONDS);
             if (ObjectUtil.isNotEmpty(ttl) && ttl <= preLoadTimeSecond) {
                 log.info("缓存刷新中...");
@@ -56,7 +76,7 @@ public class CustomizedRedisCache extends RedisCache {
                     lock.lock();
                     try {
                         // 调用 CacheHelper 中的 refreshCache 方法，执行实际的缓存刷新操作
-                        CacheHelper.refreshCache(super.getName());
+                        CacheHelper.refreshCache(super.getName(), key, cacheKey, dailyRefreshCache);
                     } catch (Exception e) {
                         log.error(e.getMessage());
                     } finally {

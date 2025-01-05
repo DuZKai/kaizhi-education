@@ -54,11 +54,15 @@ public @interface ExpirableCacheable {
     @AliasFor(annotation = Cacheable.class,attribute = "sync")
     boolean sync() default false;
 
-    // 指定缓存的过期时间，以秒为单位。默认为 0，表示不过期。
+    // 指定缓存的过期时间，以秒为单位。默认为 -1，表示不过期。
     long expiredTimeSecond() default -1;
 
-    // 指定缓存即将到期自动刷新功能，以秒为单位。默认为 0，表示不预加载。
+    // 指定缓存即将到期自动刷新功能，以秒为单位。默认为 -1，表示不预加载。
     long preLoadTimeSecond() default -1;
 
+    // 是否当日缓存
+    boolean dailyCache() default false;
 
+    // 是否自动刷新当日缓存
+    boolean autoRefreshDailyCache() default false;
 }
