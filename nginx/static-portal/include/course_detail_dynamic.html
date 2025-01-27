@@ -307,6 +307,7 @@
                 let activeUser = getActiveUser();
                 if (activeUser) {
                     addChoosecourse(this.courseId).then((res) => {
+
                         if (res.learnStatus) {
                             if (res.learnStatus === '702001') {//正常
                                 //开始学习

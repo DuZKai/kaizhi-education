@@ -31,7 +31,7 @@
 
 新增：
 
-rabbitMQ使用、拓展cacheable
+rabbitMQ使用、拓展cacheable，从8升级到21，效率提高一倍，重点升级Spring Security，从5到6，完全重构验证服务，加入Knife4j后端接口服务
 
 
 
@@ -39,6 +39,8 @@ rabbitMQ使用、拓展cacheable
 
 ### 大功能
 
+- 全部微服务升级，java从8到21，spring boot从2到3，security从5到6（另一个github仓库）
+- 加入Knife4j后端接口服务，使用网关进行全部微服务聚合
 - 使用Chromedriver和Beautifulsoup4下载学堂真实课程数据
 - 热门课程排行榜加入（每日零点通过定时任务Scheduled更新排行榜）
 - 将课程排行榜以及学习课程人数部分加入ExpirableCacheable拓展cacheable缓存，实现每日缓存，在每日零点前30分钟如果被访问则刷新缓存
@@ -477,7 +479,7 @@ docker run -p 6379:6379 --name redis-new -v /data/soft/redis-new/redis.conf:/etc
 - 迁移Html页面到vue
 - 加入ZK，MongoDB
 - auth下info服务失效
-- 
+- knife4j有些会被security拦截
 
 换皮：知识付费问答平台
 

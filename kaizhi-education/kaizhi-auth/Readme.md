@@ -878,11 +878,15 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
      * 获取token
      */
     private String getToken(ServerWebExchange exchange) {
-        String tokenStr = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if (StringUtils.isBlank(tokenStr)) {
+        String authorization = exchange.getRequest().getHeaders().getFirst(HttpHeaders.COOKIE);
+        if (StringUtils.isBlank(authorization)) {
             return null;
         }
-        String token = tokenStr.split(" ")[1];
+        String[] split = authorization.split("=");
+        if(split.length != 2) {
+            return null;
+        }
+        String token = split[1];
         if (StringUtils.isBlank(token)) {
             return null;
         }
@@ -1899,7 +1903,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
                 // 如果没有抛出异常，则表示JWT有效
                 // 将 JWT 添加到请求头中
                 ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                        .header("Authorization", "Bearer " + token)
+                        .header("Cookie", "Bearer " + token)
                         .build();
 
                 // 使用修改后的请求继续处理
@@ -2217,7 +2221,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+        String bearerToken = request.getHeader("Cookie");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

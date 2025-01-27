@@ -334,7 +334,7 @@ export default class extends mixins(MixinTools) {
   // 删除小节
   private async handleDeleteNode(teachPlanId: number) {
     try {
-      await this.showDeleteConfirm()
+      await this.showDeleteConfirm("此操作将删除该小节内容, 是否继续?")
       await deleteOutlineNode(teachPlanId)
       this.getList()
     } catch (error) {
@@ -447,7 +447,7 @@ export default class extends mixins(MixinTools) {
       ) {
         return
       }
-      await this.showDeleteConfirm()
+      await this.showDeleteConfirm("此操作将取消视频与课程关系, 是否继续?")
       await mediaUnAssociation(
           node.teachplanMedia.teachplanId,
           String(node.teachplanMedia.mediaId),
