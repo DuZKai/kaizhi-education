@@ -7,11 +7,9 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -54,7 +52,8 @@ public class TokenConfig {
         tokenEnhancerChain.setTokenEnhancers(Collections.singletonList(accessTokenConverter));
         service.setTokenEnhancer(tokenEnhancerChain);
 
-        service.setAccessTokenValiditySeconds(7200); // 令牌默认有效期2小时
+        // TODO：修改回2小时，7200，暂时设为24小时
+        service.setAccessTokenValiditySeconds(86400); // 令牌默认有效期2小时
         service.setRefreshTokenValiditySeconds(259200); // 刷新令牌默认有效期3天
         return service;
     }

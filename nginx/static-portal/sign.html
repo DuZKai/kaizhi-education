@@ -100,7 +100,6 @@
                 this.formdata.username = usernameJson;
                 let params = querystringify(this.formdata);
                 loginSubmit(params).then(res => {
-                    console.log(res)
                     if (res && res.access_token) {
 
                         if (this.autologin) {

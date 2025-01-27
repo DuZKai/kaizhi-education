@@ -15,4 +15,5 @@
 /*获取jwt令牌*/
 const getjwt = () => {
     return requestGet('/openapi/auth/userjwt');
+    // return requestGet('/openapi/auth/oauth2/jwks');
 }

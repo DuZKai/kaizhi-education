@@ -1,9 +1,18 @@
 ﻿var  getCookie = function (name) {
-    var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-    if (arr = document.cookie.match(reg))
-        return (arr[2]);
-    else
-        return null;
+    let cookies = document.cookie.split('; '); // 分割为多个键值对
+    for (let i = 0; i < cookies.length; i++) {
+        let parts = cookies[i].split('=');
+        if (parts[0] === name) {
+            console.log(parts[1])
+            return parts[1];
+        }
+    }
+    // var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+    // arr = document.cookie.match(reg);
+    // if (arr)
+    //     return (arr[2]);
+    // else
+    //     return null;
 }
 function setCookie(name,value,Days){
     if(Days==0){
@@ -70,8 +79,11 @@ var getUserInfoFromJwt = function (jwt) {
     }
     try{
         var jwtDecodeVal = jwt_decode(jwt);
-        jwtDecodeVal=JSON.parse(jwtDecodeVal.user_name);
-       
+        if(jwtDecodeVal.user_name)
+            jwtDecodeVal=JSON.parse(jwtDecodeVal.user_name);
+       if(jwtDecodeVal.sub)
+           jwtDecodeVal=JSON.parse(jwtDecodeVal.sub);
+
         if (!jwtDecodeVal) {
             return ;
         }

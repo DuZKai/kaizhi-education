@@ -294,6 +294,18 @@ spring:
 | 2023.0.1.0*                  | Spring Cloud 2023.0.1 | 3.2.4               |
 | 2023.0.0.0-RC1               | Spring Cloud 2023.0.0 | 3.2.0               |
 
+可以参考文章：
+
+https://www.cnblogs.com/zhaojinhui/p/18619651
+
+https://docs.oracle.com/en/java/javase/21/docs/api/deprecated-list.html
+
+https://juejin.cn/post/7326393655392190501
+
+https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#redis-properties
+
+https://docs.oracle.com/en/java/javase/21/migrate/migrating-jdk-8-later-jdk-releases.html#GUID-7744EF96-5899-4FB2-B34E-86D49B2E89B6
+
 
 
 ### Docker pull拉取一直不成功，拉取nacos时一直失败
@@ -678,7 +690,7 @@ System.setProperty("nacos.logging.default.config.enabled","false");
 2025-01-12 20:45:31,142 WARN [main][PostProcessorRegistrationDelegate.java:437] - Bean 'nacosConfigManager' of type [com.alibaba.cloud.nacos.NacosConfigManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [nacosAnnotationProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
 ```
 
-三个经过，其中后两个在更新spring-cloud-alibaba-dependencies包版本为2023.0.3.2后消失，最前面的一个似乎到现在都无法解决。
+三个警告，其中后两个在更新spring-cloud-alibaba-dependencies包版本为2023.0.3.2后消失，最前面的一个似乎到现在都无法解决。
 
 
 
@@ -967,6 +979,803 @@ public class Knife4jConfig {
 即可大功告成
 
 ![image-20250113230111860](img/image-20250113230111860.png)
+
+
+
+### jakarta.mail发邮件导致报错：Exception in thread "main" java.lang.IllegalStateException: No provider of jakarta.mail.util.StreamProvider was found
+
+出错代码为：
+
+```java
+Session mailSession = Session.getInstance(props, authenticator);
+```
+
+包使用了：
+
+```xml
+<dependency>
+    <groupId>jakarta.mail</groupId>
+    <artifactId>jakarta.mail-api</artifactId>
+</dependency>
+```
+
+可以确认的是代码不可能出错，因为代码是从成功运行后再迁移的，因此只会是包的问题，使用
+
+```xml
+<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>jakarta.mail</artifactId>
+</dependency>
+```
+
+问题解决
+
+
+
+### 解决docker pull超时问题
+
+- 方法1： 修改国内镜像源
+  修改daemon配置文件：vim /etc/docker/daemon.json
+
+```
+{
+    "registry-mirrors": ["https://***吴彦祖的地址***.mirror.aliyuncs.com"]
+}
+```
+
+推荐几个镜像源：
+
+```
+// docker 中国区镜像源
+https://registry.docker-cn.com
+// 网易镜像源
+http://hub-mirror.c.163.com
+// 阿里云镜像源
+https://registry.cn-hangzhou.aliyuncs.com
+```
+
+国内可以正常访问的镜像网址，大部分镜像都有，可以作为一个应急下载源
+第三方镜像-可信镜像中心网址：https://atomhub.openatom.cn/，下载示例
+
+```
+docker pull atomhub.openatom.cn/amd64/redis:7.0.2
+```
+
+- 方法2： 增加加速器
+  1、修改daemon配置文件：vim /etc/docker/daemon.json
+
+```
+{
+    "registry-mirrors": 
+	[
+		"https://do.nark.eu.org",
+		"https://dc.j8.work",
+		"https://docker.m.daocloud.io",
+		"https://dockerproxy.com",
+		"https://docker.mirrors.ustc.edu.cn",
+		"https://docker.nju.edu.cn"
+	]
+}
+```
+
+两种方法修改完daemon.json后重启docker：
+
+```
+systemctl daemon-reload
+systemctl restart docker 
+```
+
+附：阿里云个人镜像加速器
+网址:https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+
+
+### 升级redis流程
+
+选择当前稳定版本，拉取：
+
+```
+docker pull redis:7.4.2
+```
+
+在官网找到对应配置文件：
+
+https://redis.io/docs/latest/operate/oss_and_stack/management/config/
+
+按照自己之前配置保存相同的配置和不同的配置，放到自己指定的目录（此处为虚拟机，服务器的位置）：
+
+```
+ /home/docker/redis/config
+```
+
+指定redis.conf 启动
+
+```
+docker run -p 6379:6379 --name redis -v /home/docker/redis/config/redis.conf:/etc/redis/redis.conf -v /home/docker/redis/data:/data -d redis:5.0.5 redis-server /etc/redis/redis.conf --appendonly yes
+```
+
+参数说明：
+
+注意：在docker中启动redis一定要把：daemonize 设置为 no，这个很重要，如果不是no docker会一直启动失败，原因是docker本身需要后台运行，而这个配置选项也是以守护进程启动，两者会冲突
+
+1.-p 6379:6379：
+第一个端口是宿主机端口(服务器端口)，第二个端口是容器端口(容器是一个个沙箱外部不不能访问的)，将容器的6379端口映射到宿主机的6379端口上，这样可以通过访问宿主机6379来访问redis;
+
+2.–name redis：
+容器的名字 redis 方便以后操作容器（docker start redis ;docker stop redis 等等);
+
+3.-v /home/docker/redis/config/redis.conf:/etc/redis/redis.conf:
+挂载持久化配置
+/home/docker/redis/config/redis.conf ：是宿主机(服务器)你自己的redis.conf文件路径
+/etc/redis/redis.conf : 容器内部的redis.conf文件路径，不用手动创建，容器启动时会把上边宿主机的redis.conf自动映射到改目录下. 这样在修改redis.conf文件时候就不用进入到容器内部去修改了
+
+4.-v /home/docker/redis/data:/data：
+挂载持久化文件
+/home/docker/redis/data是宿主机中持久化文件的位置，/data是容器中持久化文件的位置
+
+5.-d ：
+后台启动
+
+6.redis:5.0.5 redis-server /etc/redis/redis.conf：
+redis:5.0.5 是镜像的名称+版本如下
+
+7.redis-server /etc/redis/redis.conf
+指定用配置文件的方式启动redis
+
+8.–appendonly yes开启持久化
+
+最后进入到容器内部验证下是否生成 redis.conf 和 data持久化文件
+
+```bash
+# 查看下正在运行的docker容器
+[root@instance-f4khj00x /]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+2ac032107e05        redis:5.0.5         "docker-entrypoint.s…"   11 minutes ago      Up 11 minutes       0.0.0.0:6379->6379/tcp   iredis
+
+# 进入到容器内部
+[root@instance-f4khj00x /]# docker container exec -it 2ac032107e05 /bin/bash
+
+# 进入刚配置的容器目录 /etc/redis/redis.conf
+root@2ac032107e05:/data# cd /etc/redis/   
+root@2ac032107e05:/etc/redis# ls
+redis.conf
+
+# 进入持久化目录data
+root@2ac032107e05:/etc/redis# cd /data/
+root@2ac032107e05:/data# ls
+appendonly.aof	backup.db  dump.rdb  root
+```
+
+删除容器流程：
+
+停止容器
+
+```
+docker stop redis-new
+```
+
+删除容器
+
+```
+docker rm redis-new
+```
+
+
+
+### Redis-7.4.2 日志产生报错Failed to write PID file: Permission denied
+
+```cmd
+[root@localhost home]# docker logs redis-new
+1:C 14 Jan 2025 09:18:22.305 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+1:C 14 Jan 2025 09:18:22.305 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 14 Jan 2025 09:18:22.305 * Redis version=7.4.2, bits=64, commit=00000000, modified=0, pid=1, just started
+1:C 14 Jan 2025 09:18:22.305 * Configuration loaded
+1:M 14 Jan 2025 09:18:22.305 * monotonic clock: POSIX clock_gettime
+1:M 14 Jan 2025 09:18:22.306 # Failed to write PID file: Permission denied
+```
+
+每次都会启动时候产生报错，redis配置修改下面屏蔽这句话
+
+```
+# protected-mode yes
+```
+
+
+
+### Spring-boot从2转移到3，redis产生Connection refused: getsockopt
+
+```bash
+2025-01-14 20:38:02,932 ERROR [http-nio-63075-exec-1][DirectJDKLog.java:175] - Servlet.service() for servlet [dispatcherServlet] in context with path [/checkcode] threw exception [Request processing failed: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis] with root cause
+java.net.ConnectException: Connection refused: getsockopt
+    at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+    at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+    at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:973)
+    at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+    at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:335)
+    at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+    at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+    at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+    at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+    at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+    at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+    at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+    at java.base/java.lang.Thread.run(Thread.java:1583)
+```
+
+原因是因为我的spring-boot从2转移到3，而在迁移文档其实有说明https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#redis-properties
+
+简单来说就是Redis配置都从 `spring.redis.` 到 `spring.data.redis.`，所以我们将配置从
+
+```yaml
+spring:
+  redis:
+    host: 192.168.101.65
+    port: 6379
+    password: redis
+    database: 0
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 10
+        min-idle: 0
+    timeout: 10000
+```
+
+转换如下即可
+
+```yaml
+spring:
+  data:
+    redis:
+      host: 192.168.101.65
+      port: 6379
+      password: redis
+      database: 0
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 0
+      timeout: 10000
+```
+
+
+
+### 只在上层服务中加入，不在底层加入会导致model层使用@Schema注解报错
+
+当前程序逻辑，在model层定义dto,po等类，service层使用model层定义类进行增删改查等逻辑，最后api层作为controller接发数据。之前是在api的pom.xml文件直接加入依赖
+
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+</dependency>
+```
+
+但是这样导致上层的应用有依赖，下层的没有。
+
+如果只是想在model使得import io.swagger.v3.oas.annotations.xxx.Schema不爆红警告，可以直接加入
+
+```xml
+<dependency>
+    <groupId>io.swagger.core.v3</groupId>
+    <artifactId>swagger-annotations-jakarta</artifactId>
+</dependency>
+```
+
+就可以直接解除警告。
+
+如果是想一劳永逸，可以在model层pom就进行加入依赖springdoc-openapi-starter-webmvc-ui，通过依赖传递也使得该依赖注入到service，最后到api。
+
+
+
+### 使用ListenableFuture 的addCallback()因为版本问题失效替代方法
+
+```java
+CorrelationData correlationData = new CorrelationData(id.toString());
+correlationData.getFuture().addCallback(
+        result -> {
+            if (result != null && result.isAck()) {
+                log.info("消息发送成功，消息:{}", jsonString);
+            }
+            else{
+                log.error("消息发送失败，消息:{}", jsonString);
+            }
+        },
+        ex -> {
+            log.error("消息发送失败，消息:{}", jsonString);
+        }
+);
+```
+
+这是之前代码，版本是java8, spring boot 2.3.7，中间层层包装后最终的spring core为5.2.12.RELEASE，此时这个函数还可以正确允许
+
+但是现在我升级java21和spring boot 3.2.4后，这个spring core升级为6.1.5，此时IDEA就爆红显示不存在addCallback函数了，可以使用CompletableFuture的whenComplete替换
+
+```java
+correlationData.getFuture().whenComplete((result, throwable) -> {
+    if (throwable != null) {
+        // 失败信息
+        log.error("消息发送失败，消息:{}", jsonString);
+    } else {
+        // 成功信息
+        if (result != null && result.isAck()) {
+            log.info("消息发送成功，消息:{}", jsonString);
+            // 将消息从数据库mq_message删除
+            mqMessageService.completed(id);
+        } else {
+            log.error("消息发送失败，消息:{}", jsonString);
+        }
+    }
+});
+```
+
+至于别的应该也可以，这里送上官方地址：https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html
+
+
+
+### 无法找到CommonsMultipartFile
+
+在使用spring-web 5.2.12-RELEASE升级到6.1.5时发现CommonsMultipartFile无法找到的BUG，代码如下
+
+```java
+//将file转为Multipart
+public static MultipartFile getMultipartFile(File file) {
+    FileItem item = new DiskFileItemFactory().createItem("file", MediaType.MULTIPART_FORM_DATA_VALUE, true, file.getName());
+    try (FileInputStream inputStream = new FileInputStream(file);
+         OutputStream outputStream = item.getOutputStream();) {
+        IOUtils.copy(inputStream, outputStream);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new CommonsMultipartFile(item);
+}
+```
+
+找了许多方法似乎也没有细说如何转换，只好使用测试环境的MockMultipartFile暂时去除报错，首先加入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+</dependency>
+```
+
+代码修改为：
+
+```java
+public static MultipartFile getMultipartFile(File file) {
+    try (FileInputStream inputStream = new FileInputStream(file)) {
+        return new MockMultipartFile(
+                "file",
+                file.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                inputStream
+        );
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+```
+
+后续找到更好方法再进行替换
+
+
+
+### Redis 序列化方案
+
+ `RedisSerializer`提供了九种序列化方案，分别为：
+
+| Spring-data-redis                  | fastjson                       |
+| ---------------------------------- | ------------------------------ |
+| ByteArrayRedisSerializer           | FastJsonRedisSerializer        |
+| GenericJackson2JsonRedisSerializer | GenericFastJsonRedisSerializer |
+| GenericToStringSerializer          |                                |
+| Jackson2JsonRedisSerializer        |                                |
+| JdkSerializationRedisSerializer    |                                |
+| OxmSerializer                      |                                |
+| StringRedisSerializer              |                                |
+
+`Redis`在储存数据时需要将数据转化为`byte`数组进行存储，这一点需要提前说明，接下来这一篇文章只谈 `JdkSerializationRedisSerializer` 和 `GenericFastJsonRedisSerializer`这两种序列化方案的相关问题。
+
+源码对比
+
+`JdkSerializationRedisSerializer`
+
+ 作为默认的序列化方案，`JdkSerializationRedisSerializer` 有两个属性：
+
+```java
+    private final Converter<Object, byte[]> serializer;
+    private final Converter<byte[], Object> deserializer;
+```
+
+ 想来读者已经猜到了它大致的作用，点进`Converter`中去看注释的解释：
+
+```java
+import org.springframework.lang.Nullable;
+
+/**
+ * A converter converts a source object of type {@code S} to a target of type {@code T}.
+ *
+ * <p>Implementations of this interface are thread-safe and can be shared.
+ *
+ * <p>Implementations may additionally implement {@link ConditionalConverter}.
+ *
+ * @author Keith Donald
+ * @since 3.0
+ * @param <S> the source type
+ * @param <T> the target type
+ */
+@FunctionalInterface
+public interface Converter<S, T> {
+            
+
+	/**
+	 * Convert the source object of type {@code S} to target type {@code T}.
+	 * @param source the source object to convert, which must be an instance of {@code S} (never {@code null})
+	 * @return the converted object, which must be an instance of {@code T} (potentially {@code null})
+	 * @throws IllegalArgumentException if the source cannot be converted to the desired target type
+	 */
+	@Nullable
+	T convert(S source);
+
+}
+```
+
+大致意思就是将S型的源数据转化为T型的数据。所以现在就好理解了，`JdkSerializationRedisSerializer` 中的两个属性：`serializer`的作用为将`Object`转化为`byte`数组，而`deserializer` 则相反，将`byte`数组转化为`Object`。
+
+ 最重要的就是序列化和反序列化的实现了，且看源码：
+
+```java
+    public Object deserialize(@Nullable byte[] bytes) {
+            
+        if (SerializationUtils.isEmpty(bytes)) {
+            
+            return null;
+        } else {
+            
+            try {
+            
+                return this.deserializer.convert(bytes);
+            } catch (Exception var3) {
+            
+                throw new SerializationException("Cannot deserialize", var3);
+            }
+        }
+    }
+
+    public byte[] serialize(@Nullable Object object) {
+            
+        if (object == null) {
+            
+            return SerializationUtils.EMPTY_ARRAY;
+        } else {
+            
+            try {
+            
+                return (byte[])this.serializer.convert(object);
+            } catch (Exception var3) {
+            
+                throw new SerializationException("Cannot serialize", var3);
+            }
+        }
+    }
+```
+
+ 源码也很好理解，序列化方法入参为一个`Object`对象，若此`Object`为空则返回`null`，不为空就调用`Converter<Object, byte[]>`的`convert`进行类型转化序列化完成。反序列化也是一个道理。它的底层还是通过调用`JDK`的`IO`操作`ObjectInputStream`和`ObjectOutputStream`类实现`POJO`类的序列化和反序列化。
+
+`GenericFastJsonRedisSerializer`
+
+ 此序列化方案是很受欢迎的，甚至称之为 “万能” 的序列化方案，那么它到底如何实现的？
+
+```ja
+public class GenericFastJsonRedisSerializer implements RedisSerializer<Object> {
+    private final static ParserConfig defaultRedisConfig = new ParserConfig();
+    static { defaultRedisConfig.setAutoTypeSupport(true);}
+
+    @Override
+    public byte[] serialize(Object object) throws SerializationException {
+        if (object == null) {
+            return new byte[0];
+        }
+        try {
+            return JSON.toJSONBytes(object, SerializerFeature.WriteClassName);
+        } catch (Exception ex) {
+            throw new SerializationException("Could not serialize: " + ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public Object deserialize(byte[] bytes) throws SerializationException {
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
+        try {
+            return JSON.parseObject(new String(bytes, IOUtils.UTF8), Object.class, defaultRedisConfig);
+        } catch (Exception ex) {
+            throw new SerializationException("Could not deserialize: " + ex.getMessage(), ex);
+        }
+    }
+}
+```
+
+它的序列化为将`Object`对象转化为`JSON`型的`byte`数组存储`Redis`，反序列化时将`byte`数组进行`UTF-8`编码转化为`Object`类输出。
+
+性能对比——插入
+
+ 我使用的`POJO`类为：
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserModel{
+    /**
+     * 主键
+     */
+    private Integer id;
+
+    /**
+     * 用户账号
+     */
+    private String userId;
+
+    /**
+     * 用户姓名
+     */
+    private String userName;
+
+    /**
+     * 用户证件号码
+     */
+    private String idNumber;
+
+    /**
+     * 用户邮箱
+     */
+    private String email;
+
+}
+```
+
+通过控制`Redis`序列化方案进行插入对比：
+
+```java
+@Configuration
+public class RedisConfig {
+    /**
+     * redisTemplate 序列化使用的jdkSerializeable, 存储二进制字节码, 所以自定义序列化类
+     * @param redisConnectionFactory
+     * @return
+     */
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+            
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+
+        // 使用Jackson2JsonRedisSerialize 替换默认序列化
+//        GenericFastJsonRedisSerializer redisSerializer = new GenericFastJsonRedisSerializer();
+        JdkSerializationRedisSerializer redisSerializer = new JdkSerializationRedisSerializer();
+
+        // 设置value的序列化规则和 key的序列化规则
+        redisTemplate.setValueSerializer(redisSerializer);
+        redisTemplate.setKeySerializer(redisSerializer);
+        redisTemplate.setHashKeySerializer(redisSerializer);
+        redisTemplate.setHashValueSerializer(redisSerializer);
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
+    }
+}
+```
+
+测试代码：
+
+```java
+class RedisDemoApplicationTests {
+            
+    @Autowired
+    private RedisUtils redisUtils;
+
+    @Test
+    void contextLoads() {
+            
+
+        StopWatch sw = new StopWatch("StringRedisSerializer");
+        AtomicInteger number = new AtomicInteger(1);
+        List<UserModel> userModels = userModelList(1000000);
+        sw.start("StringRedisSerializer");
+        userModels.stream().forEach(userModel -> {
+            
+            String key = "user_" + number;
+            redisUtils.set(key,userModel);
+            number.getAndIncrement();
+        });
+        sw.stop();
+        System.out.println(sw.prettyPrint());
+    }
+
+    /**
+     * @Method: userModelList
+     * @Description: 获取用户数据
+     * @param size 用户数量
+     * @Return: java.util.List<com.example.redisdemo.del.UserModel>
+     * @Author: wangdehonga
+     * @Date 2020/9/9 13:44
+     * @Version:  1.0
+     */
+    List<UserModel> userModelList (int size) {
+            
+
+        // 封装用户结果集
+        List<UserModel> userModels = new ArrayList<>(size);
+        // 主键
+        int ids = 1;
+        // 用户账号
+        String[] userIds = RandomUtils.randomNumbers(8,size,false);
+        // 用户姓名
+        String[] userNames = RandomUtils.randomUserName(size);
+        // 用户证件号码
+        String[] idNumbers = RandomUtils.randomIDNumber(size);
+        // 用户邮箱
+        String[] emails = RandomUtils.randomEmail(size);
+        // 组装用户数据
+        while(ids <= size) {
+            
+            userModels.add(new UserModel(ids, userIds[ids-1], userNames[ids-1], idNumbers[ids-1], emails[ids-1]));
+            ids ++;
+        }
+        return userModels;
+    }
+    
+}
+```
+
+`JdkSerializationRedisSerializer` 测试结果：
+
+| 数据量（万） | 耗时（s） | 占用Redis服务器内存（M） |
+| ------------ | --------- | ------------------------ |
+| 1            | 17.0219   | 4.00                     |
+| 10           | 175.2     | 40.00                    |
+| 50           | 811.69    | 225.00                   |
+| 100          | 1776.54   | 390.00                   |
+
+`Redis`结构：
+
+```java
+key : "user_1";
+value:
+{
+            
+  "@type": "com.example.redisdemo.del.UserModel",
+  "email": "zik8o71to@mail.com",
+  "id": 1,
+  "idNumber": "610924196108171604",
+  "userId": "13523312",
+  "userName": "戈而者"
+}
+```
+
+`GenericFastJsonRedisSerializer`测试结果：
+
+| 数据量（万） | 耗时（s） | 占用Redis服务器内存（M） |
+| ------------ | --------- | ------------------------ |
+| 1            | 17.5779   | 3.00                     |
+| 10           | 158.18    | 26.00                    |
+| 50           | 773.61    | 126.00                   |
+| 100          | 1549.61   | 252.00                   |
+
+`Redis`结构：
+
+```java
+key : "\xAC\xED\x00\x05t\x00\x06user_1";
+value:
+\xAC\xED\x00\x05sr\x00#com.example.redisdemo.del.UserModel\x04V\xA9\xB2\x8A\xDC\xA8\x94\x02\x00\x05L\x00\x05emailt\x00\x12Ljava/lang/String;L\x00\x02idt\x00\x13Ljava/lang/Integer;L\x00\x08idNumberq\x00~\x00\x01L\x00\x06userIdq\x00~\x00\x01L\x00\x08userNameq\x00~\x00\x01xpt\x00\x1027x1wy46@263.netsr\x00\x11java.lang.Integer\x12\xE2\xA0\xA4\xF7\x81\x878\x02\x00\x01I\x00\x05valuexr\x00\x10java.lang.Number\x86\xAC\x95\x1D\x0B\x94\xE0\x8B\x02\x00\x00xp\x00\x00\x00\x01t\x00\x12220182200104143653t\x00\x0895145743t\x00\x09\xE6\x88\x88\xE8\x80\x8C\xE8\x80\x85
+```
+
+由以上图标可知，两种序列化方案虽然在耗时方面差距不大，但随着数据量的增加，占用的服务器资源无疑时`JdkSerializationRedisSerializer` 要更多一点。
+
+优缺点总结
+
+ 以结果为导向，目前我所知道的`GenericFastJsonRedisSerializer`序列化方案相较与`JdkSerializationRedisSerializer` 序列化方案的有点有：
+
+- 使用`GenericFastJsonRedisSerializer`序列化方案不需要`POJO`类实现`Serializable`接口；
+- 存储在`Redis`中显示的数据结构更加清晰；
+- 消耗服务器资源更少，且随着数据量的不断增加，二者的差距越来越大
+
+
+
+1. **`JdkSerializationRedisSerializer`**
+
+- 使用 `JdkSerializationRedisSerializer` 时，序列化的 Java 对象必须实现 `Serializable` 接口。如果某个对象没有实现该接口，就会抛出异常。
+
+- 异常示例：
+
+  ```
+  DefaultSerializer requires a Serializable payload but received an object of type [com.everestfortune.cf.bean.CaseInfoBean]
+  ```
+
+- 这个序列化器是基于 JDK 的标准序列化机制，确实需要实现 `Serializable` 接口。如果你的类没有实现该接口，就无法使用该序列化器进行序列化。相较而言，使用起来不如其他方式灵活，但它是 Java 自带的一种方式。
+
+2. **`GenericJackson2JsonRedisSerializer`**
+
+- 当遇到 Java 8 新增的日期类型（如`LocalDate`）时，使用 
+
+  ```
+  GenericJackson2JsonRedisSerializer
+  ```
+
+   序列化和反序列化会出错。错误信息通常是：
+
+  ```
+  Could not read JSON: Cannot construct instance of `java.time.LocalDate`
+  ```
+
+- `GenericJackson2JsonRedisSerializer` 依赖 Jackson 来进行序列化和反序列化，但 Jackson 在处理 `LocalDate` 这样的 Java 8 类型时，默认情况下并不支持，除非手动配置 Jackson 的日期格式化器。
+
+- 可以通过自定义 `ObjectMapper`，并在其中注册适当的 Java 8 类型模块（例如 `JavaTimeModule`）来解决该问题：
+
+  ```
+  ObjectMapper objectMapper = new ObjectMapper();
+  objectMapper.registerModule(new JavaTimeModule());
+  objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  ```
+
+- 如果你的应用中涉及到 Java 8 新的日期类型，`GenericJackson2JsonRedisSerializer` 可能需要额外配置才能正常工作。否则，它是一个比较通用且广泛使用的 JSON 序列化方式。
+
+3. **`StringRedisSerializer`**
+
+- `StringRedisSerializer` 只能用于序列化和反序列化字符串类型的数据。如果你尝试用它来序列化对象，就会失败，因为它只支持基本的字符串数据。
+
+- `StringRedisSerializer` 适合于处理简单的字符串类型数据。如果你的 Redis 中存储的是非字符串类型的数据（如对象或数字），就需要选择其他的序列化器。
+
+4. **`GenericFastJsonRedisSerializer`**
+
+- 根据你的描述，`GenericFastJsonRedisSerializer` 使用起来没有问题，能够顺利序列化和反序列化对象，并且对于大多数场景来说表现得很好。Fastjson 是一个高效且灵活的 JSON 处理库，相较于 Jackson，它在处理性能上有一定优势。
+
+潜在问题：
+
+- **性能**：虽然 Fastjson 在性能上优于 Jackson，但在某些情况下，Fastjson 在处理复杂类型时，可能会出现反序列化不一致的问题。比如当类字段中包含 `Transient` 或者 `final` 修饰的字段时，Fastjson 可能会处理得不如预期。
+
+- **安全性**：Fastjson 曾经有过安全漏洞，尤其是反序列化时的安全问题。因此，建议使用时保持 Fastjson 版本的更新，并避免不信任的数据源进行反序列化。
+
+  例如，Fastjson 在历史上有 `DeserializationFeature` 的安全漏洞，如果输入的数据不受信任，可能会导致反序列化攻击。因此，必须确保数据的来源是安全的。
+
+结论：
+
+- **`GenericFastJsonRedisSerializer`** 确实是一个高效且通用的选择，它在大多数情况下都能正常工作，但需要确保使用的 Fastjson 版本没有已知的安全漏洞，并且你要小心处理对象的反序列化过程，尤其是在安全性较高的应用场景中。
+
+总结：
+
+- **`JdkSerializationRedisSerializer`**：要求对象实现 `Serializable` 接口，不适用于没有实现该接口的类。
+- **`GenericJackson2JsonRedisSerializer`**：可以处理 Java 对象，但需要额外配置来处理 Java 8 的时间类（如 `LocalDate`）。
+- **`StringRedisSerializer`**：只能序列化字符串类型数据，不能用于其他类型。
+- **`GenericFastJsonRedisSerializer`**：性能好，使用简单，但需要小心其安全性问题，且有时处理复杂类型时可能不如预期。
+
+如果你希望避免 `GenericJackson2JsonRedisSerializer` 的 `LocalDate` 问题，并且想要高效的 JSON 处理，`GenericFastJsonRedisSerializer` 是一个不错的选择，但需要注意其潜在的安全问题。
+
+
+
+### JWTs的parserBuilder() 方法找不到
+
+```java
+Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(jwt)
+                        .getBody();
+```
+
+之前老版本生效的方法失效，在0.12之后需要修改为
+
+```java
+Jwts.parser()
+    .verifyWith(key)
+    .build()
+    .parseSignedClaims(jwt)
+    .getPayload();
+```
 
 
 

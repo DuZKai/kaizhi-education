@@ -30,6 +30,9 @@
       <el-tab-pane label="财务管理" name="third">
         <router-link to="/organization/order-list">财务管理</router-link>
       </el-tab-pane>
+      <el-tab-pane label="新版搜索" name="four">
+        <router-link to="/app-index/ranking-list-entering">新版搜索</router-link>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>

@@ -90,6 +90,8 @@ rabbitMQ使用、拓展cacheable
 - 当在Minio检测到MD5相同时，判断为相同文件，直接跳过再次上传分块上传数据库等操作
 - 多次发布相同课程没有做幂等，多次发布会有多条消息产生
 - 加入课程时验证免费价格为0，收费价格不为0
+- 新增课程后提交第一步再返回上一步，会导致重新提交一份新的课程信息，加入判断是否同一个新增逻辑，如果已经存在数据库则使用修改逻辑
+- 修复上传视频后，"是否支持试学"部分设置失效
 
 
 
@@ -269,8 +271,25 @@ docker restart nacos
 
 
 
-
 ### Nacos
+
+安装过程：
+
+```
+docker pull nacos/nacos-server:v2.3.2
+```
+
+使用以下命令启动：
+
+```cmd
+docker run -d --name nacos-new -p 8848:8848 -p 9848:9848 -p 9849:9848 -e MODE=standalone -v /data/soft/nacos-new/logs:/home/nacos/logs -v /data/soft/nacos-new/init.d/custom.properties:/home/nacos/init.d/custom.properties -v /data/soft/nacos-new/conf:/home/nacos/conf nacos/nacos-server-new:v2.3.2
+```
+
+其中/data/soft/nacos-new已经放在.\init\nacos配置\nacos-new
+
+> 可能里面配置会有nacos-new的部分，需要全部改为nacos，需要去除new；以及8849改为8848和9849改为9848作者在更新时并没有删除旧的版本nacos，为了避免冲突加入的后缀new
+
+
 
 - Nacos依赖数据库，需要先打开mysql容器，再打开Nacos
 - 打开http://192.168.101.65:8848/nacos/#/login进入Nacos，账号密码均为nacos
@@ -320,6 +339,24 @@ docker restart elasticsearch
 
 
 ### Redis
+
+拉取：
+
+```
+docker pull redis:7.4.2
+```
+
+指定redis.conf 启动
+
+```
+docker run -p 6379:6379 --name redis-new -v /data/soft/redis-new/redis.conf:/etc/redis/redis.conf -v /data/soft/redis-new/data:/data -d redis:7.4.2 redis-server /etc/redis/redis.conf --appendonly yes
+```
+
+> 可能里面配置会有redis-new的部分，需要全部改为redis，需要去除new；以及6379改为6380，作者在更新时并没有删除旧的版本redis，为了避免冲突加入的后缀new
+
+其中/data/soft/redis已经放在.\init\redis配置\redis
+
+
 
 - 192.168.101.65:6379 密码redis
 
@@ -420,14 +457,12 @@ docker restart elasticsearch
 ## TODO
 
 - 太多无用输出，8效率低下，项目完成时尽量尝试换为21，虚拟机也是尽量换成最新版本
-- 清洗虚拟机Nacos不同配置Group
+- 用户权限现在在21下将会失效，同事查询太多数据库，放入redis，使用用户权限分配
 - 常量移除到对应constant文件，路径后续统一抽取到父路径下（token-config的秘钥可以统一配置）
 - 机构传太多视频信息可以加入收费功能
 - rabbitMQ消息队列代替content的消息传递？
 - 课程修改后，需要将师资、大纲等也修改课程发布状态，但是修改师资和大纲又修改课程信息，耦合度有点高，其实最好做法应该单独一张表记录是否发布、审核等字段
 - 课程发布时直接把PO模型类拷到feignclient，有没有除了包依赖更好的办法实现
-- 用户权限太多查询数据库，放入redis
-- 用户权限分配
 - 部署部分
 - 给视频加入弹幕
 - 给课程加入排行榜
@@ -441,6 +476,8 @@ docker restart elasticsearch
 - 限制老师和学生进入后台界面
 - 迁移Html页面到vue
 - 加入ZK，MongoDB
+- auth下info服务失效
+- 
 
 换皮：知识付费问答平台
 
@@ -450,3 +487,13 @@ docker restart elasticsearch
   - 高端专家咨询套餐。
 
 CCTALK的学习群功能，并且加入大模型消息支持
+
+
+
+## 暂时无法解决但是发现的BUG
+
+- 前端关于包的警告
+
+- 新增课程时，先提交课程图片再进行下一步后，再返回上一步会发现图片消失（似乎是前端URL前缀修改了，提交后图片和从另一个位置返回的URL不一致）
+
+  

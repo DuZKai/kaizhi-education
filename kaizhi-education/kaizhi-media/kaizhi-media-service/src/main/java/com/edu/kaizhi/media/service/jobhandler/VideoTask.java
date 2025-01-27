@@ -114,7 +114,7 @@ public class VideoTask {
         String result = "";
         try {
             //开始处理视频
-            Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpegpath, originalFile.getAbsolutePath(), mp4File.getName(), mp4File.getAbsolutePath());
+            Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpegpath, originalFile.getAbsolutePath(), mp4File.getAbsolutePath());
             //开始视频转换，成功将返回success
             result = videoUtil.generateMp4();
         } catch (Exception e) {

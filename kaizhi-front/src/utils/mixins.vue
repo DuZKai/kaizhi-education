@@ -8,7 +8,7 @@ import { Component, Prop, PropSync, Watch, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   // 删除确认
   public async showDeleteConfirm() {
-    return await this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+    return await this.$confirm('此操作将删除视频与课程关系, 是否继续?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',

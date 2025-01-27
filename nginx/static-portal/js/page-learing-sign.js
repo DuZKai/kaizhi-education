@@ -102,7 +102,9 @@ $('.codeSub').bind('click',phoCde)
 
  /*登录*/
  const loginSubmit = (params) => {
-      return  requestPostForm('/api/auth/oauth/token?'+params,{});
+     // return  requestPostForm('/api/auth/oauth/token?'+params,{});
+     //  return  requestPostForm('/api/auth/oauth2/token?'+params,{});
+     return  requestPostForm('/api/auth/login', params);
   }
   /*验证码*/
   const getCheckCodeSubmit = () => {
