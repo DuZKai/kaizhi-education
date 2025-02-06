@@ -9,8 +9,11 @@ public final class IdWorkerUtils {
 
 	private static final Random RANDOM = new Random();
 
+	// 一般分布式的话可能是分机房和机器
+	// 机器ID
 	private static final long WORKER_ID_BITS = 5L;
 
+	// 数据中心ID，也可以作为业务代码ID
 	private static final long DATACENTERIDBITS = 5L;
 
 	private static final long MAX_WORKER_ID = ~(-1L << WORKER_ID_BITS);
@@ -25,6 +28,7 @@ public final class IdWorkerUtils {
 
 	private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATACENTERIDBITS;
 
+	// 生成序列的掩码，这里是4095 (0b111111111111=0xfff=4095)
 	private static final long SEQUENCE_MASK = ~(-1L << SEQUENCE_BITS);
 
 	private static final IdWorkerUtils ID_WORKER_UTILS = new IdWorkerUtils();
@@ -66,10 +70,19 @@ public final class IdWorkerUtils {
 
 	public synchronized long nextId() {
 		long timestamp = timeGen();
+		// 时针回拨，当前时间小于上一次ID生成时间，系统时针回退过这个时间应该异常
 		if (timestamp < lastTimestamp) {
 			throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+			// 	回拨时间很短（<=100ms），可以直接sleep
+
+			// 	回拨时间适中（>100ms, <=1s），可以记录之前nextId的时间，然后从下一个值开始使用
+
+			// 回拨时间较长（>1s<=5s），抛出
+
+			// 回拨时间很长（>5s），抛出
 		}
 		if (lastTimestamp == timestamp) {
+			// 同一时间产生的ID比4096多则需要等待下一个时间
 			sequence = (sequence + 1) & SEQUENCE_MASK;
 			if (sequence == 0) {
 				timestamp = tilNextMillis(lastTimestamp);
